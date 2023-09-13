@@ -1,9 +1,23 @@
 import './index.css'
+import { AuthProvider } from '../../context/myContext.jsx'
+import FormLogin from '../../components/Login/loginMUI'
 
-export default function Login(){
-    return(
-        <>
-        <h1>Login</h1>
-        </>
+
+export default function login() {
+
+    return (
+        <div className='container-login'>
+            <div className='left-login-box'>
+                <h3>Gerencie todos os pagamentos da sua empresa em um só lugar.</h3>
+            </div>
+            <div className='login-area'>
+                <div className='box-inputs'>
+                    <h1>Faça seu login</h1>
+                    <AuthProvider>
+                        <FormLogin />
+                    </AuthProvider>
+                </div>
+            </div>
+        </div>
     )
 }
