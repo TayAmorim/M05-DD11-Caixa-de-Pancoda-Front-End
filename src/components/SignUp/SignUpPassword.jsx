@@ -3,14 +3,15 @@ import { useNavigate } from 'react-router-dom'
 import { Box, TextField, IconButton, Button, Stack, Link } from '@mui/material';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
+import { AuthContext } from '../../context/myContext.jsx'
+import api from '../../api/api.jsx'
 
 
 export default function SignUpComponentPassword({ setSucess }) {
     const navigate = useNavigate()
     const [showPassword, setShowPassword] = useState(false);
-    const [password, setPassword] = useState('')
-    const [alert, setAlert] = useState('')
     const [confirmPassword, setConfirmPassword] = useState('')
+    const { nome, email, senha, setSenha, alert, setAlert } = useContext(AuthContext)
 
     const handleTogglePassword = () => {
         setShowPassword((prevShowPassword) => !prevShowPassword);
@@ -19,27 +20,28 @@ export default function SignUpComponentPassword({ setSucess }) {
     const handleSignup = async (event) => {
         event.preventDefault()
 
-        if (!password) {
+        if (!senha) {
             setAlert('Senha é um campo obrigátorio')
-            return
-        }
-        if(password.length < 6 ){
-            setAlert('A senha precisa ter pelo menos 6 caracteres')
             return
         }
         if (!confirmPassword) {
             setAlert('Confirmar senha é um campo obrigatório')
             return
         }
-        if (password !== confirmPassword) {
+        if (senha !== confirmPassword) {
             setAlert('As senhas não são compativeis')
             return
         }
-        setSucess(true)
-        setTimeout(() => {
-            navigate('/')
-        }, 2000)
+        try {
+            const response = await api.post('/sign-up', { nome, email, senha })
+            setAlert(response.data.message)
+            setSucess(true)
+
+        } catch (error) {
+            setAlert(error.response.data)
+        }
     }
+        
     return (
         <Box
             component="form"
@@ -58,7 +60,7 @@ export default function SignUpComponentPassword({ setSucess }) {
             <Box sx={{ display: 'flex', flexDirection: 'column' }}>
                 <label style={{ fontFamily: 'Nunito', color: '#344054', fontWeight: '500' }}>Escolha uma senha*</label>
                 <TextField id="outlined-basic" variant="outlined" placeholder='******' type={showPassword ? 'text' : 'password'} required
-                    value={password} name='senha' onChange={(event) => setPassword(event.target.value)}
+                    value={senha} name='senha' onChange={(event) => setSenha(event.target.value)}
                     InputProps={{
                         style: { fontSize: '1.6rem', color: '#343447', borderRadius: '.8rem', height: '4.5rem', lineHeight: '2rem', width:'35.5rem' },
                         endAdornment: (

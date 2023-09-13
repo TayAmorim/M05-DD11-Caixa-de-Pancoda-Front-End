@@ -2,12 +2,11 @@ import { useContext, useState } from 'react';
 import validator from 'validator'
 import { useNavigate } from 'react-router-dom'
 import { Box, TextField, Button, Stack, Link } from '@mui/material';
+import { AuthContext } from '../../context/myContext.jsx'
 
 export default function SignUpComponent({ setPagePassword }) {
     const navigate = useNavigate()
-    const [nome, setNome] = useState('')
-    const [email, setEmail] = useState('')
-    const [alert, setAlert] = useState('')
+    const {nome, setNome, email, setEmail, alert, setAlert} = useContext(AuthContext)
 
     const handleSignup = () => {
 
