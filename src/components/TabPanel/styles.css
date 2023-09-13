@@ -1,0 +1,20 @@
+.container-tabs {
+  display: flex;
+  flex-direction: column;
+  gap: 6rem;
+  padding-top: 2rem;
+  height: 100vh;
+  background:  #DEDEE9;
+  box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25);
+}
+
+.button-tabs {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  background: none;
+  cursor: pointer;
+}
+
