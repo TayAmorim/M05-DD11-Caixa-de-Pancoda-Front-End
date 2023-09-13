@@ -1,7 +1,7 @@
 import {Route, Routes} from 'react-router-dom'
-import Login from './pages/login/login'
-import SignUp from './pages/signUp/signUp'
-import Home from './pages/home/home'
+import Login from './pages/login/index'
+import SignUp from './pages/signUp/index'
+import Home from './pages/home/index'
 
 export default function MyRoutes() {
   return (
