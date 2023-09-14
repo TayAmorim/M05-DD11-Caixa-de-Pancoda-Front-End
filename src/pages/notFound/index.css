@@ -1,0 +1,25 @@
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@100;200;300;400;500;600&family=Nunito:wght@200;300;400;500;600;700&display=swap');
+.container-notFound{
+    width: 100vw;
+    height: 100vh;
+    background-color: #F8F8F9;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.box-notFound{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    width: 80rem;
+    height: 45rem;
+    border-radius: 3rem;
+    font-family: 'Montserrat', sans-serif;
+    color: #343447;
+    box-shadow: 2px 2px 5px #25252557;
+    background-color: #ffffff;
+}
+.box-notFound img{
+    margin-bottom: 3rem;
+}
