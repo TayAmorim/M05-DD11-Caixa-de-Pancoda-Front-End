@@ -9,6 +9,7 @@
 }
 
 .button-tabs {
+  text-decoration: none;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -18,3 +19,6 @@
   cursor: pointer;
 }
 
+.button-tabs.active {
+  border-right: 2px solid red;
+}

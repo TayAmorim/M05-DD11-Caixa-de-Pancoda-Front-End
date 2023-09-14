@@ -2,6 +2,8 @@ import { Grid } from "@mui/material";
 import TabPanel from "../../components/TabPanel";
 
 import "./styles.css";
+import { Route, Routes } from "react-router-dom";
+import SummaryCharges from "../../components/SummaryCharges";
 
 export default function Home() {
   return (
@@ -9,9 +11,11 @@ export default function Home() {
       <Grid item xs={1}>
         <TabPanel />
       </Grid>
-      <Grid item xs={11}>
-        <h1>oi</h1>
-      </Grid>
+      <Routes>
+        <Route path="/" element={<SummaryCharges />} />
+        <Route path="clientes" />
+        <Route path="cobranca" />
+      </Routes>
     </Grid>
   );
 }

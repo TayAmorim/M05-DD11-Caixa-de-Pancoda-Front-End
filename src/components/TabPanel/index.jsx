@@ -1,22 +1,23 @@
 import "./styles.css";
-import HomeSvg from "../../assets/home.svg";
+import { ReactComponent as HomeSvg } from "../../assets/home.svg";
 import { Box } from "@mui/material";
+import { NavLink } from "react-router-dom";
 
 export default function VerticalTabs() {
   return (
     <Box className="container-tabs">
-      <Box component="button" className="button-tabs">
-        <img src={HomeSvg} alt="" />
+      <NavLink to="/home" className="button-tabs" end>
+        <HomeSvg />
         Home
-      </Box>
-      <Box component="button" className="button-tabs">
-        <img src={HomeSvg} alt="" />
+      </NavLink>
+      <NavLink to="/home/clientes" className="button-tabs">
+        <HomeSvg />
         Clientes
-      </Box>
-      <Box component="button" className="button-tabs">
-        <img src={HomeSvg} alt="" />
+      </NavLink>
+      <NavLink to="/home/cobranca" className="button-tabs">
+        <HomeSvg />
         Cobranças
-      </Box>
+      </NavLink>
     </Box>
   );
 }
