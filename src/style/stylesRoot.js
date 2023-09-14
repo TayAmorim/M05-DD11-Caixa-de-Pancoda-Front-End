@@ -18,6 +18,15 @@ function initColor() {
       --grey-6: ${colors.Grey.f};
       --grey-7: ${colors.Grey.g};
       --grey-8: ${colors.Grey.h};
+      --wine-normal: ${colors.Wine.normal};
+      --wine-light: ${colors.Wine.light};
+      --wine-dimmed: ${colors.Wine.dimmed};
+      --yellow-normal: ${colors.Yellow.normal};
+      --yellow-light: ${colors.Yellow.light};
+      --yellow-dimmed: ${colors.Yellow.dimmed};
+      --greenSupport-normal: ${colors.GreenSupport.normal};
+      --greenSupport-light: ${colors.GreenSupport.light};
+      --greenSupport-dimmed: ${colors.GreenSupport.dimmed};
     }
   `;
 

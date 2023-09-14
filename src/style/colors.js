@@ -9,6 +9,21 @@ const colors = {
     normal: "#0E8750",
     light: "#ACD9C5",
   },
+  Wine: {
+    normal: "#971D1D",
+    light: "#FFEFEF",
+    dimmed: "#E8CACA",
+  },
+  Yellow: {
+    normal: "#C5A605",
+    light: "#FCF6DC",
+    dimmed: "#E3DEC8",
+  },
+  GreenSupport: {
+    normal: "#1FA7AF",
+    light: "#EEF6F6",
+    dimmed: "#D2DFE0",
+  },
   Grey: {
     a: "#343447",
     b: "#3F3F55",
