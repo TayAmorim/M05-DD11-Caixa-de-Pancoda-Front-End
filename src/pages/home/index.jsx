@@ -7,13 +7,13 @@ import SummaryCharges from "../../components/SummaryCharges";
 
 export default function Home() {
   return (
-    <Grid container spacing={2}>
+    <Grid container>
       <Grid item xs={1}>
         <TabPanel />
       </Grid>
       <Routes>
         <Route path="/" element={<SummaryCharges />} />
-        <Route path="clientes" />
+        <Route path="clientes" element={<SummaryCharges />} />
         <Route path="cobranca" />
       </Routes>
     </Grid>

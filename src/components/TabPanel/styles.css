@@ -2,9 +2,9 @@
   display: flex;
   flex-direction: column;
   gap: 6rem;
-  padding-top: 2rem;
+  padding-top: 5.4rem;
   height: 100vh;
-  background:  #DEDEE9;
+  background:  var(--grey-6);
   box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25);
 }
 
@@ -14,11 +14,16 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  border: none;
+  border: 2px solid transparent;
   background: none;
   cursor: pointer;
 }
 
 .button-tabs.active {
-  border-right: 2px solid red;
+  color: var(--pink-normal);
+  border-right: 2px solid var(--pink-normal);
 }
+
+.button-tabs.active svg > * {
+  stroke: var(--pink-normal);
+};
