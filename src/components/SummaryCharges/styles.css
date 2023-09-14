@@ -1,5 +1,4 @@
 .charge-card {
-
   display: flex;
   align-items: center;
   justify-content: center;
@@ -7,9 +6,6 @@
   padding-block: 2.3rem;
   border-radius: 3rem;
 }
-
-
-
 .charge-card.paid {
   background-color: var(--greenSupport-light);
 }

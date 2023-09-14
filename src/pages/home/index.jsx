@@ -3,10 +3,11 @@ import TabPanel from "../../components/TabPanel";
 import "./styles.css";
 import { Route, Routes } from "react-router-dom";
 import SummaryCharges from "../../components/SummaryCharges";
+import colors from "../../style/colors";
 
 export default function Home() {
   return (
-    <Grid container>
+    <Grid sx={{ background: colors.Grey.h }} container>
       <Grid item xs={1}>
         <TabPanel />
       </Grid>

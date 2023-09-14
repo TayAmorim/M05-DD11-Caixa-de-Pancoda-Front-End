@@ -15,6 +15,6 @@ h1, h2, h3, h4, h5{
   font-family: 'Montserrat', sans-serif !important;
 }
 
-span, p, button {
+span, p, button, a {
   font-family: 'Nunito', sans-serif !important;
 }

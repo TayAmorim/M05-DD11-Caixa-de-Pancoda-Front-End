@@ -1,0 +1,19 @@
+.group-text-svg {
+  display: flex;
+  gap: 2rem;
+}
+
+.customer {
+  padding-inline: 2.4rem;
+}
+
+.customer-header {
+  padding-block: 1.6rem ;
+  font-weight: bold;
+}
+
+.customer-header span , .customer-clients span{
+  width: 160px;
+  border-bottom: 1px solid #EFF0F6;
+  padding-block: 1.6rem;
+}

@@ -3,7 +3,10 @@ import NavMenu from "../NavMenu";
 import colors from "../../style/colors";
 import { ReactComponent as ExpiredSvg } from "../../assets/Expired.svg";
 import { ReactComponent as PaidSvg } from "../../assets/Paid.svg";
+import { ReactComponent as Billings } from "../../assets/billingYellow.svg";
 import "./styles.css";
+import TableCharge from "../TableCharges";
+import TableChargeClients from "../TableChargesClients";
 
 function SummaryCharges() {
   return (
@@ -32,7 +35,7 @@ function SummaryCharges() {
             <NavMenu />
           </Stack>
         </Stack>
-        <Grid container sx={{ padding: "1.9em 5.4rem 2.4rem" }} spacing={6}>
+        <Grid container sx={{ padding: "1.9rem  5.4rem" }} spacing={6}>
           <Grid item xs={4}>
             <div className="charge-card paid">
               <PaidSvg />
@@ -53,7 +56,7 @@ function SummaryCharges() {
           </Grid>
           <Grid item xs={4}>
             <div className="charge-card expected">
-              <ExpiredSvg />
+              <Billings />
               <div className="charge-texts">
                 <h3>Cobranças Previstas</h3>
                 <h2>R$ 10.000</h2>
@@ -61,30 +64,35 @@ function SummaryCharges() {
             </div>
           </Grid>
         </Grid>
-        <Grid container sx={{ padding: "1.9em 5.4rem 2.4rem" }} spacing={2}>
+        <Grid container sx={{ padding: "1.9rem  5.4rem" }} spacing={6}>
           <Grid item xs={4}>
-            <div className="">
-              <div className="charge-table">
-                <h3>Cobrança Pagas</h3>
-                <h2>R$ 30.000</h2>
-              </div>
-            </div>
+            <TableCharge title="Cobranças Pagas" number="08" color="green" />
           </Grid>
           <Grid item xs={4}>
-            <div className="">
-              <div className="charge-table">
-                <h3>Cobrança Pagas</h3>
-                <h2>R$ 30.000</h2>
-              </div>
-            </div>
+            <TableCharge title="Cobranças Vencidas" number="05" color="wine" />
           </Grid>
           <Grid item xs={4}>
-            <div className="">
-              <div className="charge-table">
-                <h3>Cobrança Pagas</h3>
-                <h2>R$ 30.000</h2>
-              </div>
-            </div>
+            <TableCharge
+              title="Cobranças Previstas"
+              number="10"
+              color="yellow"
+            />
+          </Grid>
+        </Grid>
+        <Grid container sx={{ padding: "1.9rem  5.4rem" }} spacing={6}>
+          <Grid item xs={6}>
+            <TableChargeClients
+              title="Clientes Inadimplentes"
+              number="08"
+              defaulter={true}
+            />
+          </Grid>
+          <Grid item xs={6}>
+            <TableChargeClients
+              title="Clientes em dia"
+              number="08"
+              defaulter={false}
+            />
           </Grid>
         </Grid>
       </Grid>
