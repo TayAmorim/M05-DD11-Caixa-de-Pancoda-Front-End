@@ -1,6 +1,5 @@
 import { Grid } from "@mui/material";
 import TabPanel from "../../components/TabPanel";
-
 import "./styles.css";
 import { Route, Routes } from "react-router-dom";
 import SummaryCharges from "../../components/SummaryCharges";
