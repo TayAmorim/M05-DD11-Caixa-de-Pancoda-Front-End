@@ -111,7 +111,7 @@ export default function NavMenu() {
             disableRipple
           >
             <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
-              <img style={{marginBottom: '0.6rem'}} src={editIcon} alt="Edit Icon" />
+              <img  style={{marginBottom: '0.6rem'}} src={editIcon} alt="Edit Icon" />
               Editar
             </div>
 

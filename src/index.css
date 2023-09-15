@@ -10,11 +10,23 @@ html {
 
 body {
   font-size: 1.6rem;
+  overflow-x: hidden;
 }
 h1, h2, h3, h4, h5{
   font-family: 'Montserrat', sans-serif !important;
 }
 
-span, p, button, a {
+span, p, button, a, ul, li, label {
   font-family: 'Nunito', sans-serif !important;
+}
+
+::-webkit-scrollbar {
+  width: 8px;
+}
+::-webkit-scrollbar-thumb {
+  background-color: #DA0175;
+  border-radius: 5px; 
+}
+::-webkit-scrollbar-track {
+  background-color:  #F8F8F9; 
 }
