@@ -1,4 +1,4 @@
-import './modalEditUser.css';
+import './index.css';
 import { useContext, useState, useEffect } from 'react';
 import closeIcon from '../../assets/closeIcon.svg'
 import { Box, Button, Stack, IconButton } from '@mui/material';
@@ -10,6 +10,7 @@ import FormControl from '@mui/material/FormControl';
 import InputAdornment from '@mui/material/InputAdornment';
 import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
+import InputMask from 'react-input-mask';
 
 const BootstrapInput = styled(InputBase)(({ theme }) => ({
     'label + &': {
@@ -67,6 +68,14 @@ export default function modalEditUser({ setOpenModaEditUser, openModalEditUser, 
         event.preventDefault();
     };
 
+    const handlePhoneChange = (event) => {
+        setPhone(event.target.value);
+    };
+
+    const handleCpfChange = (event) => {
+        setCpf(event.target.value);
+    };
+
     return (
         <div className='container-modalEditUser'>
             <div className='box-modalEditUser'>
@@ -99,6 +108,7 @@ export default function modalEditUser({ setOpenModaEditUser, openModalEditUser, 
                             id="bootstrap-input"
                             placeholder='Digite o seu nome'
                             value={name}
+                            onChange={() => setName()}
                             name='nome' />
                     </FormControl>
                     <FormControl variant="standard" >
@@ -113,7 +123,9 @@ export default function modalEditUser({ setOpenModaEditUser, openModalEditUser, 
                             id="bootstrap-input"
                             value={email}
                             name='email'
-                            placeholder='Digite o seu e-mail' />
+                            placeholder='Digite o seu e-mail'
+                            onChange={() => setEmail()} />
+
                     </FormControl>
 
 
@@ -125,30 +137,44 @@ export default function modalEditUser({ setOpenModaEditUser, openModalEditUser, 
                         gap: '1rem',
                         '& > :not(style)': { width: '100%', height: '4.4rem', position: 'relative' },
                     }}>
-
-                        <FormControl variant="standard" >
-                            <InputLabel shrink htmlFor="bootstrap-input"
-                                style={{ fontSize: '20px' }}
-                                type='text' required
-                            >
-                                CPF
+                        <FormControl variant="standard">
+                            <InputLabel shrink htmlFor="bootstrap-input" style={{ fontSize: '20px' }}>
+                                Cpf
                             </InputLabel>
-                            <BootstrapInput id="bootstrap-input"
+                            <InputMask
+                                mask="999.999.999-99"
                                 value={cpf}
-                                name='cpf'
-                                placeholder='Digite o seu CPF' />
+                                onChange={handleCpfChange}
+                            >
+                                {() => (
+                                    <BootstrapInput
+                                        id="bootstrap-input"
+                                        name='cpf'
+                                        type='tel'
+                                        placeholder='Digite o seu cpf'
+                                    />
+                                )}
+                            </InputMask>
                         </FormControl>
-                        <FormControl variant="standard" >
-                            <InputLabel shrink htmlFor="bootstrap-input"
-                                style={{ fontSize: '20px' }}
-                                type='text' required
-                                value={email} name='email'>
+
+                        <FormControl variant="standard">
+                            <InputLabel shrink htmlFor="bootstrap-input" style={{ fontSize: '20px' }}>
                                 Telefone
                             </InputLabel>
-                            <BootstrapInput id="bootstrap-input"
+                            <InputMask
+                                mask="(99) 99999-9999"
                                 value={phone}
-                                name='phone'
-                                placeholder='Digite o seu telefone' />
+                                onChange={handlePhoneChange}
+                            >
+                                {() => (
+                                    <BootstrapInput
+                                        id="bootstrap-input"
+                                        name='phone'
+                                        type='tel'
+                                        placeholder='Digite o seu telefone'
+                                    />
+                                )}
+                            </InputMask>
                         </FormControl>
 
                     </Box>
@@ -159,7 +185,7 @@ export default function modalEditUser({ setOpenModaEditUser, openModalEditUser, 
                             type='text' required
                             value={newPassword}
                             name='newPassword'
-                            placeholder>
+                            onChange={() => setNewPassword()}>
                             Nova senha
                         </InputLabel>
                         <BootstrapInput id="bootstrap-input"
@@ -169,6 +195,7 @@ export default function modalEditUser({ setOpenModaEditUser, openModalEditUser, 
                                     onClick={handleClickShowPassword}
                                     onMouseDown={handleMouseDownPassword}
                                     edge="end"
+                                    sx={{ position: 'absolute', right: '2rem', top: '3.2rem', transform: 'translateY(-50%)' }}
                                 >
                                     {showPassword ? <VisibilityOff /> : <Visibility />}
                                 </IconButton>
@@ -181,7 +208,8 @@ export default function modalEditUser({ setOpenModaEditUser, openModalEditUser, 
                         <InputLabel shrink htmlFor="bootstrap-input"
                             style={{ fontSize: '20px' }}
                             type='text' required
-                            value={confirmNewPassword} name='confirmNewPassword'>
+                            value={confirmNewPassword} name='confirmNewPassword'
+                            onChange={() => setNewPassword()}>
                             Confirmação senha
                         </InputLabel>
                         <BootstrapInput id="bootstrap-input"
@@ -191,6 +219,7 @@ export default function modalEditUser({ setOpenModaEditUser, openModalEditUser, 
                                     onClick={handleClickShowPassword}
                                     onMouseDown={handleMouseDownPassword}
                                     edge="end"
+                                    sx={{ position: 'absolute', right: '2rem', top: '3.2rem', transform: 'translateY(-50%)' }}
                                 >
                                     {showPassword ? <VisibilityOff /> : <Visibility />}
                                 </IconButton>
@@ -221,7 +250,7 @@ export default function modalEditUser({ setOpenModaEditUser, openModalEditUser, 
                     </Stack>
                 </Box>
             </div>
-        </div>
+        </div >
     )
 }
 

@@ -8,10 +8,6 @@
     background-color: #2525255c;
 }
 
-.box-modalEditUser h1 {
-    font-family: 'Montserrat', sans-serif;
-}
-
 .box-modalEditUser {
     display: flex;
     align-items: center;
@@ -21,6 +17,11 @@
     background-color: #fff;
     border-radius: 3rem;
     box-shadow: 2px 2px 5px #2525256a;
+    top: 0px;
+}
+
+.box-modalEditUser h1 {
+    font-family: 'Montserrat', sans-serif;
 }
 
 .box-modalEditUser h1 {
