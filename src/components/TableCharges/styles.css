@@ -1,0 +1,43 @@
+
+
+.table-container {
+  background: #FFF;
+  filter: drop-shadow(0px 4px 4px rgba(172, 217, 197, 0.25));
+  border-top-left-radius: 20px;
+  border-radius: 20px;
+  padding-top: 1.8rem;
+  
+ 
+}
+
+.table-title {
+  border-bottom: 1px solid #EFF0F6;
+  align-items: center;
+  padding-bottom: 1.6rem;
+}
+
+.table-header {
+  font-weight: bold;
+  margin-block: 1rem;
+}
+
+.table-header, .table-clients {
+  color: #3F3F55;
+  padding: 1.8rem 3.2rem;
+  border-bottom: 1px solid #EFF0F6;
+}
+
+.table-clients span {
+  font-size: 1.4rem;
+}
+
+.table-clients span, .table-header span {
+  width: 90px;
+}
+
+.btn-more {
+  font-family: 'Nunito', sans-serif;
+  text-decoration: underline;
+  color: var(--pink-normal);
+  cursor: pointer;
+}

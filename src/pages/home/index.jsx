@@ -1,21 +1,21 @@
-import { useState } from "react";
-import "./index.css";
-import ModalEditUser from "../../components/modalEdituser";
-import { Button } from "@mui/base";
+import { Grid } from "@mui/material";
+import TabPanel from "../../components/TabPanel";
+import "./styles.css";
+import { Route, Routes } from "react-router-dom";
+import SummaryCharges from "../../components/SummaryCharges";
+import colors from "../../style/colors";
 
 export default function Home() {
-  const [openModalEditUser, setOpenModaEditUser] = useState(false);
-
   return (
-    <>
-      <h1>Home</h1>
-      <Button onClick={() => setOpenModaEditUser(true)}>Abrir</Button>
-      {openModalEditUser && (
-        <ModalEditUser
-          setOpenModaEditUser={setOpenModaEditUser}
-          openModalEditUser={openModalEditUser}
-        />
-      )}
-    </>
+    <Grid sx={{ background: colors.Grey.h }} container>
+      <Grid item xs={1}>
+        <TabPanel />
+      </Grid>
+      <Routes>
+        <Route path="/" element={<SummaryCharges />} />
+        <Route path="clientes" element={<SummaryCharges />} />
+        <Route path="cobranca" />
+      </Routes>
+    </Grid>
   );
 }
