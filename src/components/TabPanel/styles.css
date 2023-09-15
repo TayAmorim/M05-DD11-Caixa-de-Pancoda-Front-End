@@ -1,4 +1,6 @@
 .container-tabs {
+  width: 108px;
+  position: fixed;
   display: flex;
   flex-direction: column;
   gap: 6rem;
