@@ -1,13 +1,15 @@
 import * as React from "react";
+import { useState } from "react";
 import { styled, alpha } from "@mui/material/styles";
 import Button from "@mui/material/Button";
 import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
-import EditIcon from "@mui/icons-material/Edit";
-import FileCopyIcon from "@mui/icons-material/FileCopy";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import colors from "../../style/colors";
 import { Stack } from "@mui/material";
+import editIcon from '../../assets/editIcon.svg'
+import logOut from '../../assets/logOut.svg'
+import { useNavigate } from 'react-router-dom'
 
 const StyledMenu = styled((props) => (
   <Menu
@@ -53,6 +55,7 @@ const StyledMenu = styled((props) => (
 }));
 
 export default function NavMenu() {
+  const navigate = useNavigate()
   const [anchorEl, setAnchorEl] = React.useState(null);
   const open = Boolean(anchorEl);
   const handleClick = (event) => {
@@ -61,6 +64,11 @@ export default function NavMenu() {
   const handleClose = () => {
     setAnchorEl(null);
   };
+
+  const logOutFunction = () => {
+    localStorage.removeItem('token')
+    navigate('/')
+  }
 
   return (
     <div>
@@ -97,12 +105,16 @@ export default function NavMenu() {
               display: "flex",
               flexDirection: "column",
               justifyContent: "center",
+              height: '90%'
             }}
             onClick={handleClose}
             disableRipple
           >
-            <EditIcon />
-            Editar
+            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
+              <img style={{marginBottom: '0.6rem'}} src={editIcon} alt="Edit Icon" />
+              Editar
+            </div>
+
           </MenuItem>
           <MenuItem
             sx={{
@@ -111,14 +123,16 @@ export default function NavMenu() {
               justifyContent: "center",
               gap: "3px",
             }}
-            onClick={handleClose}
+            onClick={() => {handleClose(); logOutFunction()}}
             disableRipple
           >
-            <FileCopyIcon />
-            Sair
+            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
+              <img src={logOut} alt="Logout Icon" />
+              Sair
+            </div>
           </MenuItem>
         </Stack>
       </StyledMenu>
-    </div>
+    </div >
   );
 }
