@@ -1,14 +1,15 @@
-import { useContext, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import validator from 'validator'
 import { useNavigate } from 'react-router-dom'
 import { Box, TextField, Button, Stack, Link } from '@mui/material';
 import { AuthContext } from '../../context/myContext.jsx'
 
+
 export default function SignUpComponent({ setPagePassword }) {
     const navigate = useNavigate()
     const {nome, setNome, email, setEmail, alert, setAlert} = useContext(AuthContext)
 
-    const handleSignup = () => {
+    const handleSignup = async() => {
 
         if (!nome) {
             return setAlert('Nome é um campo obrigátorio!')
@@ -22,8 +23,8 @@ export default function SignUpComponent({ setPagePassword }) {
         }
         setPagePassword(true)
         setAlert('')
-    }
 
+    }
     return (
         <Box
             component="form"
@@ -32,7 +33,6 @@ export default function SignUpComponent({ setPagePassword }) {
                 flexDirection: 'column',
                 alignItems: 'center',
                 justifyContent: 'center',
-                gap: '2rem',
                 '& > :not(style)': {
                     m: 0,
                     width: '36.8rem',
