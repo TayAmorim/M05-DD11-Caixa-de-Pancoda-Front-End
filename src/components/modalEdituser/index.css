@@ -1,4 +1,5 @@
 .container-modalEditUser {
+    top: 0;
     position: fixed;
     display: flex;
     align-items: center;
