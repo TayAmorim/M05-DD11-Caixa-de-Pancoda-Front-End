@@ -34,11 +34,11 @@ export default function SignUpComponentPassword({ setSucess }) {
         }
         try {
             const response = await api.post('/users', { name, email, password })
-            setAlert(response.data.message)
+            setAlert(String(response.data.mensagem));
             setSucess(true)
 
         } catch (error) {
-            setAlert(error.response.data)
+            setAlert(String(error.response.data.mensagem));
         }
     }
         

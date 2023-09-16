@@ -30,7 +30,7 @@ export default function formLogin() {
         try {
             const response = await api.post('/login', { email, password })
             localStorage.setItem('token', response.data.token)
-            setAlert(response.data.message)
+            setAlert(String(response.data.mensagem));
             navigate('/')
 
             toast.success('Login efetuado com sucesso!', {

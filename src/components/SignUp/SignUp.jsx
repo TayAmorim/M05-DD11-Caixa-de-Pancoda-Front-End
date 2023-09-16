@@ -82,7 +82,7 @@ export default function SignUpComponent({ setPagePassword }) {
             {alert && <span style={{ color: '#DA0175', width: '100%', left: '2rem', marginTop:'1rem'}}>{alert}</span>}
             </Box>
 
-            <div style={{marginTop: '8rem'}}>
+            <div style={{marginTop: '10rem'}}>
                 <Stack sx={{ width: '100%', display: 'flex', justifyContent: 'center' }} direction="row" spacing={2}>
                     <Button
                         sx={{
