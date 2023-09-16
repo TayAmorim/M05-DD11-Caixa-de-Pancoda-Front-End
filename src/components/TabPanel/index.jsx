@@ -8,15 +8,15 @@ import { NavLink } from "react-router-dom";
 export default function VerticalTabs() {
   return (
     <Box className="container-tabs">
-      <NavLink to="/home" className="button-tabs" end>
+      <NavLink to="/" className="button-tabs" end>
         <HomeSvg />
         Home
       </NavLink>
-      <NavLink to="/home/clientes" className="button-tabs">
+      <NavLink to="/clientes" className="button-tabs">
         <ClientsSvg />
         Clientes
       </NavLink>
-      <NavLink to="/home/cobranca" className="button-tabs">
+      <NavLink to="/cobranca" className="button-tabs">
         <BillingsSvg />
         Cobranças
       </NavLink>

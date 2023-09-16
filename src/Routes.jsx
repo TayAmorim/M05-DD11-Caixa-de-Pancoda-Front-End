@@ -10,9 +10,9 @@ export default function MyRoutes() {
     <>
       <ModalProvider>
         <Routes>
-          <Route path="/" element={<Login />} />
+          <Route path="/*" element={<Home />} />
           <Route path="sign-up" element={<SignUp />} />
-          <Route path="home/*" element={<Home />} />
+          <Route path="login" element={<Login />} />
 
           <Route path="*" element={<NotFoundPage />} />
         </Routes>
