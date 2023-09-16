@@ -5,27 +5,40 @@ import { Route, Routes } from "react-router-dom";
 import SummaryCharges from "../../components/SummaryCharges";
 import CustomerList from "../../components/CustomerList";
 import colors from "../../style/colors";
-import ModalEditCustomer from '../../components/modalEditCustomer/index'
-import { useState } from "react";
+import ModalEditCustomer from "../../components/modalEditCustomer/index";
+import { useContext, useState } from "react";
+
+import ModalEditUser from "../../components/modalEdituser";
+import { ModalContext } from "../../context/modalContext";
 
 export default function Home() {
-  const [openModalCustomer, setOpenModalCustomer] = useState(false)
+  const [openModalCustomer, setOpenModalCustomer] = useState(false);
+  const { OpenModalEditUser, setOpenModalEditUser } = useContext(ModalContext);
+
   return (
     <>
-    <Grid sx={{ background: colors.Grey.h, position:'relative' }} container>
-      <Grid item xs={1} >
-        <TabPanel />
-      </Grid>
+      <Grid sx={{ background: colors.Grey.h, position: "relative" }} container>
+        <Grid item xs={1}>
+          <TabPanel />
+        </Grid>
         <Routes>
           <Route path="/" element={<SummaryCharges />} />
-          <Route path="clientes" element={<CustomerList setOpenModalCustomer={setOpenModalCustomer} />} />
+          <Route
+            path="clientes"
+            element={
+              <CustomerList setOpenModalCustomer={setOpenModalCustomer} />
+            }
+          />
           <Route path="cobranca" />
         </Routes>
-        
-      {openModalCustomer && <ModalEditCustomer setOpenModalCustomer={setOpenModalCustomer}/> }
+        {OpenModalEditUser && (
+          <ModalEditUser setOpenModalEditUser={setOpenModalEditUser} />
+        )}
 
+        {openModalCustomer && (
+          <ModalEditCustomer setOpenModalCustomer={setOpenModalCustomer} />
+        )}
       </Grid>
-
-      </>
+    </>
   );
 }

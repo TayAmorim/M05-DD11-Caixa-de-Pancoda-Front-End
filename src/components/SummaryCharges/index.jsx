@@ -35,66 +35,72 @@ function SummaryCharges() {
             <NavMenu />
           </Stack>
         </Stack>
-        <Grid container sx={{ padding: "1.9rem  5.4rem" }} spacing={6}>
-          <Grid item xs={4}>
-            <div className="charge-card paid">
-              <PaidSvg />
-              <div className="charge-texts">
-                <h3>Cobrança Pagas</h3>
-                <h2>R$ 30.000</h2>
+        <div className="animation">
+          <Grid container sx={{ padding: "1.9rem  5.4rem" }} spacing={6}>
+            <Grid item xs={4}>
+              <div className="charge-card paid">
+                <PaidSvg />
+                <div className="charge-texts">
+                  <h3>Cobrança Pagas</h3>
+                  <h2>R$ 30.000</h2>
+                </div>
               </div>
-            </div>
-          </Grid>
-          <Grid item xs={4}>
-            <div className="charge-card expired">
-              <ExpiredSvg />
-              <div className="charge-texts">
-                <h3>Cobranças Vencidas</h3>
-                <h2>R$ 7.000</h2>
+            </Grid>
+            <Grid item xs={4}>
+              <div className="charge-card expired">
+                <ExpiredSvg />
+                <div className="charge-texts">
+                  <h3>Cobranças Vencidas</h3>
+                  <h2>R$ 7.000</h2>
+                </div>
               </div>
-            </div>
-          </Grid>
-          <Grid item xs={4}>
-            <div className="charge-card expected">
-              <Billings />
-              <div className="charge-texts">
-                <h3>Cobranças Previstas</h3>
-                <h2>R$ 10.000</h2>
+            </Grid>
+            <Grid item xs={4}>
+              <div className="charge-card expected">
+                <Billings />
+                <div className="charge-texts">
+                  <h3>Cobranças Previstas</h3>
+                  <h2>R$ 10.000</h2>
+                </div>
               </div>
-            </div>
+            </Grid>
           </Grid>
-        </Grid>
-        <Grid container sx={{ padding: "1.9rem  5.4rem" }} spacing={6}>
-          <Grid item xs={4}>
-            <TableCharge title="Cobranças Pagas" number="08" color="green" />
+          <Grid container sx={{ padding: "1.9rem  5.4rem" }} spacing={6}>
+            <Grid item xs={4}>
+              <TableCharge title="Cobranças Pagas" number="08" color="green" />
+            </Grid>
+            <Grid item xs={4}>
+              <TableCharge
+                title="Cobranças Vencidas"
+                number="05"
+                color="wine"
+              />
+            </Grid>
+            <Grid item xs={4}>
+              <TableCharge
+                title="Cobranças Previstas"
+                number="10"
+                color="yellow"
+              />
+            </Grid>
           </Grid>
-          <Grid item xs={4}>
-            <TableCharge title="Cobranças Vencidas" number="05" color="wine" />
+          <Grid container sx={{ padding: "1.9rem  5.4rem" }} spacing={6}>
+            <Grid item xs={6}>
+              <TableChargeClients
+                title="Clientes Inadimplentes"
+                number="08"
+                defaulter={true}
+              />
+            </Grid>
+            <Grid item xs={6}>
+              <TableChargeClients
+                title="Clientes em dia"
+                number="08"
+                defaulter={false}
+              />
+            </Grid>
           </Grid>
-          <Grid item xs={4}>
-            <TableCharge
-              title="Cobranças Previstas"
-              number="10"
-              color="yellow"
-            />
-          </Grid>
-        </Grid>
-        <Grid container sx={{ padding: "1.9rem  5.4rem" }} spacing={6}>
-          <Grid item xs={6}>
-            <TableChargeClients
-              title="Clientes Inadimplentes"
-              number="08"
-              defaulter={true}
-            />
-          </Grid>
-          <Grid item xs={6}>
-            <TableChargeClients
-              title="Clientes em dia"
-              number="08"
-              defaulter={false}
-            />
-          </Grid>
-        </Grid>
+        </div>
       </Grid>
     </>
   );
