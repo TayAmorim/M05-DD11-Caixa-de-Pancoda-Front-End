@@ -68,7 +68,7 @@ export default function NavMenu() {
 
   const logOutFunction = () => {
     localStorage.removeItem("token");
-    navigate("/");
+    navigate("/login");
   };
 
   function openModal() {

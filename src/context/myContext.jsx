@@ -4,8 +4,8 @@ const AuthContext = createContext();
 
 const AuthProvider = ({ children }) => {
   const [email, setEmail] = useState("");
-  const [senha, setSenha] = useState("");
-  const [nome, setNome] = useState("");
+  const [password, setPassword] = useState("");
+  const [name, setName] = useState("");
   const [alert, setAlert] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [paidValue, setPaidValue] = useState(0);
@@ -23,12 +23,12 @@ const AuthProvider = ({ children }) => {
       value={{
         email,
         setEmail,
-        senha,
-        setSenha,
+        password,
+        setPassword,
         alert,
         setAlert,
-        nome,
-        setNome,
+        name,
+        setName,
         confirmPassword,
         setConfirmPassword,
         paidValue,

@@ -5,11 +5,13 @@ import { Box, TextField, IconButton, Button, Stack, Link } from '@mui/material';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
 import { AuthContext } from '../../context/myContext.jsx'
+import {toast} from 'react-toastify'
+import 'react-toastify/dist/ReactToastify.css';
 
 export default function formLogin() {
     const navigate = useNavigate()
     const [showPassword, setShowPassword] = useState(false);
-    const { email, setEmail, senha, setSenha, alert, setAlert } = useContext(AuthContext)
+    const { email, setEmail, password, setPassword, alert, setAlert } = useContext(AuthContext)
 
     const handleTogglePassword = () => {
         setShowPassword((prevShowPassword) => !prevShowPassword);
@@ -21,17 +23,39 @@ export default function formLogin() {
             setAlert('Email é um campo obrigátorio')
             return
         }
-        if (!senha) {
+        if (!password) {
             setAlert('Senha é um campo obrigatório')
             return
         }
         try {
-            const response = await api.post('/login', { email, senha })
+            const response = await api.post('/login', { email, password })
             localStorage.setItem('token', response.data.token)
             setAlert(response.data.message)
-            navigate('/main')
+            navigate('/')
+
+            toast.success('Login efetuado com sucesso!', {
+                position: "bottom-right",
+                autoClose: 5000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: "colored",
+                });
+
         } catch (error) {
-            setAlert(error.response.data)
+            toast.error('Ops! Algo deu errado!', {
+                position: "bottom-right",
+                autoClose: 5000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: "colored",
+                });
+            setAlert(String(error.response.data.mensagem));
         }
     }
 
@@ -65,7 +89,7 @@ export default function formLogin() {
             <Box  sx={{ display: 'flex', flexDirection: 'column' }}>
                 <label style={{ fontFamily: 'Nunito', color: '#344054', fontWeight: '500' }}>Senha*</label>
                 <TextField id="outlined-basic" variant="outlined" type={showPassword ? 'text' : 'password'} placeholder='Digite sua senha'
-                    value={senha} name='senha' onChange={(event) => setSenha(event.target.value)}
+                    value={password} name='password' onChange={(event) => setPassword(event.target.value)}
                     InputProps={{
                         style: { fontSize: '1.6rem', color: '#343447', borderRadius: '.8rem', width:'35.5rem', height: '4.5rem' },
                         endAdornment: (
