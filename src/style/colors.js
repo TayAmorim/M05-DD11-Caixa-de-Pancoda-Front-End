@@ -16,7 +16,7 @@ const colors = {
   },
   Yellow: {
     normal: "#C5A605",
-    light: "#FCF6DC",
+    light: "#FCF6DC", 
     dimmed: "#E3DEC8",
   },
   GreenSupport: {

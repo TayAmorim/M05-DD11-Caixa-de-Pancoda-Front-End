@@ -52,7 +52,7 @@ const BootstrapInput = styled(InputBase)(({ theme }) => ({
     },
 }));
 
-export default function modalEditUser({ setOpenModaEditUser, openModalEditUser, shareData }) {
+export default function modalEditUser({ setOpenModalEditUser}) {
     const [showPassword, setShowPassword] = useState(false);
     const [alert, setAlert] = useState('')
     const [name, setName] = useState('')
@@ -80,7 +80,7 @@ export default function modalEditUser({ setOpenModaEditUser, openModalEditUser, 
         <div className='container-modalEditUser'>
             <div className='box-modalEditUser'>
                 <div className='closeIcon-box'>
-                    <img onClick={() => setOpenModaEditUser(false)} src={closeIcon} alt="Close Icon" />
+                    <img onClick={() => setOpenModalEditUser(false)} src={closeIcon} alt="Close Icon" />
                 </div>
                 <h1>Edite o seu cadastro</h1>
 

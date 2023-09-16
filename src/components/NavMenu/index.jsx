@@ -1,5 +1,4 @@
 import * as React from "react";
-import { useState } from "react";
 import { styled, alpha } from "@mui/material/styles";
 import Button from "@mui/material/Button";
 import Menu from "@mui/material/Menu";
@@ -7,9 +6,10 @@ import MenuItem from "@mui/material/MenuItem";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import colors from "../../style/colors";
 import { Stack } from "@mui/material";
-import editIcon from '../../assets/editIcon.svg'
-import logOut from '../../assets/logOut.svg'
-import { useNavigate } from 'react-router-dom'
+import editIcon from "../../assets/editIcon.svg";
+import logOut from "../../assets/logOut.svg";
+import { useNavigate } from "react-router-dom";
+import { ModalContext } from "../../context/modalContext";
 
 const StyledMenu = styled((props) => (
   <Menu
@@ -55,7 +55,8 @@ const StyledMenu = styled((props) => (
 }));
 
 export default function NavMenu() {
-  const navigate = useNavigate()
+  const { setOpenModalEditUser } = React.useContext(ModalContext);
+  const navigate = useNavigate();
   const [anchorEl, setAnchorEl] = React.useState(null);
   const open = Boolean(anchorEl);
   const handleClick = (event) => {
@@ -66,73 +67,104 @@ export default function NavMenu() {
   };
 
   const logOutFunction = () => {
-    localStorage.removeItem('token')
-    navigate('/')
+    localStorage.removeItem("token");
+    navigate("/");
+  };
+
+  function openModal() {
+    setOpenModalEditUser(true);
   }
 
   return (
-    <div>
-      <Button
-        sx={{
-          fontSize: "1.8rem",
-          textTransform: "capitalize",
-          fontWeight: "bold",
-          color: colors.Green.normal,
-        }}
-        id="demo-customized-button"
-        aria-controls={open ? "demo-customized-menu" : undefined}
-        aria-haspopup="true"
-        aria-expanded={open ? "true" : undefined}
-        variant="text"
-        disableElevation
-        onClick={handleClick}
-        endIcon={<KeyboardArrowDownIcon />}
-      >
-        Lorena
-      </Button>
-      <StyledMenu
-        id="demo-customized-menu"
-        MenuListProps={{
-          "aria-labelledby": "demo-customized-button",
-        }}
-        anchorEl={anchorEl}
-        open={open}
-        onClose={handleClose}
-      >
-        <Stack flexDirection="row" alignItems="center" justifyContent="center">
-          <MenuItem
-            sx={{
-              display: "flex",
-              flexDirection: "column",
-              justifyContent: "center",
-              height: '90%'
-            }}
-            onClick={handleClose}
-            disableRipple
+    <>
+      <div>
+        <Button
+          sx={{
+            fontSize: "1.8rem",
+            textTransform: "capitalize",
+            fontWeight: "bold",
+            color: colors.Green.normal,
+          }}
+          id="demo-customized-button"
+          aria-controls={open ? "demo-customized-menu" : undefined}
+          aria-haspopup="true"
+          aria-expanded={open ? "true" : undefined}
+          variant="text"
+          disableElevation
+          onClick={handleClick}
+          endIcon={<KeyboardArrowDownIcon />}
+        >
+          Lorena
+        </Button>
+        <StyledMenu
+          id="demo-customized-menu"
+          MenuListProps={{
+            "aria-labelledby": "demo-customized-button",
+          }}
+          anchorEl={anchorEl}
+          open={open}
+          onClose={handleClose}
+        >
+          <Stack
+            flexDirection="row"
+            alignItems="center"
+            justifyContent="center"
           >
-            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
-              <img style={{marginBottom: '0.6rem'}} src={editIcon} alt="Edit Icon" />
-              Editar
-            </div>
-
-          </MenuItem>
-          <MenuItem
-            sx={{
-              display: "flex",
-              flexDirection: "column",
-              justifyContent: "center",
-              gap: "3px",
-            }}
-            onClick={() => {handleClose(); logOutFunction()}}
-            disableRipple
-          >
-            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
-              <img src={logOut} alt="Logout Icon" />
-              Sair
-            </div>
-          </MenuItem>
-        </Stack>
-      </StyledMenu>
-    </div >
+            <MenuItem
+              sx={{
+                display: "flex",
+                flexDirection: "column",
+                justifyContent: "center",
+                height: "90%",
+              }}
+              onClick={handleClose}
+              disableRipple
+            >
+              <div
+                style={{
+                  display: "flex",
+                  flexDirection: "column",
+                  alignItems: "center",
+                  justifyContent: "center",
+                }}
+                onClick={openModal}
+              >
+                <img
+                  style={{ marginBottom: "0.6rem" }}
+                  src={editIcon}
+                  alt="Edit Icon"
+                />
+                Editar
+              </div>
+            </MenuItem>
+            <MenuItem
+              sx={{
+                display: "flex",
+                flexDirection: "column",
+                justifyContent: "center",
+                gap: "3px",
+              }}
+              onClick={() => {
+                handleClose();
+                logOutFunction();
+              }}
+              disableRipple
+            >
+              <div
+                style={{
+                  display: "flex",
+                  flexDirection: "column",
+                  alignItems: "center",
+                  justifyContent: "center",
+                }}
+              >
+                <img src={logOut} alt="Logout Icon" />
+                Sair
+              </div>
+            </MenuItem>
+          </Stack>
+        </StyledMenu>
+      </div>
+    </>
   );
 }
