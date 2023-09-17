@@ -7,8 +7,20 @@ import { ReactComponent as Billings } from "../../assets/billingYellow.svg";
 import "./styles.css";
 import TableCharge from "../TableCharges";
 import TableChargeClients from "../TableChargesClients";
+import { useContext } from "react";
+import { AuthContext } from "../../context/myContext";
 
 function SummaryCharges() {
+  const{userData} = useContext(AuthContext)
+  const nameUser = userData.name.split(" ");
+  let firstLetter = "";
+  if (nameUser.length === 2 || nameUser.length > 2) {
+    for (let name of nameUser) {
+      firstLetter += name[0];
+    }
+  } else if (nameUser.length === 1) {
+    firstLetter = nameUser[0][0];
+  }
   return (
     <>
       <Grid item xs={11}>
@@ -26,11 +38,12 @@ function SummaryCharges() {
             <Avatar
               sx={{
                 bgcolor: colors.Grey.f,
-                color: colors.Green.dark,
-                fontSize: "2.2rem",
+                color: colors.Green.normal,
+                fontSize: "2rem",
+                fontFamily: "Nunito",
               }}
             >
-              L
+              {firstLetter.slice(0, 2)}
             </Avatar>
             <NavMenu />
           </Stack>

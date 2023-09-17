@@ -7,11 +7,11 @@ import { AuthContext } from '../../context/myContext.jsx'
 
 export default function SignUpComponent({ setPagePassword }) {
     const navigate = useNavigate()
-    const {nome, setNome, email, setEmail, alert, setAlert} = useContext(AuthContext)
+    const {name, setName, email, setEmail, alert, setAlert} = useContext(AuthContext)
 
     const handleSignup = async() => {
 
-        if (!nome) {
+        if (!name) {
             return setAlert('Nome é um campo obrigátorio!')
         }
         if (!email) {
@@ -50,9 +50,9 @@ export default function SignUpComponent({ setPagePassword }) {
                     variant="outlined"
                     type="text"
                     required
-                    value={nome}
-                    onChange={(event) => setNome(event.target.value)}
-                    name="nome"
+                    value={name}
+                    onChange={(event) => setName(event.target.value)}
+                    name="name"
                     InputProps={{
                         style: { fontSize: '1.6rem', color: '#343447', borderRadius: '.8rem', height: '4.5rem', width:'35.5rem' },
                     }}
@@ -82,7 +82,7 @@ export default function SignUpComponent({ setPagePassword }) {
             {alert && <span style={{ color: '#DA0175', width: '100%', left: '2rem', marginTop:'1rem'}}>{alert}</span>}
             </Box>
 
-            <div style={{marginTop: '8rem'}}>
+            <div style={{marginTop: '10rem'}}>
                 <Stack sx={{ width: '100%', display: 'flex', justifyContent: 'center' }} direction="row" spacing={2}>
                     <Button
                         sx={{
