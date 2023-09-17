@@ -5,6 +5,10 @@ import { Box, TextField, Button, Stack } from "@mui/material";
 import { useState } from "react";
 import api from "../../api/api";
 
+
+import {  toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+
 export default function modalEditCustomer({ setOpenModalCustomer }) {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
@@ -20,6 +24,7 @@ export default function modalEditCustomer({ setOpenModalCustomer }) {
   const [alertEmail, setAlertEmail] = useState("");
   const [alertCpf, setAlertCpf] = useState("");
   const [alertPhone, setAlertPhone] = useState("");
+
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -50,7 +55,29 @@ export default function modalEditCustomer({ setOpenModalCustomer }) {
 
     try {
       await api.post("clients", newClient);
+
+      toast.success('Cliente adicionado com sucesso!', {
+        position: "bottom-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "colored",
+        });
+        setOpenModalCustomer(false)
     } catch (error) {
+      toast.error('Ops! Algo deu errado.', {
+        position: "bottom-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "colored",
+        });
       console.log(error.message);
     }
   };
