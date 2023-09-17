@@ -5,6 +5,10 @@ import Home from "./pages/home/index";
 import NotFoundPage from "./pages/notFound";
 import { ModalProvider } from "./context/modalContext";
 
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+
+
 export default function MyRoutes() {
   return (
     <>
@@ -17,6 +21,19 @@ export default function MyRoutes() {
           <Route path="*" element={<NotFoundPage />} />
         </Routes>
       </ModalProvider>
+
+      <ToastContainer
+        position="bottom-right"
+        autoClose={5000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="colored"
+      />
     </>
   );
 }
