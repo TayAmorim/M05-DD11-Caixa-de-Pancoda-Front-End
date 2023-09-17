@@ -20,6 +20,7 @@ export default function modalEditCustomer({ setOpenModalCustomer }) {
   const [alertEmail, setAlertEmail] = useState("");
   const [alertCpf, setAlertCpf] = useState("");
   const [alertPhone, setAlertPhone] = useState("");
+  const [alertCep, setAlertCep] = useState("");
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -51,20 +52,35 @@ export default function modalEditCustomer({ setOpenModalCustomer }) {
     try {
       await api.post("clients", newClient);
     } catch (error) {
-      console.log(error.message);
+      console.log(error);
     }
   };
 
   const getAddress = async (cep) => {
-    try {
-      const responseCep = await fetch(`https://viacep.com.br/ws/${cep}/json/`);
-      const dataCep = await responseCep.json();
-      setAddress(dataCep.logradouro);
-      setCity(dataCep.localidade);
-      setState(dataCep.uf);
-      setNeighborhood(dataCep.bairro);
-    } catch (error) {
-      console.log(error.message);
+    if (cep.length == 8) {
+      try {
+        const responseCep = await fetch(
+          `https://viacep.com.br/ws/${cep}/json/`
+        );
+        const dataCep = await responseCep.json();
+        if (dataCep.erro) {
+          setAddress("");
+          setCity("");
+          setState("");
+          setNeighborhood("");
+          setAlertCep("Cep inválido");
+        } else {
+          setAddress(dataCep.logradouro);
+          setCity(dataCep.localidade);
+          setState(dataCep.uf);
+          setNeighborhood(dataCep.bairro);
+          setAlertCep("");
+        }
+      } catch (error) {
+        setAlertCep(`${error}`);
+      }
+    } else {
+      setAlertCep("O cep precisa ter 8 números");
     }
   };
 
@@ -79,6 +95,7 @@ export default function modalEditCustomer({ setOpenModalCustomer }) {
     setNeighborhood("");
     setCity("");
     setState("");
+    setAlertCep("");
   };
 
   return (
@@ -391,8 +408,10 @@ export default function modalEditCustomer({ setOpenModalCustomer }) {
                         transform: "none",
                         height: "3.8rem",
                       },
+                      className: alertCep ? "redOutline" : "",
                     }}
                   />
+                  {alertCep && <span>{alertCep}</span>}
                 </Box>
 
                 <Box sx={{ display: "flex", flexDirection: "column" }}>
@@ -509,8 +528,7 @@ export default function modalEditCustomer({ setOpenModalCustomer }) {
                   />
                 </Box>
               </div>
-
-              <div style={{ marginTop: "3rem" }}>
+              <div style={{ marginTop: "3rem", alignItems: "center" }}>
                 <Stack
                   sx={{
                     width: "100%",
