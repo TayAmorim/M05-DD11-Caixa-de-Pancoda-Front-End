@@ -9,13 +9,13 @@ import TableCharge from "../TableCharges";
 import TableChargeClients from "../TableChargesClients";
 
 function SummaryCharges() {
-  const nameUser = localStorage.getItem('name').split(' ')
-  let firstLetter = ''
-  if (nameUser.length === 2 ||nameUser.length > 2 ) {
+  const nameUser = localStorage.getItem("name").split(" ");
+  let firstLetter = "";
+  if (nameUser.length === 2 || nameUser.length > 2) {
     for (let name of nameUser) {
       firstLetter += name[0];
     }
-  } else if (nameUser.length === 1 ) {
+  } else if (nameUser.length === 1) {
     firstLetter = nameUser[0][0];
   }
   return (
@@ -37,7 +37,7 @@ function SummaryCharges() {
                 bgcolor: colors.Grey.f,
                 color: colors.Green.normal,
                 fontSize: "2rem",
-                fontFamily: "Nunito"
+                fontFamily: "Nunito",
               }}
             >
               {firstLetter.slice(0, 2)}

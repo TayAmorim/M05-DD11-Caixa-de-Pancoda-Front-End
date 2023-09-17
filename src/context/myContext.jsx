@@ -15,7 +15,7 @@ const AuthProvider = ({ children }) => {
   const [pendingClient, setPendingClient] = useState([]);
   const [expiredClient, setExpiredClient] = useState([]);
   const [shareDataBillings, setShareDataBillings] = useState([]);
-  const [data, setData] = useState([]);
+  const [userData, setUserData] = useState([]);
   const [idDelete, setIdDelete] = useState("");
 
   return (
@@ -47,8 +47,8 @@ const AuthProvider = ({ children }) => {
         setShareDataBillings,
         idDelete,
         setIdDelete,
-        data,
-        setData,
+        userData,
+        setUserData,
       }}
     >
       {children}

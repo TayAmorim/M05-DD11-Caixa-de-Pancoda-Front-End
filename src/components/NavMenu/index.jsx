@@ -10,6 +10,7 @@ import editIcon from "../../assets/editIcon.svg";
 import logOut from "../../assets/logOut.svg";
 import { useNavigate } from "react-router-dom";
 import { ModalContext } from "../../context/modalContext";
+import { AuthContext } from "../../context/myContext";
 
 const StyledMenu = styled((props) => (
   <Menu
@@ -56,8 +57,9 @@ const StyledMenu = styled((props) => (
 
 export default function NavMenu() {
   const { setOpenModalEditUser } = React.useContext(ModalContext);
+  const { userData } = React.useContext(AuthContext);
   const navigate = useNavigate();
-  const nameUser = localStorage.getItem("name")
+  const nameUser = userData.name;
   const [anchorEl, setAnchorEl] = React.useState(null);
   const open = Boolean(anchorEl);
   const handleClick = (event) => {
@@ -69,7 +71,7 @@ export default function NavMenu() {
 
   const logOutFunction = () => {
     localStorage.removeItem("token");
-    localStorage.removeItem("name")
+
     navigate("/login");
   };
 
@@ -96,7 +98,7 @@ export default function NavMenu() {
           onClick={handleClick}
           endIcon={<KeyboardArrowDownIcon />}
         >
-          {nameUser.length > 7 ? nameUser.slice(0, 7) + '...' : nameUser}
+          {nameUser.length > 7 ? nameUser.slice(0, 7) + "..." : nameUser}
         </Button>
         <StyledMenu
           id="demo-customized-menu"
