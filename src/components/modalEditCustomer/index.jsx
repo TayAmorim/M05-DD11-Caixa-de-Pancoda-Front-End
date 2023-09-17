@@ -67,7 +67,7 @@ export default function modalEditCustomer({ setOpenModalCustomer }) {
       });
       setOpenModalCustomer(false);
     } catch (error) {
-      toast.error("Ops! Algo deu errado.", {
+      toast.error(`${error.response.data.mensagem}`, {
         position: "bottom-right",
         autoClose: 5000,
         hideProgressBar: false,
