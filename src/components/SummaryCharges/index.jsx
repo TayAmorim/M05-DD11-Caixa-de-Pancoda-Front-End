@@ -7,9 +7,12 @@ import { ReactComponent as Billings } from "../../assets/billingYellow.svg";
 import "./styles.css";
 import TableCharge from "../TableCharges";
 import TableChargeClients from "../TableChargesClients";
+import { useContext } from "react";
+import { AuthContext } from "../../context/myContext";
 
 function SummaryCharges() {
-  const nameUser = localStorage.getItem("name").split(" ");
+  const{userData} = useContext(AuthContext)
+  const nameUser = userData.name.split(" ");
   let firstLetter = "";
   if (nameUser.length === 2 || nameUser.length > 2) {
     for (let name of nameUser) {

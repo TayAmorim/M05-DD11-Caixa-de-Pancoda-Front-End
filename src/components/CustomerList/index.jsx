@@ -15,9 +15,12 @@ import clients from "../../assets/clients.svg";
 import searchControler from "../../assets/customersSettings.svg";
 import sortIconHeaders from "../../assets/sortIconHeaders.svg";
 import addBilling from "../../assets/addBilling.svg";
+import { useContext } from "react";
+import { AuthContext } from "../../context/myContext";
 
 export default function CustomerList({ setOpenModalCustomer }) {
-  const nameUser = localStorage.getItem("name").split(" ");
+  const {userData} = useContext(AuthContext)
+  const nameUser = userData.name.split(" ");
   let firstLetter = "";
   if (nameUser.length === 2 || nameUser.length > 2) {
     for (let name of nameUser) {
