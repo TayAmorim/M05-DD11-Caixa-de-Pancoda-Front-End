@@ -68,6 +68,7 @@ export default function NavMenu() {
 
   const logOutFunction = () => {
     localStorage.removeItem("token");
+    localStorage.removeItem("name")
     navigate("/login");
   };
 
@@ -94,7 +95,7 @@ export default function NavMenu() {
           onClick={handleClick}
           endIcon={<KeyboardArrowDownIcon />}
         >
-          Lorena
+          {localStorage.getItem('name')}
         </Button>
         <StyledMenu
           id="demo-customized-menu"

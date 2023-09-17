@@ -9,6 +9,7 @@ import sortIconHeaders from '../../assets/sortIconHeaders.svg'
 import addBilling from '../../assets/addBilling.svg'
 
 export default function CustomerList({setOpenModalCustomer}) {
+    const firstLetter = localStorage.getItem('name').slice(0,1)
     return (
         <>
             <Grid item xs={11}>
@@ -30,7 +31,7 @@ export default function CustomerList({setOpenModalCustomer}) {
                                 fontSize: "2.2rem",
                             }}
                         >
-                            L
+                            {firstLetter}
                         </Avatar>
                         <NavMenu />
                     </Stack>

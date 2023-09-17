@@ -11,7 +11,7 @@ import 'react-toastify/dist/ReactToastify.css';
 export default function formLogin() {
     const navigate = useNavigate()
     const [showPassword, setShowPassword] = useState(false);
-    const { email, setEmail, password, setPassword, alert, setAlert } = useContext(AuthContext)
+    const { email, setEmail, password, setPassword, alert, setAlert, setData, data } = useContext(AuthContext)
 
     const handleTogglePassword = () => {
         setShowPassword((prevShowPassword) => !prevShowPassword);
@@ -30,6 +30,7 @@ export default function formLogin() {
         try {
             const response = await api.post('/login', { email, password })
             localStorage.setItem('token', response.data.token)
+            localStorage.setItem('name', response.data.user.name)
             setAlert(String(response.data.mensagem));
             navigate('/')
 

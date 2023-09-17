@@ -9,6 +9,7 @@ import TableCharge from "../TableCharges";
 import TableChargeClients from "../TableChargesClients";
 
 function SummaryCharges() {
+  const firstLetter = localStorage.getItem('name').slice(0,1)
   return (
     <>
       <Grid item xs={11}>
@@ -30,7 +31,7 @@ function SummaryCharges() {
                 fontSize: "2.2rem",
               }}
             >
-              L
+              {firstLetter}
             </Avatar>
             <NavMenu />
           </Stack>
