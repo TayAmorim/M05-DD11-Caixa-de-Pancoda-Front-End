@@ -9,7 +9,15 @@ import sortIconHeaders from '../../assets/sortIconHeaders.svg'
 import addBilling from '../../assets/addBilling.svg'
 
 export default function CustomerList({setOpenModalCustomer}) {
-    const firstLetter = localStorage.getItem('name').slice(0,1)
+    const nameUser = localStorage.getItem('name').split(' ')
+    let firstLetter = ''
+    if (nameUser.length === 2 || nameUser.length > 2) {
+      for (let name of nameUser) {
+        firstLetter += name[0];
+      }
+    } else if (nameUser.length === 1  ) {
+      firstLetter = nameUser[0][0];
+    }
     return (
         <>
             <Grid item xs={11}>
@@ -27,11 +35,12 @@ export default function CustomerList({setOpenModalCustomer}) {
                         <Avatar
                             sx={{
                                 bgcolor: colors.Grey.f,
-                                color: colors.Green.dark,
-                                fontSize: "2.2rem",
+                                color: colors.Green.normal,
+                                fontSize: "2rem",
+                                fontFamily: "Nunito"
                             }}
                         >
-                            {firstLetter}
+                            {firstLetter.slice(0, 2)}
                         </Avatar>
                         <NavMenu />
                     </Stack>

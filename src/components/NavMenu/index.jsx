@@ -57,6 +57,7 @@ const StyledMenu = styled((props) => (
 export default function NavMenu() {
   const { setOpenModalEditUser } = React.useContext(ModalContext);
   const navigate = useNavigate();
+  const nameUser = localStorage.getItem("name")
   const [anchorEl, setAnchorEl] = React.useState(null);
   const open = Boolean(anchorEl);
   const handleClick = (event) => {
@@ -95,7 +96,7 @@ export default function NavMenu() {
           onClick={handleClick}
           endIcon={<KeyboardArrowDownIcon />}
         >
-          {localStorage.getItem('name')}
+          {nameUser.length > 7 ? nameUser.slice(0, 7) + '...' : nameUser}
         </Button>
         <StyledMenu
           id="demo-customized-menu"
