@@ -11,6 +11,10 @@ import InputAdornment from '@mui/material/InputAdornment';
 import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import InputMask from 'react-input-mask';
+import { AuthContext } from "../../context/myContext.jsx";
+import { ModalContext } from '../../context/modalContext';
+
+
 
 const BootstrapInput = styled(InputBase)(({ theme }) => ({
     'label + &': {
@@ -52,29 +56,83 @@ const BootstrapInput = styled(InputBase)(({ theme }) => ({
     },
 }));
 
-export default function modalEditUser({ setOpenModalEditUser}) {
+export default function modalEditUser({ setOpenModalEditUser }) {
     const [showPassword, setShowPassword] = useState(false);
-    const [alert, setAlert] = useState('')
-    const [name, setName] = useState('')
-    const [email, setEmail] = useState('')
     const [cpf, setCpf] = useState('')
     const [phone, setPhone] = useState('')
     const [newPassword, setNewPassword] = useState('')
     const [confirmNewPassword, setConfirmNewPassword] = useState('')
+    const {
+        name,
+        setName,
+        email,
+        setEmail,
+        userData,
+        setUserData
+    } = useContext(AuthContext);
+    const { OpenModalEditUser } = useContext(ModalContext);
 
+    const [alert, setAlert] = useState();
+
+    const getUserData = async () => {
+        try {
+
+            const response = await api.get(`user/${userData.id}`);
+            setUserData(response.data.user);
+            setName(userData.name)
+            setEmail(userData.email)
+            setPhone(userData.phone)
+            setCpf(userData.cpf)
+
+        } catch (error) {
+            setAlert(String(error.response));
+        }
+    }
     const handleClickShowPassword = () => setShowPassword(!showPassword);
 
     const handleMouseDownPassword = (event) => {
         event.preventDefault();
     };
 
-    const handlePhoneChange = (event) => {
-        setPhone(event.target.value);
-    };
 
-    const handleCpfChange = (event) => {
-        setCpf(event.target.value);
-    };
+    const handleUpdateUser = async (event) => {
+        event.preventDefault()
+
+        if (!name) {
+            setAlert('Nome é um campo obrigatório')
+            return
+        }
+        if (!email) {
+            setAlert('Email é um campo obrigatório')
+            return
+        }
+        if (!newPassword) {
+            setAlert('Senha é um campo obrigátorio')
+            return
+        }
+        if (!confirmNewPassword) {
+            setAlert('Confirmar senha é um campo obrigatório')
+            return
+        }
+        if (newPassword !== confirmNewPassword) {
+            setAlert('As senhas não são compativeis')
+            return
+        }
+        try {
+            const password = newPassword
+            let editedCpf = cpf.replaceAll('.', "").replaceAll('-', "");
+            const response = await api.put(`updateUser`, { name, email, cpf: editedCpf, phone, password })
+            if (response.status == 204) {
+                setAlert('Usuário atualizado com sucesso!');
+            }
+
+        } catch (error) {
+            setAlert(String(error.response.data.mensagem));
+        }
+    }
+    useEffect(() => {
+        getUserData()
+    }, [OpenModalEditUser]);
 
     return (
         <div className='container-modalEditUser'>
@@ -96,6 +154,7 @@ export default function modalEditUser({ setOpenModalEditUser}) {
                         '& > :not(style)': { m: 0, width: '36.8rem', height: '4.4rem', position: 'relative' },
                     }}
                     autoComplete="off"
+                    onSubmit={handleUpdateUser}
                 >
                     <FormControl variant="standard" >
                         <InputLabel shrink htmlFor="bootstrap-input"
@@ -104,27 +163,27 @@ export default function modalEditUser({ setOpenModalEditUser}) {
                         >
                             Nome
                         </InputLabel>
-                        <BootstrapInput defaultValue={name}
-                            id="bootstrap-input"
+                        <BootstrapInput
+                            defaultValue={name}
                             placeholder='Digite o seu nome'
                             value={name}
-                            onChange={() => setName()}
-                            name='nome' />
+                            onChange={(event) => setName(event.target.value)}
+                            name='name'
+                        />
                     </FormControl>
                     <FormControl variant="standard" >
                         <InputLabel shrink htmlFor="bootstrap-input"
                             style={{ fontSize: '20px' }}
                             type='text' required
-
+                            name='email'
                         >
                             Email
                         </InputLabel>
                         <BootstrapInput
-                            id="bootstrap-input"
                             value={email}
-                            name='email'
+                            onChange={(event) => setEmail(event.target.value)}
                             placeholder='Digite o seu e-mail'
-                            onChange={() => setEmail()} />
+                        />
 
                     </FormControl>
 
@@ -144,11 +203,13 @@ export default function modalEditUser({ setOpenModalEditUser}) {
                             <InputMask
                                 mask="999.999.999-99"
                                 value={cpf}
-                                onChange={handleCpfChange}
+                                defaultValue={cpf}
+                                onChange={(event) => setCpf(event.target.value)}
                             >
                                 {() => (
                                     <BootstrapInput
-                                        id="bootstrap-input"
+                                        defaultValue={cpf}
+                                        value={cpf}
                                         name='cpf'
                                         type='tel'
                                         placeholder='Digite o seu cpf'
@@ -164,33 +225,32 @@ export default function modalEditUser({ setOpenModalEditUser}) {
                             <InputMask
                                 mask="(99) 99999-9999"
                                 value={phone}
-                                onChange={handlePhoneChange}
+                                onChange={(event) => setPhone(event.target.value)}
                             >
                                 {() => (
                                     <BootstrapInput
-                                        id="bootstrap-input"
+                                        defaultValue={phone}
                                         name='phone'
                                         type='tel'
+                                        value={phone}
                                         placeholder='Digite o seu telefone'
                                     />
                                 )}
                             </InputMask>
                         </FormControl>
-
                     </Box>
 
                     <FormControl variant="standard" >
                         <InputLabel shrink htmlFor="bootstrap-input"
                             style={{ fontSize: '20px' }}
                             type='text' required
-                            value={newPassword}
-                            name='newPassword'
-                            onChange={() => setNewPassword()}>
+                        >
                             Nova senha
                         </InputLabel>
-                        <BootstrapInput id="bootstrap-input"
+                        <BootstrapInput
                             endAdornment={<InputAdornment position="end">
                                 <IconButton
+                                    value={newPassword} name='newPassword'
                                     aria-label="toggle password visibility"
                                     onClick={handleClickShowPassword}
                                     onMouseDown={handleMouseDownPassword}
@@ -200,6 +260,8 @@ export default function modalEditUser({ setOpenModalEditUser}) {
                                     {showPassword ? <VisibilityOff /> : <Visibility />}
                                 </IconButton>
                             </InputAdornment>}
+                            value={newPassword}
+                            onChange={(event) => setNewPassword(event.target.value)}
                             type={showPassword ? 'text' : 'password'}
                         />
                     </FormControl>
@@ -208,11 +270,10 @@ export default function modalEditUser({ setOpenModalEditUser}) {
                         <InputLabel shrink htmlFor="bootstrap-input"
                             style={{ fontSize: '20px' }}
                             type='text' required
-                            value={confirmNewPassword} name='confirmNewPassword'
-                            onChange={() => setNewPassword()}>
+                        >
                             Confirmação senha
                         </InputLabel>
-                        <BootstrapInput id="bootstrap-input"
+                        <BootstrapInput
                             endAdornment={<InputAdornment position="end">
                                 <IconButton
                                     aria-label="toggle password visibility"
@@ -224,13 +285,16 @@ export default function modalEditUser({ setOpenModalEditUser}) {
                                     {showPassword ? <VisibilityOff /> : <Visibility />}
                                 </IconButton>
                             </InputAdornment>}
+                            value={confirmNewPassword} name='confirmNewPassword'
+                            onChange={(event) => setConfirmNewPassword(event.target.value)}
                             type={showPassword ? 'text' : 'password'}
                         />
                     </FormControl>
 
-                    {alert && <span>{alert}</span>}
+                    <Stack sx={{ width: '100%', display: 'flex', justifyContent: 'center', margin: '3rem', }}
+                        direction="row"
+                        spacing={2}>
 
-                    <Stack sx={{ width: '100%', display: 'flex', justifyContent: 'center', margin: '3rem', }} direction="row" spacing={2}>
                         <Button
                             sx={{
                                 width: '16rem',
@@ -243,12 +307,15 @@ export default function modalEditUser({ setOpenModalEditUser}) {
                                 fontSize: '1.4rem'
                             }}
                             variant="contained"
-                            type='button'
+                            type='submit'
                         >
                             Atualizar
                         </Button>
+
                     </Stack>
+
                 </Box>
+                {alert && <span style={{ color: '#DA0175', width: '100%', left: '2rem', marginTop: '1rem' }}>{alert}</span>}
             </div>
         </div >
     )
