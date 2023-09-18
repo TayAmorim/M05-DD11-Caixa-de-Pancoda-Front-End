@@ -1,4 +1,5 @@
 import * as React from "react";
+import { useContext } from "react";
 import { styled, alpha } from "@mui/material/styles";
 import Button from "@mui/material/Button";
 import Menu from "@mui/material/Menu";
@@ -10,6 +11,7 @@ import editIcon from "../../assets/editIcon.svg";
 import logOut from "../../assets/logOut.svg";
 import { useNavigate } from "react-router-dom";
 import { ModalContext } from "../../context/modalContext";
+import { AuthContext } from "../../context/myContext";
 
 const StyledMenu = styled((props) => (
   <Menu
@@ -60,6 +62,19 @@ export default function NavMenu() {
   const navigate = useNavigate();
   const [anchorEl, setAnchorEl] = React.useState(null);
   const open = Boolean(anchorEl);
+  const {
+    name,
+    setName,
+    email,
+    setEmail,
+    userData,
+    setUserData,
+    phone,
+    setPhone,
+    cpf,
+    setCpf,
+    setAlert
+  } = useContext(AuthContext);
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
   };
@@ -73,9 +88,21 @@ export default function NavMenu() {
 
     navigate("/login");
   };
+  const getUserData = async () => {
+    try {
+
+      const response = await api.get(`user/${userData.id}`);
+      setUserData(response.data.user);
+
+    } catch (error) {
+      setAlert(String(error.response));
+    }
+  }
 
   function openModal() {
+    getUserData()
     setOpenModalEditUser(true);
+
   }
 
   return (
@@ -97,7 +124,7 @@ export default function NavMenu() {
           onClick={handleClick}
           endIcon={<KeyboardArrowDownIcon />}
         >
-          {nameUser.length > 7 ? nameUser.slice(0, 7) + "..." : nameUser}
+          {userData.name}
         </Button>
         <StyledMenu
           id="demo-customized-menu"

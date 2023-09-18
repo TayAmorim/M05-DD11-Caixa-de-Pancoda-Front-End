@@ -74,20 +74,7 @@ export default function modalEditUser({ setOpenModalEditUser }) {
 
     const [alert, setAlert] = useState();
 
-    const getUserData = async () => {
-        try {
 
-            const response = await api.get(`user/${userData.id}`);
-            setUserData(response.data.user);
-            setName(userData.name)
-            setEmail(userData.email)
-            setPhone(userData.phone)
-            setCpf(userData.cpf)
-
-        } catch (error) {
-            setAlert(String(error.response));
-        }
-    }
     const handleClickShowPassword = () => setShowPassword(!showPassword);
 
     const handleMouseDownPassword = (event) => {
@@ -123,7 +110,10 @@ export default function modalEditUser({ setOpenModalEditUser }) {
             let editedCpf = cpf.replaceAll('.', "").replaceAll('-', "");
             const response = await api.put(`updateUser`, { name, email, cpf: editedCpf, phone, password })
             if (response.status == 204) {
+
                 setAlert('Usuário atualizado com sucesso!');
+                setUserData({ name, email, cpf: editedCpf, phone, password })
+                localStorage.setItem("name", response.data.user.name);
             }
 
         } catch (error) {
@@ -131,7 +121,10 @@ export default function modalEditUser({ setOpenModalEditUser }) {
         }
     }
     useEffect(() => {
-        getUserData()
+        setName(userData.name)
+        setEmail(userData.email)
+        setPhone(userData.phone)
+        setCpf(userData.cpf)
     }, [OpenModalEditUser]);
 
     return (
