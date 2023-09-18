@@ -39,6 +39,7 @@ export default function formLogin() {
       const response = await api.post("/login", { email, password });
       setUserData(response.data.user);
       localStorage.setItem("token", response.data.token);
+      localStorage.setItem("name", response.data.user.name);
       setAlert(String(response.data.mensagem));
       navigate("/");
 
