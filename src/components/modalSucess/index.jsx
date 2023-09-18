@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import { useContext } from "react";
 import checkIcon from "../../assets/check-icon.svg";
 import { Stack } from "@mui/material";
 import "./styles.css";
