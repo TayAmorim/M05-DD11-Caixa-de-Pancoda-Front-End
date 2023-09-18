@@ -1,0 +1,14 @@
+.container-success {
+  position: fixed;
+  width: 100vw;
+  height: 100vh;
+  margin: 0 auto;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: hsla(153, 4%, 59%, 0.3);
+}
+
+.box-success {
+  width: 600px !important;
+}

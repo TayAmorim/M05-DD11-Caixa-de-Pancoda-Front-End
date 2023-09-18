@@ -39,7 +39,7 @@ export default function formLogin() {
       const response = await api.post("/login", { email, password });
       setUserData(response.data.user);
       localStorage.setItem("token", response.data.token);
-      setAlert(String(response.data.mensagem));
+      localStorage.setItem("name", response.data.user.name);
       navigate("/");
 
       toast.success("Login efetuado com sucesso!", {
@@ -63,7 +63,7 @@ export default function formLogin() {
         progress: undefined,
         theme: "colored",
       });
-      setAlert(String(error.response.data.mensagem));
+      setAlert(String(error.response.mensagem));
     }
   };
 

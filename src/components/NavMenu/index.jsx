@@ -1,4 +1,5 @@
 import * as React from "react";
+import { useContext } from "react";
 import { styled, alpha } from "@mui/material/styles";
 import Button from "@mui/material/Button";
 import Menu from "@mui/material/Menu";
@@ -57,10 +58,24 @@ const StyledMenu = styled((props) => (
 
 export default function NavMenu() {
   const { setOpenModalEditUser } = React.useContext(ModalContext);
-  const { userData } = React.useContext(AuthContext);
+  const nameUser = localStorage.getItem("name").split(" ");
   const navigate = useNavigate();
   const [anchorEl, setAnchorEl] = React.useState(null);
   const open = Boolean(anchorEl);
+  const {
+    name,
+    setName,
+    email,
+    setEmail,
+    userData,
+    setUserData,
+    phone,
+    setPhone,
+    cpf,
+    setCpf,
+    setAlert,
+    setPassword
+  } = useContext(AuthContext);
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
   };
@@ -70,12 +85,28 @@ export default function NavMenu() {
 
   const logOutFunction = () => {
     localStorage.removeItem("token");
+    localStorage.removeItem("name");
+    setAlert('');
+    setEmail('');
+    setPassword('')
 
     navigate("/login");
   };
+  const getUserData = async () => {
+    try {
+
+      const response = await api.get(`user/${userData.id}`);
+      setUserData(response.data.user);
+
+    } catch (error) {
+      setAlert(String(error.response));
+    }
+  }
 
   function openModal() {
+    getUserData()
     setOpenModalEditUser(true);
+
   }
 
   return (
@@ -97,7 +128,7 @@ export default function NavMenu() {
           onClick={handleClick}
           endIcon={<KeyboardArrowDownIcon />}
         >
-          {userData.name.length > 7 ? userData.name.slice(0, 7) + "..." : userData.name}
+          {userData.name}
         </Button>
         <StyledMenu
           id="demo-customized-menu"
