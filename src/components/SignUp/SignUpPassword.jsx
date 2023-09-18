@@ -11,7 +11,7 @@ export default function SignUpComponentPassword({ setSucess }) {
     const navigate = useNavigate()
     const [showPassword, setShowPassword] = useState(false);
     const [confirmPassword, setConfirmPassword] = useState('')
-    const { nome, email, senha, setSenha, alert, setAlert } = useContext(AuthContext)
+    const { name, email, password, setPassword, alert, setAlert } = useContext(AuthContext)
 
     const handleTogglePassword = () => {
         setShowPassword((prevShowPassword) => !prevShowPassword);
@@ -20,7 +20,7 @@ export default function SignUpComponentPassword({ setSucess }) {
     const handleSignup = async (event) => {
         event.preventDefault()
 
-        if (!senha) {
+        if (!password) {
             setAlert('Senha é um campo obrigátorio')
             return
         }
@@ -28,17 +28,17 @@ export default function SignUpComponentPassword({ setSucess }) {
             setAlert('Confirmar senha é um campo obrigatório')
             return
         }
-        if (senha !== confirmPassword) {
+        if (password !== confirmPassword) {
             setAlert('As senhas não são compativeis')
             return
         }
         try {
-            const response = await api.post('/sign-up', { nome, email, senha })
-            setAlert(response.data.message)
+            const response = await api.post('/users', { name, email, password })
+            setAlert(String(response.data.mensagem));
             setSucess(true)
 
         } catch (error) {
-            setAlert(error.response.data)
+            setAlert(String(error.response.data.mensagem));
         }
     }
         
@@ -60,7 +60,7 @@ export default function SignUpComponentPassword({ setSucess }) {
             <Box sx={{ display: 'flex', flexDirection: 'column' }}>
                 <label style={{ fontFamily: 'Nunito', color: '#344054', fontWeight: '500' }}>Escolha uma senha*</label>
                 <TextField id="outlined-basic" variant="outlined" placeholder='******' type={showPassword ? 'text' : 'password'} required
-                    value={senha} name='senha' onChange={(event) => setSenha(event.target.value)}
+                    value={password} name='password' onChange={(event) => setPassword(event.target.value)}
                     InputProps={{
                         style: { fontSize: '1.6rem', color: '#343447', borderRadius: '.8rem', height: '4.5rem', lineHeight: '2rem', width:'35.5rem' },
                         endAdornment: (
@@ -114,7 +114,7 @@ export default function SignUpComponentPassword({ setSucess }) {
                     </Button>
                 </Stack>
                 <Box sx={{ width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', marginTop: '3rem', fontFamily: 'Nunito', fontWeight: '500' }}>
-                    Já tem uma conta? Faça seu <Link onClick={() => navigate('/')} sx={{
+                    Já tem uma conta? Faça seu <Link onClick={() => navigate('/login')} sx={{
                         color: '#DA0175', textDecorationColor: '#DA0175', cursor: 'pointer', marginLeft: '1rem'
                     }}>Login</Link>
                 </Box>

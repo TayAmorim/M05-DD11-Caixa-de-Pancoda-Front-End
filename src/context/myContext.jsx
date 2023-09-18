@@ -4,8 +4,8 @@ const AuthContext = createContext();
 
 const AuthProvider = ({ children }) => {
   const [email, setEmail] = useState("");
-  const [senha, setSenha] = useState("");
-  const [nome, setNome] = useState("");
+  const [password, setPassword] = useState("");
+  const [name, setName] = useState("");
   const [alert, setAlert] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [paidValue, setPaidValue] = useState(0);
@@ -15,7 +15,7 @@ const AuthProvider = ({ children }) => {
   const [pendingClient, setPendingClient] = useState([]);
   const [expiredClient, setExpiredClient] = useState([]);
   const [shareDataBillings, setShareDataBillings] = useState([]);
-  const [data, setData] = useState([]);
+  const [userData, setUserData] = useState([]);
   const [idDelete, setIdDelete] = useState("");
 
   return (
@@ -23,12 +23,12 @@ const AuthProvider = ({ children }) => {
       value={{
         email,
         setEmail,
-        senha,
-        setSenha,
+        password,
+        setPassword,
         alert,
         setAlert,
-        nome,
-        setNome,
+        name,
+        setName,
         confirmPassword,
         setConfirmPassword,
         paidValue,
@@ -47,8 +47,8 @@ const AuthProvider = ({ children }) => {
         setShareDataBillings,
         idDelete,
         setIdDelete,
-        data,
-        setData,
+        userData,
+        setUserData,
       }}
     >
       {children}

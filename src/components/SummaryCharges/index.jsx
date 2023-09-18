@@ -9,6 +9,7 @@ import TableCharge from "../TableCharges";
 import TableChargeClients from "../TableChargesClients";
 
 function SummaryCharges() {
+  const userStorage = JSON.parse(localStorage.getItem("user"));
   return (
     <>
       <Grid item xs={11}>
@@ -26,11 +27,12 @@ function SummaryCharges() {
             <Avatar
               sx={{
                 bgcolor: colors.Grey.f,
-                color: colors.Green.dark,
-                fontSize: "2.2rem",
+                color: colors.Green.normal,
+                fontSize: "2rem",
+                fontFamily: "Nunito",
               }}
             >
-              L
+              {userStorage.name[0]}
             </Avatar>
             <NavMenu />
           </Stack>
