@@ -66,6 +66,7 @@ export default function modalEditUser({ setOpenModalEditUser }) {
   const [alert, setAlert] = useState();
 
   const handleClickShowPassword = () => setShowPassword(!showPassword);
+  const userStorage = JSON.parse(localStorage.getItem("user"));
 
   const handleMouseDownPassword = (event) => {
     event.preventDefault();
@@ -109,6 +110,13 @@ export default function modalEditUser({ setOpenModalEditUser }) {
           phone,
           password,
         };
+        const userNotPassword = {
+          name: updateUser.name,
+          email: updateUser.email,
+          cpf: updateUser.cpf,
+          phone: updateUser.phone,
+        };
+        localStorage.setItem("user", JSON.stringify(userNotPassword));
       } else {
         updateUser = {
           name,
@@ -116,12 +124,15 @@ export default function modalEditUser({ setOpenModalEditUser }) {
           cpf: editedCpf,
           phone,
         };
+        localStorage.setItem("user", JSON.stringify(updateUser));
       }
 
       const response = await api.put(`updateUser`, updateUser);
+
       if (response.status == 204) {
         setAlert("Usuário atualizado com sucesso!");
         setUserData({ name, email, cpf: editedCpf, phone, password });
+
         setOpenModalEditUser(false);
         setSucess(true);
       }
@@ -130,10 +141,10 @@ export default function modalEditUser({ setOpenModalEditUser }) {
     }
   };
   useEffect(() => {
-    setName(userData.name);
-    setEmail(userData.email);
-    setPhone(userData.phone);
-    setCpf(userData.cpf);
+    setName(userStorage.name);
+    setEmail(userStorage.email);
+    setPhone(userStorage.phone);
+    setCpf(userStorage.cpf);
   }, [OpenModalEditUser, setSucess]);
 
   return (
@@ -351,24 +362,39 @@ export default function modalEditUser({ setOpenModalEditUser }) {
             direction="row"
             spacing={2}
           >
-            <Button
-              sx={{
-                width: "16rem",
-                height: "4rem",
-                borderRadius: ".8rem",
-                backgroundColor: "#DA0175",
-                "&:hover": {
-                  backgroundColor: "#790342",
-                },
-                fontSize: "1.4rem",
-              }}
-              variant="contained"
-              type="submit"
-            >
-              Atualizar
-            </Button>
+            <div style={{ marginTop: "1rem" }}>
+              <Button
+                sx={{
+                  width: "16rem",
+                  height: "4rem",
+                  borderRadius: ".8rem",
+                  backgroundColor: "#DA0175",
+
+                  "&:hover": {
+                    backgroundColor: "#790342",
+                  },
+                  fontSize: "1.4rem",
+                }}
+                variant="contained"
+                type="submit"
+              >
+                Atualizar
+              </Button>
+            </div>
           </Stack>
         </Box>
+        {alert && (
+          <span
+            style={{
+              color: "#DA0175",
+              width: "100%",
+              left: "2rem",
+              marginBlock: "2rem",
+            }}
+          >
+            {alert}
+          </span>
+        )}
       </div>
     </div>
   );
