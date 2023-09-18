@@ -86,10 +86,10 @@ export default function NavMenu() {
   const logOutFunction = () => {
     localStorage.removeItem("token");
     localStorage.removeItem("name");
+    localStorage.removeItem("user");
     setAlert("");
     setEmail("");
     setPassword("");
-
     navigate("/login");
   };
 
