@@ -73,7 +73,8 @@ export default function NavMenu() {
     setPhone,
     cpf,
     setCpf,
-    setAlert
+    setAlert,
+    setPassword
   } = useContext(AuthContext);
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
@@ -85,6 +86,9 @@ export default function NavMenu() {
   const logOutFunction = () => {
     localStorage.removeItem("token");
     localStorage.removeItem("name");
+    setAlert('');
+    setEmail('');
+    setPassword('')
 
     navigate("/login");
   };

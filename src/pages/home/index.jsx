@@ -13,7 +13,7 @@ import { ModalContext } from "../../context/modalContext";
 
 export default function Home() {
   const [openModalCustomer, setOpenModalCustomer] = useState(false);
-  const { OpenModalEditUser, setOpenModalEditUser } = useContext(ModalContext);
+  const { OpenModalEditUser, setOpenModalEditUser, sucess, setSucess } = useContext(ModalContext);
 
   return (
     <>
@@ -38,6 +38,7 @@ export default function Home() {
         {openModalCustomer && (
           <ModalEditCustomer setOpenModalCustomer={setOpenModalCustomer} />
         )}
+
       </Grid>
     </>
   );
