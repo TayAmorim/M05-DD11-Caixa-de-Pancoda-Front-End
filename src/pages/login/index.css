@@ -1,0 +1,43 @@
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@100;200;300;400;500;600&family=Nunito:wght@200;300;400;500;600;700&display=swap');
+.container-login{
+    display: flex;
+    width: 100vw;
+    height: 100vh;
+    background-color: #F8F8F9;
+    font-family: 'Montserrat', sans-serif;
+}
+.left-login-box{
+    display: flex;
+    justify-content: center;
+    width: 31vw;
+    height: 100%;
+    background-image: url('../../assets/backgroundLogin.png');
+    background-size: cover;
+}
+.left-login-box h3{
+    margin-top: 20rem;
+    text-align: center;
+    width: 38rem;
+    font-size: 2.4rem;
+    font-weight: 400;
+    color: #034A2A;
+}
+.login-area{
+    width: calc(100vw - 31vw);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.login-area h1{
+    font-size: 2.4rem;
+    font-weight: bold;
+    margin-bottom: 3rem;
+    color: #343447;
+}
+.box-inputs{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+

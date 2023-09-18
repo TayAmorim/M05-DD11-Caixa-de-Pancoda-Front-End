@@ -1,0 +1,50 @@
+.container-tabs {
+  width: 108px;
+  position: fixed;
+  display: flex;
+  flex-direction: column;
+  gap: 6rem;
+  padding-top: 5.4rem;
+  height: 100%;
+  background:  var(--grey-6);
+  box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25);
+}
+
+.button-tabs {
+  text-decoration: none;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  border: 2px solid transparent;
+  background: none;
+  cursor: pointer;
+  color: var(--grey-1);
+}
+
+.button-tabs.active {
+  color: var(--pink-normal);
+  border-right: 2px solid var(--pink-normal);
+}
+
+.button-tabs.active svg > * {
+  stroke: var(--pink-normal);
+};
+
+.animation {
+  width: 100%;
+  max-height: 90rem;
+  overflow-x: auto;
+  animation: slideFromRight .7s ease-in-out;
+}
+
+@keyframes slideFromRight {
+  0% {
+      transform: translateX(100%);
+      opacity: 0;
+  }
+  100% {
+      transform: translateX(0);
+      opacity: 1;
+  }
+}
