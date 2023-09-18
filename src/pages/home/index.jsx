@@ -1,7 +1,7 @@
-import { Grid } from "@mui/material";
+import { Button, Grid, Stack } from "@mui/material";
 import TabPanel from "../../components/TabPanel";
 import "./styles.css";
-import { Route, Routes } from "react-router-dom";
+import { Navigate, Route, Routes } from "react-router-dom";
 import SummaryCharges from "../../components/SummaryCharges";
 import CustomerList from "../../components/CustomerList";
 import colors from "../../style/colors";
@@ -10,10 +10,12 @@ import { useContext, useState } from "react";
 
 import ModalEditUser from "../../components/modalEdituser";
 import { ModalContext } from "../../context/modalContext";
+import ModalSucess from "../../components/modalSucess";
 
 export default function Home() {
   const [openModalCustomer, setOpenModalCustomer] = useState(false);
-  const { OpenModalEditUser, setOpenModalEditUser, sucess, setSucess } = useContext(ModalContext);
+  const { OpenModalEditUser, setOpenModalEditUser, sucess, setSucess } =
+    useContext(ModalContext);
 
   return (
     <>
@@ -39,6 +41,7 @@ export default function Home() {
           <ModalEditCustomer setOpenModalCustomer={setOpenModalCustomer} />
         )}
 
+        {sucess && <ModalSucess />}
       </Grid>
     </>
   );
