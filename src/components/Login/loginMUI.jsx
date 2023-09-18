@@ -40,6 +40,8 @@ export default function formLogin() {
       setUserData(response.data.user);
       localStorage.setItem("token", response.data.token);
       localStorage.setItem("name", response.data.user.name);
+      const objeto = JSON.stringify(response.data.user);
+      localStorage.setItem("user", objeto);
       navigate("/");
 
       toast.success("Login efetuado com sucesso!", {
@@ -63,7 +65,7 @@ export default function formLogin() {
         progress: undefined,
         theme: "colored",
       });
-      setAlert(String(error.response.mensagem));
+      setAlert(String(error.response.data.mensagem));
     }
   };
 

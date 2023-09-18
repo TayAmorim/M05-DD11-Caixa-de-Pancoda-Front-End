@@ -58,7 +58,7 @@ const StyledMenu = styled((props) => (
 
 export default function NavMenu() {
   const { setOpenModalEditUser } = React.useContext(ModalContext);
-  const nameUser = localStorage.getItem("name").split(" ");
+  const userStorage = JSON.parse(localStorage.getItem("user"));
   const navigate = useNavigate();
   const [anchorEl, setAnchorEl] = React.useState(null);
   const open = Boolean(anchorEl);
@@ -74,7 +74,7 @@ export default function NavMenu() {
     cpf,
     setCpf,
     setAlert,
-    setPassword
+    setPassword,
   } = useContext(AuthContext);
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
@@ -86,27 +86,21 @@ export default function NavMenu() {
   const logOutFunction = () => {
     localStorage.removeItem("token");
     localStorage.removeItem("name");
-    setAlert('');
-    setEmail('');
-    setPassword('')
+    setAlert("");
+    setEmail("");
+    setPassword("");
 
     navigate("/login");
   };
-  const getUserData = async () => {
-    try {
 
+  async function openModal() {
+    setOpenModalEditUser(true);
+    try {
       const response = await api.get(`user/${userData.id}`);
       setUserData(response.data.user);
-
     } catch (error) {
       setAlert(String(error.response));
     }
-  }
-
-  function openModal() {
-    getUserData()
-    setOpenModalEditUser(true);
-
   }
 
   return (
@@ -128,7 +122,7 @@ export default function NavMenu() {
           onClick={handleClick}
           endIcon={<KeyboardArrowDownIcon />}
         >
-          {userData.name}
+          {userStorage.name}
         </Button>
         <StyledMenu
           id="demo-customized-menu"
