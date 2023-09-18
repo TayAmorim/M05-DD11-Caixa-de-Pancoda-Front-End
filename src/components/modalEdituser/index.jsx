@@ -74,10 +74,10 @@ export default function modalEditUser({ setOpenModalEditUser }) {
         userData,
         setUserData
     } = useContext(AuthContext);
-    const { OpenModalEditUser, setSucess, sucess } = useContext(ModalContext);
+    const { OpenModalEditUser } = useContext(ModalContext);
 
     const [alert, setAlert] = useState();
-
+    const [sucess, setSucess] = useState(false);
 
     const handleClickShowPassword = () => setShowPassword(!showPassword);
 
@@ -137,7 +137,7 @@ export default function modalEditUser({ setOpenModalEditUser }) {
             if (response.status == 204) {
                 setAlert("Usuário atualizado com sucesso!");
                 setUserData({ name, email, cpf: editedCpf, phone, password });
-                setOpenModalEditUser(false);
+                localStorage.setItem("name", response.data.user.name);
                 setSucess(true);
             }
         } catch (error) {
@@ -149,7 +149,7 @@ export default function modalEditUser({ setOpenModalEditUser }) {
         setEmail(userData.email)
         setPhone(userData.phone)
         setCpf(userData.cpf)
-    }, [OpenModalEditUser, setSucess]);
+    }, [OpenModalEditUser]);
 
     return (
 
