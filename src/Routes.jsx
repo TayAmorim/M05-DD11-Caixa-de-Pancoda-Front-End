@@ -9,9 +9,6 @@ import LoginRoutes from "./components/LoginRoutes/LoginRoutes";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
-import { ToastContainer } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
-
 export default function MyRoutes() {
   return (
     <>
