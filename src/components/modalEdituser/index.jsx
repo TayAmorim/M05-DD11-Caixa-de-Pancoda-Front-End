@@ -113,11 +113,11 @@ export default function modalEditUser({ setOpenModalEditUser }) {
             .replaceAll("-", "")
             .replaceAll(" ", "")
         : "";
-      if (editedCpf.length > 1 && editedCpf.length < 11) {
-        setAlert("O cpf Precisa ter 11 caracteres");
+      if (cpf.length >= 1 && cpf.length < 11) {
+        setAlert("O cpf Precisa ter 11 numeros");
         return;
       }
-      if (phoneClearMask.length > 1 && phoneClearMask.length < 10) {
+      if (phone.length >= 1 && phone.length < 11) {
         setAlert("O phone Precisa ter de 10 a 11 numeros");
         return;
       }
