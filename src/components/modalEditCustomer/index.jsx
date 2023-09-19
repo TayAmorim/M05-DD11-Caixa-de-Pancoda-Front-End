@@ -39,6 +39,12 @@ export default function modalEditCustomer({ setOpenModalCustomer }) {
     if (!phone) {
       return setAlertPhone("Campo obrigatório");
     }
+    if (isNaN(cpf) || cpf.length < 11) {
+      return setAlertCpf("Formato de cpf Inválido");
+    }
+    if (isNaN(phone)) {
+      return setAlertPhone("Formato de Telefone Inválido");
+    }
     const newClient = {
       name_client: name,
       email_client: email,
@@ -254,6 +260,7 @@ export default function modalEditCustomer({ setOpenModalCustomer }) {
                   <TextField
                     id="outlined-basic"
                     variant="outlined"
+                    mask="999.999.999-99"
                     type="text"
                     placeholder="Digite o CPF"
                     value={cpf}
