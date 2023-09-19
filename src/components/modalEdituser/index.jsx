@@ -83,6 +83,7 @@ export default function modalEditUser({ setOpenModalEditUser }) {
       setAlert("Email é um campo obrigatório");
       return;
     }
+
     if (newPassword) {
       if (!newPassword) {
         setAlert("Senha é um campo obrigátorio");
@@ -100,7 +101,26 @@ export default function modalEditUser({ setOpenModalEditUser }) {
 
     try {
       const password = newPassword;
-      let editedCpf = cpf.replaceAll(".", "").replaceAll("-", "");
+      // TODO: trasnformar em regex
+      let editedCpf = cpf
+        ? cpf.replaceAll(".", "").replaceAll("-", "").replaceAll("_", "")
+        : "";
+      let phoneClearMask = phone
+        ? phone
+            .replaceAll("_", "")
+            .replaceAll("(", "")
+            .replaceAll(")", "")
+            .replaceAll("-", "")
+            .replaceAll(" ", "")
+        : "";
+      if (editedCpf.length > 1 && editedCpf.length < 11) {
+        setAlert("O cpf Precisa ter 11 caracteres");
+        return;
+      }
+      if (phoneClearMask.length > 1 && phoneClearMask.length < 10) {
+        setAlert("O phone Precisa ter de 10 a 11 numeros");
+        return;
+      }
       let updateUser;
       if (password) {
         updateUser = {
@@ -143,7 +163,7 @@ export default function modalEditUser({ setOpenModalEditUser }) {
   useEffect(() => {
     setName(userStorage.name);
     setEmail(userStorage.email);
-    setPhone(userStorage.phone);
+    setPhone(userStorage.phone ? userStorage.phone : "");
     setCpf(userStorage.cpf);
   }, [OpenModalEditUser, setSucess]);
 
