@@ -99,34 +99,44 @@ export default function modalEditUser({ setOpenModalEditUser }) {
       }
     }
 
-    try {
-      const password = newPassword;
-      // TODO: trasnformar em regex
+    if (cpf) {
       let editedCpf = cpf
         ? cpf.replaceAll(".", "").replaceAll("-", "").replaceAll("_", "")
         : "";
+      setCpf(editedCpf);
+      if (cpf.length !== 11) {
+        setAlert("Informe os 11 dígitos do cpf");
+        return;
+      }
+
+    }
+
+    if (phone) {
       let phoneClearMask = phone
         ? phone
-            .replaceAll("_", "")
-            .replaceAll("(", "")
-            .replaceAll(")", "")
-            .replaceAll("-", "")
-            .replaceAll(" ", "")
+          .replaceAll("_", "")
+          .replaceAll("(", "")
+          .replaceAll(")", "")
+          .replaceAll("-", "")
+          .replaceAll(" ", "")
         : "";
-      if (cpf.length >= 1 && cpf.length < 11) {
-        setAlert("O cpf Precisa ter 11 numeros");
+      setPhone(phoneClearMask);
+      if (phone.length < 10) {
+        setAlert("O número de telefone deve ter entre 10 e 11 dígitos");
         return;
       }
-      if (phone.length >= 1 && phone.length < 11) {
-        setAlert("O phone Precisa ter de 10 a 11 numeros");
-        return;
-      }
+
+    }
+
+    try {
+      const password = newPassword;
+
       let updateUser;
       if (password) {
         updateUser = {
           name,
           email,
-          cpf: editedCpf,
+          cpf,
           phone,
           password,
         };
@@ -141,9 +151,25 @@ export default function modalEditUser({ setOpenModalEditUser }) {
         updateUser = {
           name,
           email,
-          cpf: editedCpf,
+          cpf,
           phone,
         };
+        if (!cpf && !phone) {
+          if (userStorage.name == name && userStorage.email == email) {
+            setAlert("Nenhuma alteração de dados identificada");
+            return;
+          }
+
+          updateUser = {
+            name,
+            email
+          };
+        }
+
+        if (updateUser.name == userStorage.name && updateUser.email == userStorage.email && updateUser.cpf == userStorage.cpf && updateUser.phone == userStorage.phone) {
+          setAlert("Nenhuma alteração de dados identificada");
+          return;
+        }
         localStorage.setItem("user", JSON.stringify(updateUser));
       }
 
@@ -151,7 +177,7 @@ export default function modalEditUser({ setOpenModalEditUser }) {
 
       if (response.status == 204) {
         setAlert("Usuário atualizado com sucesso!");
-        setUserData({ name, email, cpf: editedCpf, phone, password });
+        setUserData({ name, email, cpf, phone, password });
 
         setOpenModalEditUser(false);
         setSucess(true);
