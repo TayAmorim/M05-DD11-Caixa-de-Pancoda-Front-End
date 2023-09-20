@@ -1,0 +1,47 @@
+.container-modal-delete{
+    position: fixed;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100vw;
+    height: 100vh;
+    background-color: #2525255c;
+}
+.box-info-delete{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    width: 40vw;
+    height: 55vh;
+    background-color: #fff;
+    border-radius: 3rem ;
+    box-shadow: 2px 2px 5px #2525256a;
+}
+.box-info-delete h3{
+    color: rgb(212, 138, 0);
+}
+.box-buttons{
+    margin-top: 2rem;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 3rem;
+}
+.btn-yes, .btn-no{
+    border: none;
+    border-radius: 1.5rem;
+    width: 10rem;
+    height: 3.5rem;
+    font-weight: bold;
+    cursor: pointer;
+}
+.btn-yes{
+    background-color: #EEF6F6;
+    color: #1FA7AF;
+}
+.btn-no{
+    background-color: #FFEFEF;
+    color: #971D1D;
+}

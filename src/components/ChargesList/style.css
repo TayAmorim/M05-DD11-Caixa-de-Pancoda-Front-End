@@ -1,0 +1,27 @@
+.charges{
+   justify-content: flex-end;
+}
+.charges-table ul{
+    grid-template-columns: repeat(8, 1fr);
+}
+.edit-delete{
+    display: flex;
+    gap: 2rem;
+}
+.edit-delete div{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+.edit-delete img{
+    cursor: pointer;
+}
+.edit-delete div span{
+    margin-top: .8rem;
+    font-size: 1rem;
+    cursor: pointer;
+}
+.edit-delete div:nth-child(2){
+    color: red;
+}

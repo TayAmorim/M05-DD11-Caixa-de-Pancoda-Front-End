@@ -16,7 +16,7 @@ import searchControler from "../../assets/customersSettings.svg";
 import sortIconHeaders from "../../assets/sortIconHeaders.svg";
 import addBilling from "../../assets/addBilling.svg";
 
-export default function CustomerList({ setOpenModalCustomer }) {
+export default function CustomerList({ setOpenModalCustomer, setOpenModalCreateCharges }) {
   const userStorage = JSON.parse(localStorage.getItem("user"));
   const nameUser = userStorage.name;
   const words = nameUser.split(' ');
@@ -173,108 +173,11 @@ export default function CustomerList({ setOpenModalCustomer }) {
                 <li>71 9 9462 8654</li>
                 <li className="expired-client">Inadimplente</li>
                 <li>
-                  <img src={addBilling} alt="Add Billing Icon" />
+                  <img onClick={() => setOpenModalCreateCharges(true)} src={addBilling} alt="Add Billing Icon" />
                 </li>
               </ul>
 
-              <ul>
-                <li>Cameron Williamson</li>
-                <li>054 365 255 87</li>
-                <li>cameronw@cubos.io</li>
-                <li>71 9 9462 8654</li>
-                <li className="expired-client">Inadimplente</li>
-                <li>
-                  <img src={addBilling} alt="Add Billing Icon" />
-                </li>
-              </ul>
-
-              <ul>
-                <li>Savannah Nguyen</li>
-                <li>054 365 255 87</li>
-                <li>snguyen@cubos.io</li>
-                <li>71 9 9462 8654</li>
-                <li className="expired-client">Inadimplente</li>
-                <li>
-                  <img src={addBilling} alt="Add Billing Icon" />
-                </li>
-              </ul>
-
-              <ul>
-                <li>Darlene Robertson</li>
-                <li>054 365 255 87</li>
-                <li>darlener@cubos.io</li>
-                <li>71 9 9462 8654</li>
-                <li className="expired-client">Inadimplente</li>
-                <li>
-                  <img src={addBilling} alt="Add Billing Icon" />
-                </li>
-              </ul>
-
-              <ul>
-                <li>Marvin McKinney</li>
-                <li>054 365 255 87</li>
-                <li>marvinm@cubos.io</li>
-                <li>71 9 9462 8654</li>
-                <li className="expired-client">Inadimplente</li>
-                <li>
-                  <img src={addBilling} alt="Add Billing Icon" />
-                </li>
-              </ul>
-
-              <ul>
-                <li>Sandra dos Santos</li>
-                <li>054 365 255 87</li>
-                <li>sandrasantos@cubos.io</li>
-                <li>71 9 9462 8654</li>
-                <li className="expired-client">Inadimplente</li>
-                <li>
-                  <img src={addBilling} alt="Add Billing Icon" />
-                </li>
-              </ul>
-
-              <ul>
-                <li>Cameron Williamson</li>
-                <li>054 365 255 87</li>
-                <li>cameronw@cubos.io</li>
-                <li>71 9 9462 8654</li>
-                <li className="up-to-date-client">Em dia</li>
-                <li>
-                  <img src={addBilling} alt="Add Billing Icon" />
-                </li>
-              </ul>
-
-              <ul>
-                <li>Savannah Nguyen</li>
-                <li>054 365 255 87</li>
-                <li>snguyen@cubos.io</li>
-                <li>71 9 9462 8654</li>
-                <li className="up-to-date-client">Em dia</li>
-                <li>
-                  <img src={addBilling} alt="Add Billing Icon" />
-                </li>
-              </ul>
-
-              <ul>
-                <li>Darlene Robertson</li>
-                <li>054 365 255 87</li>
-                <li>darlener@cubos.io</li>
-                <li>71 9 9462 8654</li>
-                <li className="up-to-date-client">Em dia</li>
-                <li>
-                  <img src={addBilling} alt="Add Billing Icon" />
-                </li>
-              </ul>
-
-              <ul>
-                <li>Marvin McKinney</li>
-                <li>054 365 255 87</li>
-                <li>marvinm@cubos.io</li>
-                <li>71 9 9462 8654</li>
-                <li className="up-to-date-client">Em dia</li>
-                <li>
-                  <img src={addBilling} alt="Add Billing Icon" />
-                </li>
-              </ul>
+             
             </div>
           </div>
         </div>
