@@ -59,8 +59,7 @@ export default function modalEditUser({ setOpenModalEditUser }) {
   const [phone, setPhone] = useState("");
   const [newPassword, setNewPassword] = useState("");
   const [confirmNewPassword, setConfirmNewPassword] = useState("");
-  const { name, setName, email, setEmail, userData, setUserData } =
-    useContext(AuthContext);
+  const { name, setName, email, setEmail, userData, setUserData } = useContext(AuthContext);
   const { OpenModalEditUser, setSucess, sucess } = useContext(ModalContext);
 
   const [alert, setAlert] = useState();
@@ -108,28 +107,29 @@ export default function modalEditUser({ setOpenModalEditUser }) {
         setAlert("Informe os 11 dígitos do cpf");
         return;
       }
-
     }
-
+    let phoneClearMask = phone
+      ? phone
+        .replaceAll("_", "")
+        .replaceAll("(", "")
+        .replaceAll(")", "")
+        .replaceAll("-", "")
+        .replaceAll(" ", "")
+      : "";
+    setPhone(phoneClearMask);
     if (phone) {
-      let phoneClearMask = phone
-        ? phone
-          .replaceAll("_", "")
-          .replaceAll("(", "")
-          .replaceAll(")", "")
-          .replaceAll("-", "")
-          .replaceAll(" ", "")
-        : "";
-      setPhone(phoneClearMask);
-      if (phone.length < 10) {
+
+      if (phoneClearMask.length < 10) {
+        console.log(phoneClearMask);
         setAlert("O número de telefone deve ter entre 10 e 11 dígitos");
         return;
       }
-
     }
+
 
     try {
       const password = newPassword;
+
 
       let updateUser;
       if (password) {
@@ -159,14 +159,16 @@ export default function modalEditUser({ setOpenModalEditUser }) {
             setAlert("Nenhuma alteração de dados identificada");
             return;
           }
-
           updateUser = {
             name,
             email
           };
         }
 
-        if (updateUser.name == userStorage.name && updateUser.email == userStorage.email && updateUser.cpf == userStorage.cpf && updateUser.phone == userStorage.phone) {
+        if (updateUser.name == userStorage.name
+          && updateUser.email == userStorage.email
+          && updateUser.cpf == userStorage.cpf
+          && updateUser.phone == userStorage.phone) {
           setAlert("Nenhuma alteração de dados identificada");
           return;
         }
