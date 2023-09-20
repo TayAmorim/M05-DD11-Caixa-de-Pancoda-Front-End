@@ -104,3 +104,11 @@
     color: var(--green-normal) ;
     
 }
+
+.mensage-customerList {
+    width: 100vw;
+    display: flex;
+    margin-top: 5%;
+    justify-content: center;
+    height: 100vh;
+}
