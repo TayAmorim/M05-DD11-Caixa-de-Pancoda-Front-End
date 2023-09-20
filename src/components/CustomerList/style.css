@@ -112,3 +112,12 @@
     justify-content: center;
     height: 100vh;
 }
+
+.link-detail-customer {
+    cursor: pointer;
+}
+
+.link-detail-customer:hover {
+    text-decoration: underline;
+    color: var(--pink-normal);
+}

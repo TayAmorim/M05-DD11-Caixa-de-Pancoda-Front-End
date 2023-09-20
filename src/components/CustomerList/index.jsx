@@ -17,6 +17,7 @@ import sortIconHeaders from "../../assets/sortIconHeaders.svg";
 import addBilling from "../../assets/addBilling.svg";
 import { useEffect, useState } from "react";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 export default function CustomerList({ setOpenModalCustomer }) {
   const userStorage = JSON.parse(localStorage.getItem("user"));
@@ -24,6 +25,7 @@ export default function CustomerList({ setOpenModalCustomer }) {
   const nameUser = userStorage.name;
   const words = nameUser.split(" ");
   const firstLetters = [];
+  const navigate = useNavigate();
 
   for (let i = 0; i < 2; i++) {
     if (words[i] && words[i].length > 0) {
@@ -60,6 +62,14 @@ export default function CustomerList({ setOpenModalCustomer }) {
     }
     gettingCustomerList();
   }, []);
+
+  function detailCustomer(id) {
+    navigate(`/clientes/detalhes/${id}`);
+  }
+
+  function createBilling(idCustomer, nameCustomer) {
+    console.log(idCustomer, nameCustomer);
+  }
 
   return (
     <>
@@ -202,7 +212,12 @@ export default function CustomerList({ setOpenModalCustomer }) {
               <div className="body-table-customer">
                 {customersList.map((customer) => (
                   <ul key={customer.id}>
-                    <li>{customer.name_client}</li>
+                    <li
+                      className="link-detail-customer"
+                      onClick={() => detailCustomer(customer.id)}
+                    >
+                      {customer.name_client}
+                    </li>
                     <li>{customer.cpf_client}</li>
                     <li>{customer.email_client}</li>
                     <li>{customer.phone_client}</li>
@@ -214,7 +229,13 @@ export default function CustomerList({ setOpenModalCustomer }) {
                       {customer.status ? "Em dia" : "Inadimplente"}
                     </li>
                     <li>
-                      <img src={addBilling} alt="Add Billing Icon" />
+                      <img
+                        onClick={() =>
+                          createBilling(customer.id, customer.name_client)
+                        }
+                        src={addBilling}
+                        alt="Add Billing Icon"
+                      />
                     </li>
                   </ul>
                 ))}

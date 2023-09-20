@@ -26,12 +26,15 @@ export default function Home() {
         <Routes>
           <Route path="/" element={<SummaryCharges />} />
           <Route
-            path="clientes/*"
+            path="clientes"
             element={
               <CustomerList setOpenModalCustomer={setOpenModalCustomer} />
             }
           />
-
+          <Route
+            path="clientes/detalhes/:id"
+            element={<h1>Detalhamento do Cliente</h1>}
+          />
           <Route path="cobranca" />
         </Routes>
         {OpenModalEditUser && (
