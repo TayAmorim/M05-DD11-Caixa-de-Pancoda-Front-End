@@ -9,7 +9,18 @@ import TableCharge from "../TableCharges";
 import TableChargeClients from "../TableChargesClients";
 
 function SummaryCharges() {
+
   const userStorage = JSON.parse(localStorage.getItem("user"));
+  const nameUser = userStorage.name;
+  const words = nameUser.split(' ');
+  const firstLetters = [];
+
+  for (let i = 0; i < 2; i++) {
+    if (words[i] && words[i].length > 0) {
+      const first = words[i][0];
+      firstLetters.push(first);
+    }
+  }
   return (
     <>
       <Grid item xs={11}>
@@ -32,7 +43,7 @@ function SummaryCharges() {
                 fontFamily: "Nunito",
               }}
             >
-              {userStorage.name[0]}
+              {firstLetters}
             </Avatar>
             <NavMenu />
           </Stack>
