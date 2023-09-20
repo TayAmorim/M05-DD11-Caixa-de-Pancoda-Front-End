@@ -11,6 +11,7 @@ import { useContext, useState } from "react";
 import ModalEditUser from "../../components/modalEdituser";
 import { ModalContext } from "../../context/modalContext";
 import ModalSucess from "../../components/modalSucess";
+import CustomerDetails from "../../components/CustomerDetails";
 
 export default function Home() {
   const [openModalCustomer, setOpenModalCustomer] = useState(false);
@@ -28,7 +29,8 @@ export default function Home() {
           <Route
             path="clientes"
             element={
-              <CustomerList setOpenModalCustomer={setOpenModalCustomer} />
+              <CustomerDetails />
+              /*               <CustomerList setOpenModalCustomer={setOpenModalCustomer} /> */
             }
           />
           <Route path="cobranca" />
