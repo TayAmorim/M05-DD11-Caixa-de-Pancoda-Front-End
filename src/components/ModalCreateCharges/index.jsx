@@ -57,7 +57,7 @@ export default function modalEditCustomer({ setOpenModalCreateCharges }) {
           <div className="box-inputs">
             <div style={{ marginTop: '2rem' }} className="box-title">
               <img src={chargeIcon} alt="Charges Icon" />
-              <h1>Editar Cobrança</h1>
+              <h1>Cadastro de Cobrança</h1>
             </div>
             <Box
               onSubmit={handleSubmit}
