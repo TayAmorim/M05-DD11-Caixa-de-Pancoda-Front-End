@@ -122,7 +122,7 @@ export default function NavMenu() {
           onClick={handleClick}
           endIcon={<KeyboardArrowDownIcon />}
         >
-          {userStorage.name}
+          {userStorage.name.length < 7 ? userStorage.name : userStorage.name.slice(0, 7) + '...' }
         </Button>
         <StyledMenu
           id="demo-customized-menu"

@@ -18,6 +18,16 @@ import addBilling from "../../assets/addBilling.svg";
 
 export default function CustomerList({ setOpenModalCustomer }) {
   const userStorage = JSON.parse(localStorage.getItem("user"));
+  const nameUser = userStorage.name;
+  const words = nameUser.split(' ');
+  const firstLetters = [];
+
+  for (let i = 0; i < 2; i++) {
+    if (words[i] && words[i].length > 0) {
+      const first = words[i][0];
+      firstLetters.push(first);
+    }
+  }
   return (
     <>
       <Grid item xs={11}>
@@ -49,7 +59,7 @@ export default function CustomerList({ setOpenModalCustomer }) {
                 fontFamily: "Nunito",
               }}
             >
-              {userStorage.name[0]}
+              {firstLetters}
             </Avatar>
             <NavMenu />
           </Stack>
