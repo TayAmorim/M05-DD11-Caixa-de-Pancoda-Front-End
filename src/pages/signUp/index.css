@@ -29,6 +29,7 @@
 }
 .circle-status{
     width: 3.5rem;
+    cursor: pointer;
 }
 .bar{
     width: .35rem;
