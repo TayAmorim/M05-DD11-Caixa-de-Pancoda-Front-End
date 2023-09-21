@@ -11,7 +11,10 @@ import {
 import NavMenu from "../NavMenu";
 import colors from "../../style/colors";
 import clients from "../../assets/clients.svg";
+import editIcon from "../../assets/editicon.svg";
 import editIcon2 from "../../assets/editicon2.svg";
+import deleteIcon from "../../assets/deleteicon.svg";
+import sortIconHeaders from "../../assets/sortIconHeaders.svg";
 
 export default function CustomerDetails() {
     const userStorage = JSON.parse(localStorage.getItem("user"));
@@ -181,42 +184,42 @@ export default function CustomerDetails() {
                     marginLeft: '18.3rem'
                 }}>
                 <div className='first-client-data-row'>
-                    <div>
+                    <div className='data-client-space'>
                         <h5>E-Mail</h5>
                         <p>{clientData.email_client}</p>
-                    </div>
-                    <div>
+                    </div >
+                    <div className='data-client-space'>
                         <h5>Telefone</h5>
                         <p>{clientData.phone_client}</p>
                     </div>
-                    <div>
+                    <div className='data-client-space'>
                         <h5>CPF</h5>
                         <p>{clientData.cpf_client}</p>
                     </div>
                 </div>
 
                 <div className='second-client-data-row'>
-                    <div>
+                    <div className='data-client-space'>
                         <h5>Endereço</h5>
                         <p>{clientData.address_complete.address}</p>
                     </div>
-                    <div>
+                    <div className='data-client-space'>
                         <h5>Bairro</h5>
                         <p>{clientData.address_complete.neighborhood}</p>
                     </div>
-                    <div>
+                    <div className='data-client-space'>
                         <h5>Complemento</h5>
                         <p>{clientData.address_complete.complement}</p>
                     </div>
-                    <div>
+                    <div className='data-client-space'>
                         <h5>CEP</h5>
                         <p>{clientData.address_complete.zip_code}</p>
                     </div>
-                    <div>
+                    <div className='data-client-space'>
                         <h5>Cidade</h5>
                         <p>{clientData.address_complete.city}</p>
                     </div>
-                    <div>
+                    <div className='data-client-space'>
                         <h5>UF</h5>
                         <p>{clientData.address_complete.state}</p>
                     </div>
@@ -250,6 +253,41 @@ export default function CustomerDetails() {
                     + Nova cobrança
                 </Button>
             </Stack>
+
+            <div className="box-table-billings-details">
+                <div className="table-header-customer-details">
+                    <ul>
+                        <li>
+                            <img src={sortIconHeaders} alt="Sort Icon" />
+                            Id.Cob
+                        </li>
+                        <li>
+                            <img src={sortIconHeaders} alt="Sort Icon" />Data de venc.</li>
+                        <li>Valor</li>
+                        <li>Status</li>
+                        <li>Descrição</li>
+                    </ul>
+                </div>
+                {clientData.charges.map(charges => (
+                    <div className="body-table-customer" key={charges.id}>
+                        <ul>
+                            <li>{charges.id_charges}</li>
+                            <li>{charges.due_date}</li>
+                            <li>R$ {(charges.amount / 100).toFixed(2)}</li>
+                            <li>{charges.status ? "Vencida" : "Em dia"}</li>
+                            <li>{charges['description ']}</li>
+                            <li>
+                                <img src={editIcon} alt="Edit Billing Icon" />
+
+                            </li>
+                            <li>
+                                <img src={deleteIcon} alt="Delete Billing Icon" />
+
+                            </li>
+                        </ul>
+                    </div>
+                ))}
+            </div>
 
 
 

@@ -12,13 +12,42 @@
 .first-client-data-row {
     display: flex;
 
-    gap: 10rem;
 }
 
 .second-client-data-row {
     display: flex;
-
-    gap: 7rem;
-
     margin-top: 4rem;
+}
+
+.data-client-space {
+    width: 19rem;
+}
+
+.box-table-billings-details {
+    width: 80%;
+    max-height: 80rem;
+    background-color: #fff;
+    border-radius: 3rem;
+    margin-left: 10rem;
+    overflow-x: auto;
+    animation: slideFromRight .7s ease-in-out;
+}
+
+.table-header-customer-details ul,
+.body-table-customer ul {
+    margin: 2rem;
+    padding-bottom: 2rem;
+    list-style: none;
+    display: grid;
+    grid-template-columns: repeat(7, 2fr);
+    text-align: center;
+    color: #344054;
+    border-bottom: 1px solid rgb(223, 223, 223);
+
+}
+
+.table-header-customer-details ul {
+    font-weight: bold;
+    font-size: 1.5rem;
+
 }
