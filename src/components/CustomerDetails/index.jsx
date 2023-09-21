@@ -62,14 +62,14 @@ export default function CustomerDetails() {
 
     return (
         <>
-            <Grid item xs={11} sx={{ border: '1px solid red' }}>
+            <Grid item xs={10} sx={{ border: '1px solid red' }}>
                 <Stack
                     direction="row"
                     spacing={1}
                     sx={{
                         padding: "5.4rem 5.4rem 2.4rem",
                         borderBottom: "1px solid" + colors.Green.light,
-                        marginLeft: '1rem'
+
                     }}
                     justifyContent="space-between"
                 >

@@ -24,11 +24,12 @@
 }
 
 .box-table-billings-details {
-    width: 80%;
+    width: 76%;
     max-height: 80rem;
     background-color: #fff;
     border-radius: 3rem;
-    margin-left: 10rem;
+    margin-left: 18rem;
+    margin-bottom: 5rem;
     overflow-x: auto;
     animation: slideFromRight .7s ease-in-out;
 }
@@ -43,11 +44,16 @@
     text-align: center;
     color: #344054;
     border-bottom: 1px solid rgb(223, 223, 223);
-
 }
 
 .table-header-customer-details ul {
     font-weight: bold;
     font-size: 1.5rem;
+    align-items: center;
+
+}
+
+.table-header-customer-details img {
+    align-items: center;
 
 }
