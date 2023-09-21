@@ -16,19 +16,43 @@ import searchControler from "../../assets/customersSettings.svg";
 import sortIconHeaders from "../../assets/sortIconHeaders.svg";
 import editIcon from "../../assets/editIcon.svg";
 import deleteIcon from "../../assets/deleteIcon.svg"
-
-export default function ChargesList({setOpenModalDeleteCharges, setOpenModalEditCharges }) {
+import axios from 'axios'
+import { useContext, useEffect, useState } from "react";
+import { AuthContext } from '../../context/myContext';
+import {format} from '../../../node_modules/date-fns'
+export default function ChargesList({ setOpenModalDeleteCharges, setOpenModalEditCharges }) {
+    const { setIdDelete, dataCharges, setDataCharges, setIdEdit } = useContext(AuthContext)
+    const [data, setData] = useState([])
     const userStorage = JSON.parse(localStorage.getItem("user"));
     const nameUser = userStorage.name;
     const words = nameUser.split(' ');
     const firstLetters = [];
-
+    
     for (let i = 0; i < 2; i++) {
         if (words[i] && words[i].length > 0) {
             const first = words[i][0];
             firstLetters.push(first);
         }
     }
+
+    const getCharges = async () => {
+        try {
+            const response = await axios.get('http://localhost:3000/cobrancas')
+            setData(response.data)
+
+        } catch (error) {
+            console.log(error)
+        }
+    }
+
+    useEffect(() => {
+        getCharges()
+    }, [])
+
+    useEffect(() => {
+        setDataCharges(data)
+    }, [data])
+
     return (
         <>
             <Grid item xs={11}>
@@ -147,25 +171,27 @@ export default function ChargesList({setOpenModalDeleteCharges, setOpenModalEdit
                             </ul>
                         </div>
                         <div className="body-table-customer charges-table">
-                            <ul>
-                                <li>Sara da Silva</li>
-                                <li>159</li>
-                                <li>R$: 1.500,00</li>
-                                <li>20/09/2023</li>
-                                <li className="expired-client">Vencida</li>
-                                <li>Cartão itau E CAIXA</li>
-                                <li></li>
-                                <li className="edit-delete">
-                                    <div onClick={() => setOpenModalEditCharges(true)}>
-                                        <img src={editIcon} alt="Edit Icon" />
-                                        <span>Editar</span>
-                                    </div>
-                                    <div onClick={() => setOpenModalDeleteCharges(true)}>
-                                        <img src={deleteIcon} alt="Delete Icon" />
-                                        <span>Deletar</span>
-                                    </div>
-                                </li>
-                            </ul>
+                            {dataCharges.map((charges) => (
+                                <ul key={charges.id_charges}>
+                                    <li>{charges.name_client}</li>
+                                    <li>{charges.id_charges}</li>
+                                    <li>{`R$: ${(charges.amount / 100).toFixed(2).replace('.', ',')}`}</li>
+                                    <li>{format( new Date(charges.due_date), 'dd/MM/yyy')}</li>
+                                    <li className={charges.status_charge === true ? "expired-client" : "up-to-date-client"}>{charges.status_charge === true ? "Vencido" : "Pago"}</li>
+                                    <li>{charges.description}</li>
+                                    <li></li>
+                                    <li className="edit-delete">
+                                        <div onClick={() => {setOpenModalEditCharges(true); setIdEdit(charges.id)}}>
+                                            <img src={editIcon} alt="Edit Icon" />
+                                            <span>Editar</span>
+                                        </div>
+                                        <div onClick={() => { setOpenModalDeleteCharges(true); setIdDelete(charges.id) }}>
+                                            <img src={deleteIcon} alt="Delete Icon" />
+                                            <span>Deletar</span>
+                                        </div>
+                                    </li>
+                                </ul>
+                            ))}
                         </div>
                     </div>
                 </div>

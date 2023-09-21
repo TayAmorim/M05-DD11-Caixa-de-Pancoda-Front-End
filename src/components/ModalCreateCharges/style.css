@@ -84,7 +84,7 @@ label {
     align-items: center;
     gap: 1.4rem;
     margin-top: 1rem;
-    border-radius: 1rem;
+    border-radius: 2rem;
     padding: 1rem;
     background-color: rgba(211, 211, 211, 0.174);
 }
@@ -95,4 +95,5 @@ label {
     width: 20px;
     height: 20px;
     cursor: pointer;
+    accent-color: var(--green-normal);
 }

@@ -8,6 +8,11 @@ const AuthProvider = ({ children }) => {
   const [name, setName] = useState("");
   const [alert, setAlert] = useState("");
   const [userData, setUserData] = useState([]);
+  const [idDelete, setIdDelete] = useState('')
+  const [dataCharges, setDataCharges] =useState([])
+  const [dataChargesById, setDataChargesById] =useState([])
+  const [idEdit, setIdEdit] = useState('')
+
   return (
     <AuthContext.Provider
       value={{
@@ -21,6 +26,14 @@ const AuthProvider = ({ children }) => {
         setName,
         userData,
         setUserData,
+        idDelete, 
+        setIdDelete,
+        dataCharges, 
+        setDataCharges,
+        dataChargesById, 
+        setDataChargesById,
+        setIdEdit,
+        idEdit
       }}
     >
       {children}

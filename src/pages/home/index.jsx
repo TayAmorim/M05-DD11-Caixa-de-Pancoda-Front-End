@@ -52,7 +52,7 @@ export default function Home() {
         {sucess && <ModalSucess />}
 
         {openModalDeleteCharges && <ModalDelete setOpenModalDeleteCharges={setOpenModalDeleteCharges}/> }
-        {openModalEditCharges && <ModalEditCharges setOpenModalEditCharges={setOpenModalEditCharges} />}
+        {openModalEditCharges && <ModalEditCharges setOpenModalEditCharges={setOpenModalEditCharges} openModalEditCharges={openModalEditCharges} />}
         {openModalCreateCharges && <ModalCreateCharges setOpenModalCreateCharges={setOpenModalCreateCharges}/>}
       </Grid>
     </>

@@ -3,13 +3,16 @@ import * as React from 'react';
 import closeIcon from "../../assets/closeIcon.svg";
 import chargeIcon from "../../assets/billingsIcon.svg";
 import { Box, TextField, Button, Stack } from "@mui/material";
-import { useState } from "react";
+import { useState, useContext } from "react";
+import {AuthContext} from '../../context/myContext'
 import api from "../../api/api";
 
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import axios from "axios";
 
 export default function modalEditCustomer({ setOpenModalCreateCharges }) {
+  const { setDataCharges } = useContext(AuthContext)
   const [name, setName] = useState('')
   const [alertName, setAlertName] = useState('')
   const [description, setDescription] = useState('')
@@ -18,6 +21,7 @@ export default function modalEditCustomer({ setOpenModalCreateCharges }) {
   const [alertDueDate, setAlertDueDate] = useState('')
   const [amount, setAmount] = useState('')
   const [alertAmount, setAlertAmount] = useState('')
+  const [radioSelected, setRadioSelected] = useState(false)
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -33,9 +37,43 @@ export default function modalEditCustomer({ setOpenModalCreateCharges }) {
     if (!amount) {
       return setAlertAmount("Campo obrigatório");
     }
+    try {
+      const response = await axios.post('http://localhost:3000/cobrancas', {
+        "id": 17,
+        "id_charges": 17,
+        "name_client": name,
+        "amount": amount,
+        "due_date": dueDate,
+        "status_charge": radioSelected,
+        "description": description
+      })
+
+      toast.success("Cobrança criada com sucesso!", {
+        position: "bottom-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "colored",
+      });
+      dataValuesCharges()
+      setOpenModalCreateCharges(false)
+    } catch (error) {
+      console.log(error)
+    }
 
   }
-
+  const dataValuesCharges = async () => {
+    try {
+       
+        const response = await axios.get('http://localhost:3000/cobrancas');
+        setDataCharges(response.data)
+    } catch (error) {
+        console.log(error)
+    }
+}
   const cancelSubmit = () => {
     setName("");
     setDescription("");
@@ -248,10 +286,10 @@ export default function modalEditCustomer({ setOpenModalCreateCharges }) {
               <div className="input-radio-box" >
                 <label>Status</label>
                 <div>
-                  <input type="radio" value='pay' name="status" label="Cobrança Paga" checked /><label>Cobrança Paga</label>
+                  <input onChange={() => setRadioSelected(false)} type="radio" value='false' name="status_charge" label="Cobrança Paga" checked={!radioSelected} /><label>Cobrança Paga</label>
                 </div>
                 <div>
-                  <input type="radio" value='pending' name="status" label="Cobrança Pendente" /><label>Cobrança Pendente</label>
+                  <input onChange={() => setRadioSelected(true)} type="radio" value='true' name="status_charge" label="Cobrança Pendente" checked={radioSelected} /><label>Cobrança Pendente</label>
                 </div>
               </div>
 
@@ -298,7 +336,7 @@ export default function modalEditCustomer({ setOpenModalCreateCharges }) {
                     variant="contained"
                     type="submit"
                   >
-                    Aplicar
+                    Cadastrar
                   </Button>
                 </Stack>
               </div>
