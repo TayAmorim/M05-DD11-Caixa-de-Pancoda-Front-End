@@ -8,6 +8,7 @@ import ProtectedRoutes from "./components/ProtectedRoutes/ProtectedRoutes";
 import LoginRoutes from "./components/LoginRoutes/LoginRoutes";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import CustomerDetails from "./components/CustomerDetails";
 
 export default function MyRoutes() {
   return (
@@ -21,6 +22,8 @@ export default function MyRoutes() {
           <Route element={<ProtectedRoutes redirectTo={"/login"} />}>
             <Route path="/*" element={<Home />} />
           </Route>
+          <Route path="clientes/detalhes/:id"
+            element={<CustomerDetails />} />:
 
           <Route path="*" element={<NotFoundPage />} />
         </Routes>

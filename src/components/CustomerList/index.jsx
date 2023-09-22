@@ -15,12 +15,17 @@ import clients from "../../assets/clients.svg";
 import searchControler from "../../assets/customersSettings.svg";
 import sortIconHeaders from "../../assets/sortIconHeaders.svg";
 import addBilling from "../../assets/addBilling.svg";
+import { useEffect, useState } from "react";
+import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 export default function CustomerList({ setOpenModalCustomer }) {
   const userStorage = JSON.parse(localStorage.getItem("user"));
+  const [customersList, setCustomersList] = useState([]);
   const nameUser = userStorage.name;
-  const words = nameUser.split(' ');
+  const words = nameUser.split(" ");
   const firstLetters = [];
+  const navigate = useNavigate();
 
   for (let i = 0; i < 2; i++) {
     if (words[i] && words[i].length > 0) {
@@ -28,6 +33,44 @@ export default function CustomerList({ setOpenModalCustomer }) {
       firstLetters.push(first);
     }
   }
+
+  useEffect(() => {
+    async function gettingCustomerList() {
+      try {
+        const response = await axios.get("http://localhost:3000/clientes", {
+          headers: { "Content-Type": "application/json" },
+        });
+        const listCustomer = await response.data;
+        setCustomersList(
+          listCustomer.map((customer) => {
+            const newCpf = customer.cpf_client.replace(
+              /(\d{3})(\d{3})(\d{3})(\d{2})/,
+              "$1.$2.$3-$4"
+            );
+            const formattedPhoneNumber = customer.phone_client.replace(
+              /(\d{2})(\d{4})(\d{4})/,
+              "($1) $2-$3"
+            );
+            customer.cpf_client = newCpf;
+            customer.phone_client = formattedPhoneNumber;
+            return customer;
+          })
+        );
+      } catch (error) {
+        console.log(error);
+      }
+    }
+    gettingCustomerList();
+  }, []);
+
+  function detailCustomer(id) {
+    navigate(`/clientes/detalhes/${id}`);
+  }
+
+  function createBilling(idCustomer, nameCustomer) {
+    console.log(idCustomer, nameCustomer);
+  }
+
   return (
     <>
       <Grid item xs={11}>
@@ -64,220 +107,146 @@ export default function CustomerList({ setOpenModalCustomer }) {
             <NavMenu />
           </Stack>
         </Stack>
-
-        <div className="container-billingMain">
-          <div className="billing-box-header">
-            <div className="title-billing">
-              <img src={clients} alt="Billins Icon" />
-              <h1>Clientes</h1>
-            </div>
-            <div className="search-box-users">
-              <Stack
-                sx={{
-                  width: "100%",
-                  display: "flex",
-                  justifyContent: "center",
-                }}
-                direction="row"
-                spacing={2}
-              >
-                <Button
+        {customersList.length > 0 ? (
+          <div className="container-billingMain">
+            <div className="billing-box-header">
+              <div className="title-billing">
+                <img src={clients} alt="Billins Icon" />
+                <h1>Clientes</h1>
+              </div>
+              <div className="search-box-users">
+                <Stack
                   sx={{
-                    width: "25rem",
-                    height: "3.5rem",
-                    borderRadius: "1rem",
-                    backgroundColor: "#DA0175",
-                    "&:hover": {
-                      backgroundColor: "#790342",
-                    },
-                    fontSize: "1.4rem",
+                    width: "100%",
+                    display: "flex",
+                    justifyContent: "center",
                   }}
-                  onClick={() => setOpenModalCustomer(true)}
-                  variant="contained"
-                  type="button"
+                  direction="row"
+                  spacing={2}
                 >
-                  + Adicionar Cliente
-                </Button>
-              </Stack>
-              <img
-                className="searchControlerIcon"
-                src={searchControler}
-                alt="Search controller Icon"
-              />
-              <div className="set-search-input-img">
-                <Box>
-                  <TextField
-                    id="outlined-basic"
-                    label="Pesquisa"
-                    variant="outlined"
-                    type="text"
-                    name="senha"
-                    InputProps={{
-                      style: {
-                        fontSize: "1.6rem",
-                        color: "#343447",
-                        borderRadius: ".8rem",
-                        backgroundColor: "#fff",
-                        width: "30rem",
-                        height: "3.8rem",
-                        lineHeight: "1.8rem",
+                  <Button
+                    sx={{
+                      width: "25rem",
+                      height: "3.5rem",
+                      borderRadius: "1rem",
+                      backgroundColor: "#DA0175",
+                      "&:hover": {
+                        backgroundColor: "#790342",
                       },
-                      endAdornment: (
-                        <IconButton
-                          aria-label="toggle password visibility"
-                          edge="end"
-                          sx={{
-                            position: "absolute",
-                            right: "1.5rem",
-                            top: "50%",
-                            transform: "translateY(-50%)",
-                          }}
-                        >
-                          <SearchIcon style={{ fontSize: "3rem" }} />
-                        </IconButton>
-                      ),
+                      fontSize: "1.4rem",
                     }}
-                    InputLabelProps={{
-                      style: {
-                        fontSize: "1.6rem",
-                        color: "gray",
-                        width: "30rem",
-                        height: "3.8rem",
-                        lineHeight: "1.3rem",
-                      },
-                    }}
-                  />
-                </Box>
+                    onClick={() => setOpenModalCustomer(true)}
+                    variant="contained"
+                    type="button"
+                  >
+                    + Adicionar Cliente
+                  </Button>
+                </Stack>
+                <img
+                  className="searchControlerIcon"
+                  src={searchControler}
+                  alt="Search controller Icon"
+                />
+                <div className="set-search-input-img">
+                  <Box>
+                    <TextField
+                      id="outlined-basic"
+                      label="Pesquisa"
+                      variant="outlined"
+                      type="text"
+                      name="senha"
+                      InputProps={{
+                        style: {
+                          fontSize: "1.6rem",
+                          color: "#343447",
+                          borderRadius: ".8rem",
+                          backgroundColor: "#fff",
+                          width: "30rem",
+                          height: "3.8rem",
+                          lineHeight: "1.8rem",
+                        },
+                        endAdornment: (
+                          <IconButton
+                            aria-label="toggle password visibility"
+                            edge="end"
+                            sx={{
+                              position: "absolute",
+                              right: "1.5rem",
+                              top: "50%",
+                              transform: "translateY(-50%)",
+                            }}
+                          >
+                            <SearchIcon style={{ fontSize: "3rem" }} />
+                          </IconButton>
+                        ),
+                      }}
+                      InputLabelProps={{
+                        style: {
+                          fontSize: "1.6rem",
+                          color: "gray",
+                          width: "30rem",
+                          height: "3.8rem",
+                          lineHeight: "1.3rem",
+                        },
+                      }}
+                    />
+                  </Box>
+                </div>
+              </div>
+            </div>
+
+            <div className="box-table-billings">
+              <div className="table-header-customer">
+                <ul>
+                  <li>
+                    <img src={sortIconHeaders} alt="Sort Icon" />
+                    Cliente
+                  </li>
+                  <li>CPF</li>
+                  <li>E-mail</li>
+                  <li>Telefone</li>
+                  <li>Status</li>
+                  <li>Criar Cobrança</li>
+                </ul>
+              </div>
+              <div className="body-table-customer">
+                {customersList.map((customer) => (
+                  <ul key={customer.id}>
+                    <li
+                      className="link-detail-customer"
+                      onClick={() => detailCustomer(customer.id)}
+                    >
+                      {customer.name_client}
+                    </li>
+                    <li>{customer.cpf_client}</li>
+                    <li>{customer.email_client}</li>
+                    <li>{customer.phone_client}</li>
+                    <li
+                      className={
+                        customer.status ? "up-to-date-client" : "expired-client"
+                      }
+                    >
+                      {customer.status ? "Em dia" : "Inadimplente"}
+                    </li>
+                    <li>
+                      <img
+                        onClick={() =>
+                          createBilling(customer.id, customer.name_client)
+                        }
+                        src={addBilling}
+                        alt="Add Billing Icon"
+                      />
+                    </li>
+                  </ul>
+                ))}
               </div>
             </div>
           </div>
-          <div className="box-table-billings">
-            <div className="table-header-customer">
-              <ul>
-                <li>
-                  <img src={sortIconHeaders} alt="Sort Icon" />
-                  Cliente
-                </li>
-                <li>CPF</li>
-                <li>E-mail</li>
-                <li>Telefone</li>
-                <li>Status</li>
-                <li>Criar Cobrança</li>
-              </ul>
-            </div>
-            <div className="body-table-customer">
-              <ul>
-                <li>Sara da Silva</li>
-                <li>054 365 255 87</li>
-                <li>sarasilva@cubos.io</li>
-                <li>71 9 9462 8654</li>
-                <li className="expired-client">Inadimplente</li>
-                <li>
-                  <img src={addBilling} alt="Add Billing Icon" />
-                </li>
-              </ul>
-
-              <ul>
-                <li>Cameron Williamson</li>
-                <li>054 365 255 87</li>
-                <li>cameronw@cubos.io</li>
-                <li>71 9 9462 8654</li>
-                <li className="expired-client">Inadimplente</li>
-                <li>
-                  <img src={addBilling} alt="Add Billing Icon" />
-                </li>
-              </ul>
-
-              <ul>
-                <li>Savannah Nguyen</li>
-                <li>054 365 255 87</li>
-                <li>snguyen@cubos.io</li>
-                <li>71 9 9462 8654</li>
-                <li className="expired-client">Inadimplente</li>
-                <li>
-                  <img src={addBilling} alt="Add Billing Icon" />
-                </li>
-              </ul>
-
-              <ul>
-                <li>Darlene Robertson</li>
-                <li>054 365 255 87</li>
-                <li>darlener@cubos.io</li>
-                <li>71 9 9462 8654</li>
-                <li className="expired-client">Inadimplente</li>
-                <li>
-                  <img src={addBilling} alt="Add Billing Icon" />
-                </li>
-              </ul>
-
-              <ul>
-                <li>Marvin McKinney</li>
-                <li>054 365 255 87</li>
-                <li>marvinm@cubos.io</li>
-                <li>71 9 9462 8654</li>
-                <li className="expired-client">Inadimplente</li>
-                <li>
-                  <img src={addBilling} alt="Add Billing Icon" />
-                </li>
-              </ul>
-
-              <ul>
-                <li>Sandra dos Santos</li>
-                <li>054 365 255 87</li>
-                <li>sandrasantos@cubos.io</li>
-                <li>71 9 9462 8654</li>
-                <li className="expired-client">Inadimplente</li>
-                <li>
-                  <img src={addBilling} alt="Add Billing Icon" />
-                </li>
-              </ul>
-
-              <ul>
-                <li>Cameron Williamson</li>
-                <li>054 365 255 87</li>
-                <li>cameronw@cubos.io</li>
-                <li>71 9 9462 8654</li>
-                <li className="up-to-date-client">Em dia</li>
-                <li>
-                  <img src={addBilling} alt="Add Billing Icon" />
-                </li>
-              </ul>
-
-              <ul>
-                <li>Savannah Nguyen</li>
-                <li>054 365 255 87</li>
-                <li>snguyen@cubos.io</li>
-                <li>71 9 9462 8654</li>
-                <li className="up-to-date-client">Em dia</li>
-                <li>
-                  <img src={addBilling} alt="Add Billing Icon" />
-                </li>
-              </ul>
-
-              <ul>
-                <li>Darlene Robertson</li>
-                <li>054 365 255 87</li>
-                <li>darlener@cubos.io</li>
-                <li>71 9 9462 8654</li>
-                <li className="up-to-date-client">Em dia</li>
-                <li>
-                  <img src={addBilling} alt="Add Billing Icon" />
-                </li>
-              </ul>
-
-              <ul>
-                <li>Marvin McKinney</li>
-                <li>054 365 255 87</li>
-                <li>marvinm@cubos.io</li>
-                <li>71 9 9462 8654</li>
-                <li className="up-to-date-client">Em dia</li>
-                <li>
-                  <img src={addBilling} alt="Add Billing Icon" />
-                </li>
-              </ul>
-            </div>
+        ) : (
+          <div className="mensage-customerList">
+            <h1>Você não tem clientes cadastrados</h1>
           </div>
-        </div>
+        )}
       </Grid>
     </>
   );

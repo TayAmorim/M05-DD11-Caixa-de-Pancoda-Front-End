@@ -1,4 +1,5 @@
 import './styles.css'
+import { useContext, useEffect, useState } from 'react';
 import {
     Avatar,
     Grid,
@@ -15,12 +16,17 @@ import editIcon from "../../assets/editicon.svg";
 import editIcon2 from "../../assets/editicon2.svg";
 import deleteIcon from "../../assets/deleteicon.svg";
 import sortIconHeaders from "../../assets/sortIconHeaders.svg";
+import axios from "axios";
+import { Await, useParams } from 'react-router-dom';
 
 export default function CustomerDetails() {
     const userStorage = JSON.parse(localStorage.getItem("user"));
     const nameUser = userStorage.name;
     const words = nameUser.split(' ');
     const firstLetters = [];
+    const [customerData, setCustomerData] = useState({})
+
+
 
     for (let i = 0; i < 2; i++) {
         if (words[i] && words[i].length > 0) {
@@ -29,40 +35,44 @@ export default function CustomerDetails() {
         }
     }
 
-    const clientData = {
-        "name_client": "Jose Silva",
-        "cpf_client": "88051533461",
-        "email_client": "josesilva@email.com",
-        "phone_client": "1234567890",
-        "address_complete": {
-            "address": "rua sem nome",
-            "complement": "Grand Line",
-            "neighborhood": "Barra de Jangada",
-            "city": "São Paulo",
-            "state": "São Paulo",
-            "zip_code": "28360000"
-        },
-        "charges": [
-            {
-                "id_charges": "1",
-                "description ": "lorem ipsum, lorem ipsum, lorem ipsum, lorem ipsum",
-                "due_date": "12/05/23",
-                "amount": "5000",
-                "status": true
-            },
-            {
-                "id_charges": "2",
-                "description ": "lorem ipsum, lorem ipsum, lorem ipsum, lorem ipsum",
-                "due_date": "12/05/23",
-                "amount": "3000",
-                "status": false
+    useEffect(() => {
+
+        async function gettingCustomer() {
+            try {
+                const { id } = useParams();
+                const response = await axios.get(`http://localhost:3000/clientes/${id}`, {
+                    headers: { "Content-Type": "application/json" },
+                });
+                const customer = await response.data;
+
+                const newCpf = customer.cpf_client.replace(
+                    /(\d{3})(\d{3})(\d{3})(\d{2})/,
+                    "$1.$2.$3-$4"
+                );
+                const formattedPhoneNumber = customer.phone_client.replace(
+                    /(\d{2})(\d{4})(\d{4})/,
+                    "($1) $2-$3"
+                );
+                customer.cpf_client = newCpf;
+                customer.phone_client = formattedPhoneNumber;
+                setCustomerData(customer);
+            } catch (error) {
+                console.log(error);
+                throw error; // Rejeita a Promessa em caso de erro
             }
-        ]
-    }
+        }
+        gettingCustomer();
+
+    }, [customerData]);
+
+
+
 
     return (
         <>
+            {console.log(customerData)}
             <Grid item xs={10} sx={{ border: '1px solid red' }}>
+
                 <Stack
                     direction="row"
                     spacing={1}
@@ -100,7 +110,7 @@ export default function CustomerDetails() {
                                 marginBottom: "-2rem",
                             }}
                         >
-                    >
+    >
                         </h1>
                         <h1
                             style={{
@@ -129,6 +139,8 @@ export default function CustomerDetails() {
                 </Stack>
 
             </Grid>
+
+
             <Grid item xs={10} sx={{
                 border: '1px solid red',
                 marginLeft: "11.8rem"
@@ -143,7 +155,7 @@ export default function CustomerDetails() {
                 >
 
                     <img src={clients} alt="" />
-                    <h1>{clientData.name_client}</h1>
+                    <h1>{customerData.name_client}</h1>
 
                 </Stack>
             </Grid>
@@ -186,42 +198,42 @@ export default function CustomerDetails() {
                 <div className='first-client-data-row'>
                     <div className='data-client-space'>
                         <h5>E-Mail</h5>
-                        <p>{clientData.email_client}</p>
+                        <p>{customerData.email_client}</p>
                     </div >
                     <div className='data-client-space'>
                         <h5>Telefone</h5>
-                        <p>{clientData.phone_client}</p>
+                        <p>{customerData.phone_client}</p>
                     </div>
                     <div className='data-client-space'>
                         <h5>CPF</h5>
-                        <p>{clientData.cpf_client}</p>
+                        <p>{customerData.cpf_client}</p>
                     </div>
                 </div>
 
                 <div className='second-client-data-row'>
                     <div className='data-client-space'>
                         <h5>Endereço</h5>
-                        <p>{clientData.address_complete.address}</p>
+                        <p>{customerData.address_complete.address}</p>
                     </div>
                     <div className='data-client-space'>
                         <h5>Bairro</h5>
-                        <p>{clientData.address_complete.neighborhood}</p>
+                        <p>{customerData.address_complete.neighborhood}</p>
                     </div>
                     <div className='data-client-space'>
                         <h5>Complemento</h5>
-                        <p>{clientData.address_complete.complement}</p>
+                        <p>{customerData.address_complete.complement}</p>
                     </div>
                     <div className='data-client-space'>
                         <h5>CEP</h5>
-                        <p>{clientData.address_complete.zip_code}</p>
+                        <p>{customerData.address_complete.zip_code}</p>
                     </div>
                     <div className='data-client-space'>
                         <h5>Cidade</h5>
-                        <p>{clientData.address_complete.city}</p>
+                        <p>{customerData.address_complete.city}</p>
                     </div>
                     <div className='data-client-space'>
                         <h5>UF</h5>
-                        <p>{clientData.address_complete.state}</p>
+                        <p>{customerData.address_complete.state}</p>
                     </div>
                 </div>
             </Stack>
@@ -255,7 +267,7 @@ export default function CustomerDetails() {
             </Stack>
 
             <div className="box-table-billings-details">
-                <div className="table-header-customer-details">
+                <div className="table-header-customerData-details">
                     <ul>
                         <li>
                             <img src={sortIconHeaders} alt="Sort Icon" />
@@ -268,8 +280,8 @@ export default function CustomerDetails() {
                         <li>Descrição</li>
                     </ul>
                 </div>
-                {clientData.charges.map(charges => (
-                    <div className="body-table-customer" key={charges.id}>
+                {customerData.charges.map(charges => (
+                    <div className="body-table-customerData" key={charges.id}>
                         <ul>
                             <li>{charges.id_charges}</li>
                             <li>{charges.due_date}</li>
@@ -292,7 +304,9 @@ export default function CustomerDetails() {
 
 
 
-
         </>
+
+
+
     );
 }
