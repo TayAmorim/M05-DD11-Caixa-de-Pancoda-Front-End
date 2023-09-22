@@ -102,7 +102,6 @@ export default function modalEditCustomer({ setOpenModalEditCharges, openModalEd
 
 
   const cancelSubmit = () => {
-    setName("");
     setDescription("");
     setDueDate("");
     setAmount("");
@@ -158,10 +157,7 @@ export default function modalEditCustomer({ setOpenModalEditCharges, openModalEd
                   placeholder="Digite o nome"
                   value={name}
                   name="name"
-                  onChange={(event) => {
-                    setName(event.target.value);
-                    setAlertName("");
-                  }}
+                  disabled
                   InputProps={{
                     style: {
                       fontSize: "1.6rem",

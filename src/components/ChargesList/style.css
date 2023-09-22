@@ -25,3 +25,22 @@
 .edit-delete div:nth-child(2){
     color: red;
 }
+.expired-client, .pending-client, .paid-client{
+    font-weight: bold;
+    width: 60%;
+    border-radius: 1.5rem;
+    padding: 0 2rem;
+    margin: 0 auto;
+}
+.expired-client{
+    color: var(--wine-normal);
+    background-color: var(--wine-light);
+}
+.pending-client{
+    color: var(--yellow-normal);
+    background-color: var(--yellow-light);
+}
+.paid-client{
+    color: var(--greenSupport-normal);
+    background-color: var(--greenSupport-light);
+}
