@@ -34,8 +34,8 @@
     animation: slideFromRight .7s ease-in-out;
 }
 
-.table-header-customer-details ul,
-.body-table-customer ul {
+.table-header-customerData-details ul,
+.body-table-customerData ul {
     margin: 2rem;
     padding-bottom: 2rem;
     list-style: none;

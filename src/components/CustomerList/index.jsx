@@ -18,6 +18,8 @@ import addBilling from "../../assets/addBilling.svg";
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import { useContext } from "react";
+import { AuthContext } from "../../context/myContext";
 
 export default function CustomerList({ setOpenModalCustomer }) {
   const userStorage = JSON.parse(localStorage.getItem("user"));
@@ -26,6 +28,7 @@ export default function CustomerList({ setOpenModalCustomer }) {
   const words = nameUser.split(" ");
   const firstLetters = [];
   const navigate = useNavigate();
+  const { customerDetailsActive, setCustomerDetailsActive } = useContext(AuthContext);
 
   for (let i = 0; i < 2; i++) {
     if (words[i] && words[i].length > 0) {
@@ -61,9 +64,12 @@ export default function CustomerList({ setOpenModalCustomer }) {
       }
     }
     gettingCustomerList();
+
   }, []);
 
   function detailCustomer(id) {
+    setCustomerDetailsActive(true);
+    console.log(customerDetailsActive);
     navigate(`/clientes/detalhes/${id}`);
   }
 

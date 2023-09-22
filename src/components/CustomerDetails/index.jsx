@@ -9,7 +9,7 @@ import {
     IconButton,
     Button,
 } from "@mui/material";
-import NavMenu from "../NavMenu";
+import NavMenu from "../NavMenu/index";
 import colors from "../../style/colors";
 import clients from "../../assets/clients.svg";
 import editIcon from "../../assets/editicon.svg";
@@ -18,15 +18,19 @@ import deleteIcon from "../../assets/deleteicon.svg";
 import sortIconHeaders from "../../assets/sortIconHeaders.svg";
 import axios from "axios";
 import { Await, useParams } from 'react-router-dom';
+import { AuthContext } from "../../context/myContext";
 
-export default function CustomerDetails() {
+
+export default function CustomerDetails({ data }) {
     const userStorage = JSON.parse(localStorage.getItem("user"));
     const nameUser = userStorage.name;
     const words = nameUser.split(' ');
     const firstLetters = [];
-    const [customerData, setCustomerData] = useState({})
 
+    const { customerDetailsActive, setCustomerDetailsActive } = useContext(AuthContext);
 
+    const { id } = useParams();
+    const customerData = data[id - 1];
 
     for (let i = 0; i < 2; i++) {
         if (words[i] && words[i].length > 0) {
@@ -35,42 +39,12 @@ export default function CustomerDetails() {
         }
     }
 
-    useEffect(() => {
-
-        async function gettingCustomer() {
-            try {
-                const { id } = useParams();
-                const response = await axios.get(`http://localhost:3000/clientes/${id}`, {
-                    headers: { "Content-Type": "application/json" },
-                });
-                const customer = await response.data;
-
-                const newCpf = customer.cpf_client.replace(
-                    /(\d{3})(\d{3})(\d{3})(\d{2})/,
-                    "$1.$2.$3-$4"
-                );
-                const formattedPhoneNumber = customer.phone_client.replace(
-                    /(\d{2})(\d{4})(\d{4})/,
-                    "($1) $2-$3"
-                );
-                customer.cpf_client = newCpf;
-                customer.phone_client = formattedPhoneNumber;
-                setCustomerData(customer);
-            } catch (error) {
-                console.log(error);
-                throw error; // Rejeita a Promessa em caso de erro
-            }
-        }
-        gettingCustomer();
-
-    }, [customerData]);
 
 
 
 
     return (
         <>
-            {console.log(customerData)}
             <Grid item xs={10} sx={{ border: '1px solid red' }}>
 
                 <Stack
@@ -300,9 +274,6 @@ export default function CustomerDetails() {
                     </div>
                 ))}
             </div>
-
-
-
 
         </>
 

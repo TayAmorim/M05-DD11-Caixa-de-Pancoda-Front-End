@@ -8,6 +8,7 @@ const AuthProvider = ({ children }) => {
   const [name, setName] = useState("");
   const [alert, setAlert] = useState("");
   const [userData, setUserData] = useState([]);
+  const [customerDetailsActive, setCustomerDetailsActive] = useState(false);
 
 
   return (
@@ -22,7 +23,9 @@ const AuthProvider = ({ children }) => {
         name,
         setName,
         userData,
-        setUserData
+        setUserData,
+        customerDetailsActive,
+        setCustomerDetailsActive
       }}
     >
       {children}
