@@ -17,8 +17,10 @@ import editIcon2 from "../../assets/editicon2.svg";
 import deleteIcon from "../../assets/deleteicon.svg";
 import sortIconHeaders from "../../assets/sortIconHeaders.svg";
 import axios from "axios";
-import { Await, useParams } from 'react-router-dom';
+import { Await } from 'react-router-dom';
 import { AuthContext } from "../../context/myContext";
+import { format } from '../../../node_modules/date-fns';
+import ptBr from 'date-fns/locale/pt-BR';
 
 
 export default function CustomerDetails({ data }) {
@@ -27,10 +29,7 @@ export default function CustomerDetails({ data }) {
     const words = nameUser.split(' ');
     const firstLetters = [];
 
-    const { customerDetailsActive, setCustomerDetailsActive } = useContext(AuthContext);
-
-    const { id } = useParams();
-    const customerData = data[id - 1];
+    const { customerData, setCustomerData } = useContext(AuthContext);
 
     for (let i = 0; i < 2; i++) {
         if (words[i] && words[i].length > 0) {
@@ -39,13 +38,9 @@ export default function CustomerDetails({ data }) {
         }
     }
 
-
-
-
-
     return (
         <>
-            <Grid item xs={10} sx={{ border: '1px solid red' }}>
+            <Grid item xs={10} >
 
                 <Stack
                     direction="row"
@@ -116,7 +111,6 @@ export default function CustomerDetails({ data }) {
 
 
             <Grid item xs={10} sx={{
-                border: '1px solid red',
                 marginLeft: "11.8rem"
             }}>
                 <Stack direction="row"
@@ -212,68 +206,74 @@ export default function CustomerDetails({ data }) {
                 </div>
             </Stack>
 
-            <Stack direction="row"
-                sx={{
-                    padding: "3rem 3rem 1rem",
-                    marginLeft: "15.3rem",
-                    marginTop: "3rem"
-                }}
-                justifyContent="space-between"
-            >
-                <h3>Cobranças do Cliente </h3>
-                <Button
-                    sx={{
-                        marginLeft: "66.3rem",
-                        width: "20rem",
-                        height: "3.5rem",
-                        borderRadius: "1rem",
-                        backgroundColor: "#DA0175",
-                        "&:hover": {
-                            backgroundColor: "#790342",
-                        },
-                        fontSize: "1.4rem",
-                    }}
-                    variant="contained"
-                    type="button"
-                >
-                    + Nova cobrança
-                </Button>
-            </Stack>
+            <Grid item xs={11}
+                sx={{ marginLeft: '10rem' }}>
 
-            <div className="box-table-billings-details">
-                <div className="table-header-customerData-details">
-                    <ul>
-                        <li>
-                            <img src={sortIconHeaders} alt="Sort Icon" />
-                            Id.Cob
-                        </li>
-                        <li>
-                            <img src={sortIconHeaders} alt="Sort Icon" />Data de venc.</li>
-                        <li>Valor</li>
-                        <li>Status</li>
-                        <li>Descrição</li>
-                    </ul>
-                </div>
-                {customerData.charges.map(charges => (
-                    <div className="body-table-customerData" key={charges.id}>
-                        <ul>
-                            <li>{charges.id_charges}</li>
-                            <li>{charges.due_date}</li>
-                            <li>R$ {(charges.amount / 100).toFixed(2)}</li>
-                            <li>{charges.status ? "Vencida" : "Em dia"}</li>
-                            <li>{charges['description ']}</li>
-                            <li>
-                                <img src={editIcon} alt="Edit Billing Icon" />
 
-                            </li>
-                            <li>
-                                <img src={deleteIcon} alt="Delete Billing Icon" />
 
-                            </li>
-                        </ul>
+                <div className="container-billingMain">
+                    <div className="billing-box-header">
+                        <div className="title-billing">
+                            <h1>Cobrança</h1>
+                        </div>
+                        <div className="search-box-users charges">
+                        </div>
                     </div>
-                ))}
-            </div>
+                    <div className="box-table-billings ">
+                        <div className="table-header-customer charges-table">
+                            <ul>
+                                <li>
+                                    <img src={sortIconHeaders} alt="Sort Icon" />
+                                    Cliente
+                                </li>
+                                <li>
+                                    <img src={sortIconHeaders} alt="Sort Icon" />
+                                    ID Cob.
+                                </li>
+                                <li>Valor</li>
+                                <li>Data de Venc.</li>
+                                <li>Status</li>
+                                <li>Descrição</li>
+                                <li></li>
+                                <li></li>
+                            </ul>
+                        </div>
+                        <div className="body-table-customer charges-table">
+
+                            {customerData.charges.map((charges) => {
+                                const day = format(new Date(charges.due_date), 'dd/MM/yyy', { locale: ptBr })
+                                const dueDate = new Date(charges.due_date);
+                                const isExpired = charges.status_charge && dueDate > new Date();
+                                return (
+                                    <ul key={charges.id_charges}>
+                                        <li>{customerData.name_client}</li>
+                                        <li>{charges.id_charges}</li>
+                                        <li>{`R$: ${(charges.amount / 100).toFixed(2).replace('.', ',')}`}</li>
+                                        <li>{String(Number(day.slice(0, 2)) + 1) + '/' + day.slice(3, 5) + '/' + day.slice(6)}</li>
+                                        <li className={charges.status_charge ? (isExpired ? "expired-client" : "pending-client") : "paid-client"}>
+                                            {charges.status_charge ? (isExpired ? "Vencido" : "Pendente") : "Pago"}
+                                        </li>
+
+                                        <li>{charges.description}</li>
+                                        <li></li>
+                                        <li className="edit-delete">
+                                            <div onClick={() => { setOpenModalEditCharges(true); setIdEdit(charges.id) }}>
+                                                <img src={editIcon} alt="Edit Icon" />
+                                                <span>Editar</span>
+                                            </div>
+                                            <div onClick={() => { setOpenModalDeleteCharges(true); setIdDelete(charges.id) }}>
+                                                <img src={deleteIcon} alt="Delete Icon" />
+                                                <span>Deletar</span>
+                                            </div>
+                                        </li>
+                                    </ul>
+                                );
+                            })}
+                        </div>
+                    </div>
+                </div>
+            </Grid >
+
 
         </>
 

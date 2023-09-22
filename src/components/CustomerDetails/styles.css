@@ -23,28 +23,8 @@
     width: 19rem;
 }
 
-.box-table-billings-details {
-    width: 76%;
-    max-height: 80rem;
-    background-color: #fff;
-    border-radius: 3rem;
-    margin-left: 18rem;
-    margin-bottom: 5rem;
-    overflow-x: auto;
-    animation: slideFromRight .7s ease-in-out;
-}
 
-.table-header-customerData-details ul,
-.body-table-customerData ul {
-    margin: 2rem;
-    padding-bottom: 2rem;
-    list-style: none;
-    display: grid;
-    grid-template-columns: repeat(7, 2fr);
-    text-align: center;
-    color: #344054;
-    border-bottom: 1px solid rgb(223, 223, 223);
-}
+
 
 .table-header-customer-details ul {
     font-weight: bold;
@@ -56,4 +36,67 @@
 .table-header-customer-details img {
     align-items: center;
 
+}
+
+.charges {
+    justify-content: flex-end;
+}
+
+.charges {
+    justify-content: flex-end;
+}
+
+.charges-table ul {
+    grid-template-columns: repeat(8, 1fr);
+}
+
+.edit-delete {
+    display: flex;
+    gap: 2rem;
+}
+
+.edit-delete div {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.edit-delete img {
+    cursor: pointer;
+}
+
+.edit-delete div span {
+    margin-top: .8rem;
+    font-size: 1rem;
+    cursor: pointer;
+}
+
+.edit-delete div:nth-child(2) {
+    color: red;
+}
+
+.expired-client,
+.pending-client,
+.paid-client {
+    font-weight: bold;
+    width: 60%;
+    border-radius: 1.5rem;
+    padding: 0 2rem;
+    margin: 0 auto;
+}
+
+.expired-client {
+    color: var(--wine-normal);
+    background-color: var(--wine-light);
+}
+
+.pending-client {
+    color: var(--yellow-normal);
+    background-color: var(--yellow-light);
+}
+
+.paid-client {
+    color: var(--greenSupport-normal);
+    background-color: var(--greenSupport-light);
 }

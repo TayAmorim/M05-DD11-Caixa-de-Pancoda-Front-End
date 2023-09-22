@@ -11,11 +11,12 @@ import { useContext, useState } from "react";
 import ModalEditUser from "../../components/modalEdituser";
 import { ModalContext } from "../../context/modalContext";
 import ModalSucess from "../../components/modalSucess";
-
+import CustomerDetails from "../../components/CustomerDetails/index";
 export default function Home() {
   const [openModalCustomer, setOpenModalCustomer] = useState(false);
   const { OpenModalEditUser, setOpenModalEditUser, sucess, setSucess } =
     useContext(ModalContext);
+
 
   return (
     <>
@@ -33,7 +34,7 @@ export default function Home() {
           />
           <Route
             path="clientes/detalhes/:id"
-            element={<h1>Detalhamento do Cliente</h1>}
+            element={<CustomerDetails />}
           />
           <Route path="cobranca" />
         </Routes>
