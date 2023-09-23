@@ -24,7 +24,12 @@
 }
 
 
-
+.billing-header {
+    display: flex;
+    width: 80.9%;
+    justify-content: space-between;
+    margin-left: 17.8rem;
+}
 
 .table-header-customer-details ul {
     font-weight: bold;
@@ -99,4 +104,9 @@
 .paid-client {
     color: var(--greenSupport-normal);
     background-color: var(--greenSupport-light);
+}
+
+.container-billingMain {
+    margin-top: 5rem;
+    margin-left: 8rem;
 }

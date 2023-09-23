@@ -17,7 +17,7 @@ import editIcon2 from "../../assets/editicon2.svg";
 import deleteIcon from "../../assets/deleteicon.svg";
 import sortIconHeaders from "../../assets/sortIconHeaders.svg";
 import axios from "axios";
-import { Await } from 'react-router-dom';
+import { Await, useNavigate } from 'react-router-dom';
 import { AuthContext } from "../../context/myContext";
 import { format } from '../../../node_modules/date-fns';
 import ptBr from 'date-fns/locale/pt-BR';
@@ -28,8 +28,13 @@ export default function CustomerDetails({ data }) {
     const nameUser = userStorage.name;
     const words = nameUser.split(' ');
     const firstLetters = [];
+    const navigate = useNavigate();
 
     const { customerData, setCustomerData } = useContext(AuthContext);
+
+    const handleNavigateClients = () => {
+        navigate('/clientes')
+    }
 
     for (let i = 0; i < 2; i++) {
         if (words[i] && words[i].length > 0) {
@@ -60,6 +65,7 @@ export default function CustomerDetails({ data }) {
                             gap: '1rem'
                         }}
                         justifyContent="space-between"
+                        onClick={handleNavigateClients}
                     >
                         <h1
                             style={{
@@ -67,6 +73,7 @@ export default function CustomerDetails({ data }) {
                                 color: "#0E8750",
                                 alignSelf: "flex-end",
                                 marginBottom: "-2rem",
+                                cursor: "pointer"
                             }}
                         >
                             Clientes
@@ -76,8 +83,9 @@ export default function CustomerDetails({ data }) {
                                 fontSize: "1.6rem",
                                 color: "#0E8750",
                                 alignSelf: "flex-end",
-                                marginBottom: "-2rem",
+                                marginBottom: "-2rem"
                             }}
+
                         >
     >
                         </h1>
@@ -87,6 +95,7 @@ export default function CustomerDetails({ data }) {
                                 color: "#747488",
                                 alignSelf: "flex-end",
                                 marginBottom: "-2rem",
+                                cursor: "pointer"
                             }}
                         >
                             Detalhes do cliente
@@ -110,15 +119,13 @@ export default function CustomerDetails({ data }) {
             </Grid>
 
 
-            <Grid item xs={10} sx={{
-                marginLeft: "11.8rem"
-            }}>
+            <Grid item xs={10} >
                 <Stack direction="row"
                     spacing={2}
                     sx={{
                         padding: "3rem 3rem 1rem",
                         justifyContent: "left",
-                        marginLeft: "2.5rem"
+                        marginLeft: "14rem"
                     }}
                 >
 
@@ -129,13 +136,9 @@ export default function CustomerDetails({ data }) {
             </Grid>
 
 
-            <Stack direction="row"
-                sx={{
-                    padding: "3rem 3rem 1rem",
-                    marginLeft: "15.3rem"
-                }}
-                justifyContent="space-between"
-            >
+
+            <div className="billing-header">
+
                 <h3>Dados do cliente </h3>
                 <Button
                     sx={{
@@ -144,7 +147,7 @@ export default function CustomerDetails({ data }) {
                         borderRadius: "1rem",
                         backgroundColor: "#F8F8F9",
                         color: "#0E8750",
-                        marginLeft: "70.3rem",
+                        alignSelf: "end",
                         "&:hover": {
                             backgroundColor: "#0E8000",
                             color: "#F8F8F9"
@@ -156,7 +159,7 @@ export default function CustomerDetails({ data }) {
                 >
                     <img src={editIcon2} alt="" /> Editar Cliente
                 </Button>
-            </Stack>
+            </div>
             <Stack direction={'column'}
                 sx={{
                     paddingTop: "2rem",
@@ -218,6 +221,23 @@ export default function CustomerDetails({ data }) {
                         </div>
                         <div className="search-box-users charges">
                         </div>
+                        <Button
+                            sx={{
+                                width: "25rem",
+                                height: "3.5rem",
+                                borderRadius: "1rem",
+                                backgroundColor: "#DA0175",
+                                "&:hover": {
+                                    backgroundColor: "#790342",
+                                },
+                                fontSize: "1.4rem",
+                            }}
+                            onClick={() => setOpenModalCustomer(true)}
+                            variant="contained"
+                            type="button"
+                        >
+                            + Nova Cobrança
+                        </Button>
                     </div>
                     <div className="box-table-billings ">
                         <div className="table-header-customer charges-table">
@@ -243,15 +263,15 @@ export default function CustomerDetails({ data }) {
                             {customerData.charges.map((charges) => {
                                 const day = format(new Date(charges.due_date), 'dd/MM/yyy', { locale: ptBr })
                                 const dueDate = new Date(charges.due_date);
-                                const isExpired = charges.status_charge && dueDate > new Date();
+                                const isExpired = charges.status && dueDate > new Date();
                                 return (
                                     <ul key={charges.id_charges}>
                                         <li>{customerData.name_client}</li>
                                         <li>{charges.id_charges}</li>
                                         <li>{`R$: ${(charges.amount / 100).toFixed(2).replace('.', ',')}`}</li>
                                         <li>{String(Number(day.slice(0, 2)) + 1) + '/' + day.slice(3, 5) + '/' + day.slice(6)}</li>
-                                        <li className={charges.status_charge ? (isExpired ? "expired-client" : "pending-client") : "paid-client"}>
-                                            {charges.status_charge ? (isExpired ? "Vencido" : "Pendente") : "Pago"}
+                                        <li className={charges.status ? (isExpired ? "expired-client" : "pending-client") : "paid-client"}>
+                                            {charges.status ? (isExpired ? "Vencido" : "Pendente") : "Pago"}
                                         </li>
 
                                         <li>{charges.description}</li>
