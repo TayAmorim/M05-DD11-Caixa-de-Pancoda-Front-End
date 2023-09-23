@@ -8,6 +8,9 @@ const AuthProvider = ({ children }) => {
   const [name, setName] = useState("");
   const [alert, setAlert] = useState("");
   const [userData, setUserData] = useState([]);
+  const [customerData, setCustomerData] = useState(false);
+
+
   return (
     <AuthContext.Provider
       value={{
@@ -21,6 +24,8 @@ const AuthProvider = ({ children }) => {
         setName,
         userData,
         setUserData,
+        customerData,
+        setCustomerData
       }}
     >
       {children}

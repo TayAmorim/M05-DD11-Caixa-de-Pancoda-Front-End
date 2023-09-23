@@ -120,16 +120,12 @@ export default function modalEditUser({ setOpenModalEditUser }) {
     if (phone) {
 
       if (phoneClearMask.length < 10) {
-        console.log(phoneClearMask);
         setAlert("O número de telefone deve ter entre 10 e 11 dígitos");
         return;
       }
     }
-
-
     try {
       const password = newPassword;
-
 
       let updateUser;
       if (password) {

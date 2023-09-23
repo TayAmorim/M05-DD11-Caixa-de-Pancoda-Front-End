@@ -11,7 +11,7 @@ import { useContext, useState } from "react";
 import ModalEditUser from "../../components/modalEdituser";
 import { ModalContext } from "../../context/modalContext";
 import ModalSucess from "../../components/modalSucess";
-
+import CustomerDetails from "../../components/CustomerDetails/index";
 export default function Home() {
   const [openModalCustomer, setOpenModalCustomer] = useState(false);
   const { OpenModalEditUser, setOpenModalEditUser, sucess, setSucess } =
@@ -31,10 +31,7 @@ export default function Home() {
               <CustomerList setOpenModalCustomer={setOpenModalCustomer} />
             }
           />
-          <Route
-            path="clientes/detalhes/:id"
-            element={<h1>Detalhamento do Cliente</h1>}
-          />
+          <Route path="clientes/detalhes" element={<CustomerDetails />} />
           <Route path="cobranca" />
         </Routes>
         {OpenModalEditUser && (

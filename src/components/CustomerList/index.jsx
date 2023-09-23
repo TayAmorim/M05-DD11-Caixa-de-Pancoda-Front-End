@@ -15,12 +15,14 @@ import clients from "../../assets/clients.svg";
 import searchControler from "../../assets/customersSettings.svg";
 import sortIconHeaders from "../../assets/sortIconHeaders.svg";
 import addBilling from "../../assets/addBilling.svg";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import { AuthContext } from "../../context/myContext";
 
 export default function CustomerList({ setOpenModalCustomer }) {
   const userStorage = JSON.parse(localStorage.getItem("user"));
+  const { setCustomerData } = useContext(AuthContext);
   const [customersList, setCustomersList] = useState([]);
   const nameUser = userStorage.name;
   const words = nameUser.split(" ");
@@ -63,8 +65,12 @@ export default function CustomerList({ setOpenModalCustomer }) {
     gettingCustomerList();
   }, []);
 
-  function detailCustomer(id) {
-    navigate(`/clientes/detalhes/${id}`);
+  async function detailCustomer(id) {
+    const response = await axios.get(`http://localhost:3000/clientes/${id}`, {
+      headers: { "Content-Type": "application/json" },
+    });
+    navigate("/clientes/detalhes");
+    setCustomerData(response.data);
   }
 
   function createBilling(idCustomer, nameCustomer) {

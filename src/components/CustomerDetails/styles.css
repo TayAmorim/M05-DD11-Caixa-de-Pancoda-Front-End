@@ -1,0 +1,112 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter&display=swap');
+
+.css-1890l8n-MuiStack-root h1 {
+    font-family: 'Inter', sans-serif;
+    font-size: 1rem;
+    font-weight: 400;
+    line-height: 24px;
+    letter-spacing: 0em;
+    text-align: left;
+}
+
+.first-client-data-row {
+    display: flex;
+
+}
+
+.second-client-data-row {
+    display: flex;
+    margin-top: 4rem;
+}
+
+.data-client-space {
+    width: 19rem;
+}
+
+
+.billing-header {
+    display: flex;
+    width: 80.9%;
+    justify-content: space-between;
+    margin-left: 17.8rem;
+}
+
+.table-header-customer-details ul {
+    font-weight: bold;
+    font-size: 1.5rem;
+    align-items: center;
+
+}
+
+.table-header-customer-details img {
+    align-items: center;
+
+}
+
+.charges {
+    justify-content: flex-end;
+}
+
+.charges {
+    justify-content: flex-end;
+}
+
+.charges-table ul {
+    grid-template-columns: repeat(8, 1fr);
+}
+
+.edit-delete {
+    display: flex;
+    gap: 2rem;
+}
+
+.edit-delete div {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.edit-delete img {
+    cursor: pointer;
+}
+
+.edit-delete div span {
+    margin-top: .8rem;
+    font-size: 1rem;
+    cursor: pointer;
+}
+
+.edit-delete div:nth-child(2) {
+    color: red;
+}
+
+.expired-client,
+.pending-client,
+.paid-client {
+    font-weight: bold;
+    width: 60%;
+    border-radius: 1.5rem;
+    padding: 0 2rem;
+    margin: 0 auto;
+}
+
+.expired-client {
+    color: var(--wine-normal);
+    background-color: var(--wine-light);
+}
+
+.pending-client {
+    color: var(--yellow-normal);
+    background-color: var(--yellow-light);
+}
+
+.paid-client {
+    color: var(--greenSupport-normal);
+    background-color: var(--greenSupport-light);
+}
+
+.container-billingMain {
+    margin-top: 5rem;
+    margin-left: 8rem;
+}
