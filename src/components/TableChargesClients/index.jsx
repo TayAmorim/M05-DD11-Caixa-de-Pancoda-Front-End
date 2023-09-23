@@ -4,6 +4,7 @@ import { ReactComponent as DefaultingSvg } from "../../assets/defaultingCustomer
 import { ReactComponent as CompliantSvg } from "../../assets/compliant.svg";
 import "./styles.css";
 import colors from "../../style/colors";
+import {Link} from 'react-router-dom'
 
 function TableChargeClients({ title, defaulter, number }) {
   const backgroundChip = defaulter
@@ -79,7 +80,7 @@ function TableChargeClients({ title, defaulter, number }) {
         <span>041.477.456-56</span>
       </Stack>
       <Stack sx={{ margin: "0 auto", paddingBlock: "1rem" }}>
-        <a className="btn-more">Ver Todos</a>
+        <Link to={'/cobranca'}><a className="btn-more">Ver Todos</a></Link>
       </Stack>
     </Stack>
   );

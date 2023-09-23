@@ -20,7 +20,10 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { AuthContext } from "../../context/myContext";
 
-export default function CustomerList({ setOpenModalCustomer }) {
+export default function CustomerList({
+  setOpenModalCustomer,
+  setOpenModalCreateCharges,
+}) {
   const userStorage = JSON.parse(localStorage.getItem("user"));
   const { setCustomerData } = useContext(AuthContext);
   const [customersList, setCustomersList] = useState([]);

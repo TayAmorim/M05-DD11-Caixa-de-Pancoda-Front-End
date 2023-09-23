@@ -24,4 +24,8 @@ db.json
 *.sln
 *.sw?
 .vite
+<<<<<<< HEAD
 db.json
+=======
+db.json
+>>>>>>> developer
