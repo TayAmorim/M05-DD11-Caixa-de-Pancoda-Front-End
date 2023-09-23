@@ -8,10 +8,11 @@ const AuthProvider = ({ children }) => {
   const [name, setName] = useState("");
   const [alert, setAlert] = useState("");
   const [userData, setUserData] = useState([]);
-  const [idDelete, setIdDelete] = useState('')
-  const [dataCharges, setDataCharges] =useState([])
-  const [dataChargesById, setDataChargesById] =useState([])
-  const [idEdit, setIdEdit] = useState('')
+  const [idDelete, setIdDelete] = useState("");
+  const [dataCharges, setDataCharges] = useState([]);
+  const [dataChargesById, setDataChargesById] = useState([]);
+  const [idEdit, setIdEdit] = useState("");
+  const [customerData, setCustomerData] = useState(false);
 
   return (
     <AuthContext.Provider
@@ -26,14 +27,16 @@ const AuthProvider = ({ children }) => {
         setName,
         userData,
         setUserData,
-        idDelete, 
+        idDelete,
         setIdDelete,
-        dataCharges, 
+        dataCharges,
         setDataCharges,
-        dataChargesById, 
+        dataChargesById,
         setDataChargesById,
         setIdEdit,
-        idEdit
+        idEdit,
+        customerData,
+        setCustomerData,
       }}
     >
       {children}

@@ -9,7 +9,9 @@ import LoginRoutes from "./components/LoginRoutes/LoginRoutes";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
+
 export default function MyRoutes() {
+
   return (
     <>
       <ModalProvider>
@@ -21,6 +23,7 @@ export default function MyRoutes() {
           <Route element={<ProtectedRoutes redirectTo={"/login"} />}>
             <Route path="/*" element={<Home />} />
           </Route>
+
 
           <Route path="*" element={<NotFoundPage />} />
         </Routes>
