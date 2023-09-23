@@ -65,14 +65,12 @@ export default function CustomerList({ setOpenModalCustomer }) {
     gettingCustomerList();
   }, []);
 
-
-
   async function detailCustomer(id) {
     const response = await axios.get(`http://localhost:3000/clientes/${id}`, {
       headers: { "Content-Type": "application/json" },
     });
-    navigate(`/clientes/detalhes/${id}`);
-    setCustomerData(response.data)
+    navigate("/clientes/detalhes");
+    setCustomerData(response.data);
   }
 
   function createBilling(idCustomer, nameCustomer) {

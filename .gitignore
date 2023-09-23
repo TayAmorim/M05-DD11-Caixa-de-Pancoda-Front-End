@@ -24,3 +24,4 @@ db.json
 *.sln
 *.sw?
 .vite
+db.json

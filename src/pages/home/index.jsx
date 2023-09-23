@@ -17,7 +17,6 @@ export default function Home() {
   const { OpenModalEditUser, setOpenModalEditUser, sucess, setSucess } =
     useContext(ModalContext);
 
-
   return (
     <>
       <Grid sx={{ background: colors.Grey.h, position: "relative" }} container>
@@ -32,10 +31,7 @@ export default function Home() {
               <CustomerList setOpenModalCustomer={setOpenModalCustomer} />
             }
           />
-          <Route
-            path="clientes/detalhes/:id"
-            element={<CustomerDetails />}
-          />
+          <Route path="clientes/detalhes" element={<CustomerDetails />} />
           <Route path="cobranca" />
         </Routes>
         {OpenModalEditUser && (
