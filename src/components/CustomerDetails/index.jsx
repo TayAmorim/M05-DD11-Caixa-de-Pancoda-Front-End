@@ -12,8 +12,8 @@ import {
 import NavMenu from "../NavMenu/index";
 import colors from "../../style/colors";
 import clients from "../../assets/clients.svg";
-import editIcon from "../../assets/editicon.svg";
-import editIcon2 from "../../assets/editicon2.svg";
+import editIcon from "../../assets/editIcon.svg";
+import editIcon2 from "../../assets/editIcon2.svg";
 import deleteIcon from "../../assets/deleteIcon.svg";
 import sortIconHeaders from "../../assets/sortIconHeaders.svg";
 import axios from "axios";
