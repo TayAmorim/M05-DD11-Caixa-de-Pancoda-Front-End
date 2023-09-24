@@ -76,6 +76,7 @@ export default function Home() {
         {openModalCreateCharges && (
           <ModalCreateCharges
             setOpenModalCreateCharges={setOpenModalCreateCharges}
+            openModalCreateCharges={openModalCreateCharges}
           />
         )}
       </Grid>

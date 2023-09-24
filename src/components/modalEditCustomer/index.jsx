@@ -72,6 +72,7 @@ export default function modalEditCustomer({ setOpenModalCustomer }) {
         theme: "colored",
       });
       setOpenModalCustomer(false);
+      gettingCustomerList()
     } catch (error) {
       toast.error(`${error.response.data.mensagem}`, {
         position: "bottom-right",
@@ -86,6 +87,31 @@ export default function modalEditCustomer({ setOpenModalCustomer }) {
       console.log(error.message);
     }
   };
+
+  async function gettingCustomerList() {
+    try {
+      const response = await api.get("listclients");
+      const listCustomer = await response.data;
+      console.log(listCustomer.clientsWithStatus)
+      setCustomersList(
+        listCustomer.clientsWithStatus.map((customer) => {
+          const newCpf = customer.cpf_client.replace(
+            /(\d{3})(\d{3})(\d{3})(\d{2})/,
+            "$1.$2.$3-$4"
+          );
+          const formattedPhoneNumber = customer.phone_client.replace(
+            /(\d{2})(\d{4})(\d{4})/,
+            "($1) $2-$3"
+          );
+          customer.cpf_client = newCpf;
+          customer.phone_client = formattedPhoneNumber;
+          return customer;
+        })
+      );
+    } catch (error) {
+      console.log(error.message);
+    }
+  }
 
   const getAddress = async (cep) => {
     if (cep.length == 8) {
