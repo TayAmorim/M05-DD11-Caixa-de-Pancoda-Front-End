@@ -19,6 +19,7 @@ import { useContext, useEffect, useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { AuthContext } from "../../context/myContext";
+import api from "../../api/api";
 
 export default function CustomerList({
   setOpenModalCustomer,
@@ -42,10 +43,9 @@ export default function CustomerList({
   useEffect(() => {
     async function gettingCustomerList() {
       try {
-        const response = await axios.get("http://localhost:3000/clientes", {
-          headers: { "Content-Type": "application/json" },
-        });
-        const listCustomer = await response.data;
+        const response = await api.get("listClients");
+        console.log(response.data.clientsWithStatus);
+        const listCustomer = await response.data.clientsWithStatus;
         setCustomersList(
           listCustomer.map((customer) => {
             const newCpf = customer.cpf_client.replace(
@@ -69,11 +69,11 @@ export default function CustomerList({
   }, []);
 
   async function detailCustomer(id) {
-    const response = await axios.get(`http://localhost:3000/clientes/${id}`, {
-      headers: { "Content-Type": "application/json" },
-    });
+    const response = await api.get(`detailclient/${id}`,);
+    console.log(response.data);
     navigate("/clientes/detalhes");
     setCustomerData(response.data);
+    console.log(response.data);
   }
 
   function createBilling(idCustomer, nameCustomer) {
@@ -253,7 +253,37 @@ export default function CustomerList({
           </div>
         ) : (
           <div className="mensage-customerList">
-            <h1>Você não tem clientes cadastrados</h1>
+            <Stack
+              sx={{
+                width: "100%",
+                display: "flex",
+                justifyContent: "center",
+              }}
+              direction="row"
+              spacing={2}
+            >
+              <h1>Você não tem clientes cadastrados</h1>
+              <Button
+                sx={{
+                  width: "25rem",
+                  height: "3.5rem",
+                  borderRadius: "1rem",
+                  backgroundColor: "#DA0175",
+                  "&:hover": {
+                    backgroundColor: "#790342",
+                  },
+                  fontSize: "1.4rem",
+                }}
+                onClick={() => setOpenModalCustomer(true)}
+                variant="contained"
+                type="button"
+              >
+                + Adicionar Cliente
+              </Button>
+            </Stack>
+
+
+
           </div>
         )}
       </Grid>

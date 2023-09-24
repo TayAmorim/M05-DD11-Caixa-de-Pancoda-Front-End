@@ -16,24 +16,29 @@ import editIcon from "../../assets/editIcon.svg";
 import editIcon2 from "../../assets/editIcon2.svg";
 import deleteIcon from "../../assets/deleteIcon.svg";
 import sortIconHeaders from "../../assets/sortIconHeaders.svg";
-import axios from "axios";
 import { Await, useNavigate } from "react-router-dom";
 import { AuthContext } from "../../context/myContext";
 import { format } from "../../../node_modules/date-fns";
 import ptBr from "date-fns/locale/pt-BR";
+import { ModalContext } from "../../context/modalContext";
+import modalEditUser from "../modalEdituser";
 
-export default function CustomerDetails({ data }) {
+export default function CustomerDetails({ setOpenModalCustomers, setOpenModalCreateCharges }) {
   const userStorage = JSON.parse(localStorage.getItem("user"));
   const nameUser = userStorage.name;
   const words = nameUser.split(" ");
   const firstLetters = [];
   const navigate = useNavigate();
-
   const { customerData, setCustomerData } = useContext(AuthContext);
+  console.log(customerData);
 
   const handleNavigateClients = () => {
     navigate("/clientes");
   };
+
+  const handleOpenModalEditCustomer = () => {
+    setOpenModalCustomers(true);
+  }
 
   for (let i = 0; i < 2; i++) {
     if (words[i] && words[i].length > 0) {
@@ -143,6 +148,7 @@ export default function CustomerDetails({ data }) {
           }}
           variant="contained"
           type="button"
+          onClick={() => handleOpenModalEditCustomer()}
         >
           <img src={editIcon2} alt="" /> Editar Cliente
         </Button>
@@ -185,7 +191,7 @@ export default function CustomerDetails({ data }) {
           </div>
           <div className="data-client-space">
             <h5>CEP</h5>
-            <p>{customerData.address_complete.zip_code}</p>
+            <p>{customerData.address_complete.cep}</p>
           </div>
           <div className="data-client-space">
             <h5>Cidade</h5>
@@ -216,7 +222,7 @@ export default function CustomerDetails({ data }) {
                 },
                 fontSize: "1.4rem",
               }}
-              onClick={() => setOpenModalCustomer(true)}
+              onClick={() => setOpenModalCreateCharges(true)}
               variant="contained"
               type="button"
             >
