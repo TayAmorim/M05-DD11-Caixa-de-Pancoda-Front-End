@@ -13,6 +13,9 @@ const AuthProvider = ({ children }) => {
   const [dataChargesById, setDataChargesById] = useState([]);
   const [idEdit, setIdEdit] = useState("");
   const [customerData, setCustomerData] = useState(false);
+  const [fetchClientList, setFetchClientList] = useState(false)
+  const [nameModalCreateCharge, setNameModalCreateCharge] = useState('')
+  const [idModalCreateCharge, setIdModalCreateCharge] = useState('')
 
   return (
     <AuthContext.Provider
@@ -37,6 +40,11 @@ const AuthProvider = ({ children }) => {
         idEdit,
         customerData,
         setCustomerData,
+        nameModalCreateCharge, 
+        setNameModalCreateCharge,
+        idModalCreateCharge, 
+        setIdModalCreateCharge,
+        fetchClientList, setFetchClientList
       }}
     >
       {children}

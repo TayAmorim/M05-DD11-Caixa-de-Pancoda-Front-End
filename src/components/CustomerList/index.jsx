@@ -1,4 +1,5 @@
 import "./style.css";
+import * as React from 'react';
 import {
   Avatar,
   Grid,
@@ -7,6 +8,7 @@ import {
   TextField,
   IconButton,
   Button,
+  CircularProgress
 } from "@mui/material";
 import NavMenu from "../NavMenu";
 import colors from "../../style/colors";
@@ -16,7 +18,7 @@ import searchControler from "../../assets/customersSettings.svg";
 import sortIconHeaders from "../../assets/sortIconHeaders.svg";
 import addBilling from "../../assets/addBilling.svg";
 import { useContext, useEffect, useState } from "react";
-import axios from "axios";
+import api from '../../api/api'
 import { useNavigate } from "react-router-dom";
 import { AuthContext } from "../../context/myContext";
 
@@ -25,12 +27,14 @@ export default function CustomerList({
   setOpenModalCreateCharges,
 }) {
   const userStorage = JSON.parse(localStorage.getItem("user"));
-  const { setCustomerData } = useContext(AuthContext);
+  const { setCustomerData, setNameModalCreateCharge, setIdModalCreateCharge, fetchClientList, setFetchClientList } = useContext(AuthContext);
   const [customersList, setCustomersList] = useState([]);
   const nameUser = userStorage.name;
   const words = nameUser.split(" ");
   const firstLetters = [];
   const navigate = useNavigate();
+  const [page, setPage] = useState(1)
+  const [totalPage, setTotalPage] = useState('')
 
   for (let i = 0; i < 2; i++) {
     if (words[i] && words[i].length > 0) {
@@ -40,44 +44,66 @@ export default function CustomerList({
   }
 
   useEffect(() => {
-    async function gettingCustomerList() {
-      try {
-        const response = await axios.get("http://localhost:3000/clientes", {
-          headers: { "Content-Type": "application/json" },
-        });
-        const listCustomer = await response.data;
-        setCustomersList(
-          listCustomer.map((customer) => {
-            const newCpf = customer.cpf_client.replace(
-              /(\d{3})(\d{3})(\d{3})(\d{2})/,
-              "$1.$2.$3-$4"
-            );
-            const formattedPhoneNumber = customer.phone_client.replace(
-              /(\d{2})(\d{4})(\d{4})/,
-              "($1) $2-$3"
-            );
-            customer.cpf_client = newCpf;
-            customer.phone_client = formattedPhoneNumber;
-            return customer;
-          })
-        );
-      } catch (error) {
-        console.log(error);
-      }
+    if(fetchClientList){
+      gettingCustomerList()
     }
+    setFetchClientList(false)
+  }, [fetchClientList])
+
+
+  async function gettingCustomerList(newPage) {
+    try {
+      const response = await api.get(`/listclients?page=${newPage}`);
+
+      const listCustomer = await response.data;
+      setTotalPage(listCustomer.totalPages)
+      setCustomersList(
+        listCustomer.clientsWithStatus.map((customer) => {
+          const newCpf = customer.cpf_client.replace(
+            /(\d{3})(\d{3})(\d{3})(\d{2})/,
+            "$1.$2.$3-$4"
+          );
+          const formattedPhoneNumber = customer.phone_client.replace(
+            /(\d{2})(\d{4})(\d{4})/,
+            "($1) $2-$3"
+          );
+          customer.cpf_client = newCpf;
+          customer.phone_client = formattedPhoneNumber;
+          return customer;
+        })
+      );
+    } catch (error) {
+      console.log(error.message);
+    }
+  }
+  useEffect(() => {
     gettingCustomerList();
   }, []);
 
   async function detailCustomer(id) {
-    const response = await axios.get(`http://localhost:3000/clientes/${id}`, {
-      headers: { "Content-Type": "application/json" },
-    });
+    const response = await api.get(`/detailclient/${id}`);
+
     navigate("/clientes/detalhes");
     setCustomerData(response.data);
   }
 
   function createBilling(idCustomer, nameCustomer) {
-    console.log(idCustomer, nameCustomer);
+    setNameModalCreateCharge(nameCustomer)
+    setIdModalCreateCharge(idCustomer)
+  }
+
+  function handlePreviousPage() {
+    if (page > 1) {
+      const newPage = page - 1;
+      setPage(newPage);
+      gettingCustomerList(newPage);
+    }
+  }
+
+  function handleNextPage() {
+    const newPage = page + 1;
+    setPage(newPage);
+    gettingCustomerList(newPage);
   }
 
   return (
@@ -225,36 +251,87 @@ export default function CustomerList({
                       className="link-detail-customer"
                       onClick={() => detailCustomer(customer.id)}
                     >
-                      {customer.name_client}
+                      {customer.name_client.length < 12 ? customer.name_client : customer.name_client.slice(0, 12) + '...'}
                     </li>
                     <li>{customer.cpf_client}</li>
-                    <li>{customer.email_client}</li>
+                    <li>{customer.email_client.length < 15 ? customer.email_client : customer.email_client.slice(0,15) + '...' }</li>
                     <li>{customer.phone_client}</li>
                     <li
                       className={
-                        customer.status ? "up-to-date-client" : "expired-client"
+                        !customer.status ? "up-to-date-client" : "expired-client"
                       }
                     >
-                      {customer.status ? "Em dia" : "Inadimplente"}
+                      {!customer.status ? "Em dia" : "Inadimplente"}
                     </li>
                     <li>
+                      <div style={{display:'flex', alignItems:'center', justifyContent:'center', flexDirection:'column'}}>
                       <img
-                        onClick={() =>
-                          createBilling(customer.id, customer.name_client)
+                        onClick={() => {
+                          createBilling(customer.id, customer.name_client);
+                          setOpenModalCreateCharges(true)
+                        }
                         }
                         src={addBilling}
                         alt="Add Billing Icon"
                       />
+                      <span style={{color:'#DA0175', fontSize:'1.1rem', marginTop:'.5rem'}}>Cobrança</span>
+                      </div>
                     </li>
                   </ul>
                 ))}
               </div>
+
+              <div style={{ margin: "5rem 0" }}>
+                <Stack
+                  sx={{ width: "100%", display: "flex", justifyContent: "center" }}
+                  direction="row"
+                  spacing={2}
+                >
+                  <Button
+                    sx={{
+                      width: "16rem",
+                      height: "4.4rem",
+                      borderRadius: ".8rem",
+                      backgroundColor: "#DA0175",
+                      "&:hover": {
+                        backgroundColor: "#790342",
+                      },
+                      fontSize: "1.4rem",
+                    }}
+                    variant="contained"
+                    type="button"
+                    onClick={() => handlePreviousPage()}
+                    disabled={page == 1}
+                  >
+                    Anterior
+                  </Button>
+                  <Button
+                    sx={{
+                      width: "16rem",
+                      height: "4.4rem",
+                      borderRadius: ".8rem",
+                      backgroundColor: "#DA0175",
+                      "&:hover": {
+                        backgroundColor: "#790342",
+                      },
+                      fontSize: "1.4rem",
+                    }}
+                    variant="contained"
+                    type="button"
+                    onClick={() => handleNextPage()}
+                    disabled={page >= totalPage}
+                  >
+                    Proximo
+                  </Button>
+                </Stack>
+              </div>
+
             </div>
           </div>
         ) : (
-          <div className="mensage-customerList">
-            <h1>Você não tem clientes cadastrados</h1>
-          </div>
+            <Box sx={{ display: 'flex', width:'90vw', height:'calc(100vh - 130px)', alignItems:'center', justifyContent:'center', color:'secondary' }}>
+              <CircularProgress />
+            </Box>
         )}
       </Grid>
     </>

@@ -9,10 +9,10 @@ import api from "../../api/api";
 
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import axios from "axios";
 
-export default function modalEditCustomer({ setOpenModalCreateCharges }) {
-  const { setDataCharges } = useContext(AuthContext)
+
+export default function modalEditCustomer({ setOpenModalCreateCharges, openModalCreateCharges }) {
+  const { setDataCharges, nameModalCreateCharge, idModalCreateCharge, fetchClientList, setFetchClientList } = useContext(AuthContext)
   const [name, setName] = useState('')
   const [alertName, setAlertName] = useState('')
   const [description, setDescription] = useState('')
@@ -25,9 +25,6 @@ export default function modalEditCustomer({ setOpenModalCreateCharges }) {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-    if (!name) {
-      return setAlertName("Este campo deve ser preenchido");
-    }
     if (!description) {
       return setAlertDescription("Este campo deve ser preenchido");
     }
@@ -38,13 +35,12 @@ export default function modalEditCustomer({ setOpenModalCreateCharges }) {
       return setAlertAmount("Campo obrigatório");
     }
     try {
-      const response = await axios.post('http://localhost:3000/cobrancas', {
-        "id": 17,
-        "id_charges": 17,
-        "name_client": name,
-        "amount": amount,
+      const response = await api.post('/charges', {
+        "id_customer": String(idModalCreateCharge),
+        "name_client": nameModalCreateCharge,
+        "amount": Number(amount),
         "due_date": dueDate,
-        "status_charge": radioSelected,
+        "status": radioSelected,
         "description": description
       })
 
@@ -60,15 +56,15 @@ export default function modalEditCustomer({ setOpenModalCreateCharges }) {
       });
       dataValuesCharges()
       setOpenModalCreateCharges(false)
+      setFetchClientList(true)
     } catch (error) {
-      console.log(error)
+      console.log(error.message)
     }
-
   }
   const dataValuesCharges = async () => {
     try {
        
-        const response = await axios.get('http://localhost:3000/cobrancas');
+        const response = await api.get('/listcharges');
         setDataCharges(response.data)
     } catch (error) {
         console.log(error)
@@ -128,7 +124,7 @@ export default function modalEditCustomer({ setOpenModalCreateCharges }) {
                   variant="outlined"
                   type="text"
                   placeholder="Digite o nome"
-                  value={name}
+                  value={nameModalCreateCharge}
                   name="name"
                   disabled
                   InputProps={{
