@@ -2,13 +2,15 @@ import "./style.css";
 import closeIcon from "../../assets/closeIcon.svg";
 import clientsIcon from "../../assets/clients.svg";
 import { Box, TextField, Button, Stack } from "@mui/material";
-import { useState } from "react";
+import { useContext, useState } from "react";
 import api from "../../api/api";
 
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { AuthContext } from "../../context/myContext";
 
 export default function modalEditCustomer({ setOpenModalCustomer }) {
+  const {fetchClientList, setFetchClientList} = useContext(AuthContext)
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [cpf, setCpf] = useState("");
@@ -72,7 +74,7 @@ export default function modalEditCustomer({ setOpenModalCustomer }) {
         theme: "colored",
       });
       setOpenModalCustomer(false);
-      gettingCustomerList()
+      setFetchClientList(true)
     } catch (error) {
       toast.error(`${error.response.data.mensagem}`, {
         position: "bottom-right",
@@ -87,31 +89,6 @@ export default function modalEditCustomer({ setOpenModalCustomer }) {
       console.log(error.message);
     }
   };
-
-  async function gettingCustomerList() {
-    try {
-      const response = await api.get("listclients");
-      const listCustomer = await response.data;
-      console.log(listCustomer.clientsWithStatus)
-      setCustomersList(
-        listCustomer.clientsWithStatus.map((customer) => {
-          const newCpf = customer.cpf_client.replace(
-            /(\d{3})(\d{3})(\d{3})(\d{2})/,
-            "$1.$2.$3-$4"
-          );
-          const formattedPhoneNumber = customer.phone_client.replace(
-            /(\d{2})(\d{4})(\d{4})/,
-            "($1) $2-$3"
-          );
-          customer.cpf_client = newCpf;
-          customer.phone_client = formattedPhoneNumber;
-          return customer;
-        })
-      );
-    } catch (error) {
-      console.log(error.message);
-    }
-  }
 
   const getAddress = async (cep) => {
     if (cep.length == 8) {

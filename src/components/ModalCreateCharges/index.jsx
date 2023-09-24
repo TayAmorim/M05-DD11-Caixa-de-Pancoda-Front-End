@@ -12,7 +12,7 @@ import "react-toastify/dist/ReactToastify.css";
 
 
 export default function modalEditCustomer({ setOpenModalCreateCharges, openModalCreateCharges }) {
-  const { setDataCharges, nameModalCreateCharge, idModalCreateCharge } = useContext(AuthContext)
+  const { setDataCharges, nameModalCreateCharge, idModalCreateCharge, fetchClientList, setFetchClientList } = useContext(AuthContext)
   const [name, setName] = useState('')
   const [alertName, setAlertName] = useState('')
   const [description, setDescription] = useState('')
@@ -56,6 +56,7 @@ export default function modalEditCustomer({ setOpenModalCreateCharges, openModal
       });
       dataValuesCharges()
       setOpenModalCreateCharges(false)
+      setFetchClientList(true)
     } catch (error) {
       console.log(error.message)
     }

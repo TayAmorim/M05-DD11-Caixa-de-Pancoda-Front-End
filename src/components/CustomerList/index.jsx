@@ -27,7 +27,7 @@ export default function CustomerList({
   setOpenModalCreateCharges,
 }) {
   const userStorage = JSON.parse(localStorage.getItem("user"));
-  const { setCustomerData, setNameModalCreateCharge, setIdModalCreateCharge } = useContext(AuthContext);
+  const { setCustomerData, setNameModalCreateCharge, setIdModalCreateCharge, fetchClientList, setFetchClientList } = useContext(AuthContext);
   const [customersList, setCustomersList] = useState([]);
   const nameUser = userStorage.name;
   const words = nameUser.split(" ");
@@ -42,6 +42,13 @@ export default function CustomerList({
       firstLetters.push(first);
     }
   }
+
+  useEffect(() => {
+    if(fetchClientList){
+      gettingCustomerList()
+    }
+    setFetchClientList(false)
+  }, [fetchClientList])
 
 
   async function gettingCustomerList(newPage) {
@@ -244,10 +251,10 @@ export default function CustomerList({
                       className="link-detail-customer"
                       onClick={() => detailCustomer(customer.id)}
                     >
-                      {customer.name_client}
+                      {customer.name_client.length < 12 ? customer.name_client : customer.name_client.slice(0, 12) + '...'}
                     </li>
                     <li>{customer.cpf_client}</li>
-                    <li>{customer.email_client}</li>
+                    <li>{customer.email_client.length < 15 ? customer.email_client : customer.email_client.slice(0,15) + '...' }</li>
                     <li>{customer.phone_client}</li>
                     <li
                       className={
@@ -257,6 +264,7 @@ export default function CustomerList({
                       {!customer.status ? "Em dia" : "Inadimplente"}
                     </li>
                     <li>
+                      <div style={{display:'flex', alignItems:'center', justifyContent:'center', flexDirection:'column'}}>
                       <img
                         onClick={() => {
                           createBilling(customer.id, customer.name_client);
@@ -266,6 +274,8 @@ export default function CustomerList({
                         src={addBilling}
                         alt="Add Billing Icon"
                       />
+                      <span style={{color:'#DA0175', fontSize:'1.1rem', marginTop:'.5rem'}}>Cobrança</span>
+                      </div>
                     </li>
                   </ul>
                 ))}

@@ -13,6 +13,7 @@ const AuthProvider = ({ children }) => {
   const [dataChargesById, setDataChargesById] = useState([]);
   const [idEdit, setIdEdit] = useState("");
   const [customerData, setCustomerData] = useState(false);
+  const [fetchClientList, setFetchClientList] = useState(false)
   const [nameModalCreateCharge, setNameModalCreateCharge] = useState('')
   const [idModalCreateCharge, setIdModalCreateCharge] = useState('')
 
@@ -42,7 +43,8 @@ const AuthProvider = ({ children }) => {
         nameModalCreateCharge, 
         setNameModalCreateCharge,
         idModalCreateCharge, 
-        setIdModalCreateCharge
+        setIdModalCreateCharge,
+        fetchClientList, setFetchClientList
       }}
     >
       {children}
