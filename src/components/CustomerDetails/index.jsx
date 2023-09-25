@@ -1,12 +1,9 @@
 import "./styles.css";
-import { useContext, useEffect, useState } from "react";
+import { useContext } from "react";
 import {
   Avatar,
   Grid,
   Stack,
-  Box,
-  TextField,
-  IconButton,
   Button,
 } from "@mui/material";
 import NavMenu from "../NavMenu/index";
@@ -16,13 +13,10 @@ import editIcon from "../../assets/editIcon.svg";
 import editIcon2 from "../../assets/editIcon2.svg";
 import deleteIcon from "../../assets/deleteIcon.svg";
 import sortIconHeaders from "../../assets/sortIconHeaders.svg";
-import { Await, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { AuthContext } from "../../context/myContext";
 import { format } from "../../../node_modules/date-fns";
 import ptBr from "date-fns/locale/pt-BR";
-import { ModalContext } from "../../context/modalContext";
-import modalEditUser from "../modalEdituser";
-import { api } from "../../api/api";
 
 export default function CustomerDetails({ setOpenModalCustomers, setOpenModalCreateCharges }) {
   const userStorage = JSON.parse(localStorage.getItem("user"));
@@ -257,7 +251,7 @@ export default function CustomerDetails({ setOpenModalCustomers, setOpenModalCre
                   locale: ptBr,
                 });
                 const dueDate = new Date(charges.due_date);
-                const isExpired = charges.status && dueDate > new Date();
+                const isExpired = charges.status && dueDate < new Date();
                 return (
                   <ul key={charges.id_charges}>
                     <li>{customerData.name_client}</li>
