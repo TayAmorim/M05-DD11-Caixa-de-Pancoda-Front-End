@@ -2,7 +2,7 @@ import "./style.css";
 import closeIcon from "../../assets/closeIcon.svg";
 import clientsIcon from "../../assets/clients.svg";
 import { Box, TextField, Button, Stack } from "@mui/material";
-import { useState, useContext } from "react";
+import { useState, useContext, useEffect } from "react";
 import api from "../../api/api";
 import { AuthContext } from "../../context/myContext";
 import { toast } from "react-toastify";
@@ -25,6 +25,8 @@ export default function ModalEditCustomers({ setOpenModalCustomers, customerData
     const [alertCpf, setAlertCpf] = useState("");
     const [alertPhone, setAlertPhone] = useState("");
     const [alertCep, setAlertCep] = useState("");
+    const [alertaDeuceData, setAlertDeuceData] = useState("");
+    const { isClientUpdated, setIsClientUpdated } = useState(false);
     const { setCustomerData } = useContext(AuthContext);
 
 
@@ -61,9 +63,21 @@ export default function ModalEditCustomers({ setOpenModalCustomers, customerData
             state,
         };
 
+        if (customerData.name_client == newClient.name_client &&
+            customerData.email_client == newClient.email_client &&
+            customerData.cpf_client == newClient.cpf_client &&
+            customerData.phone_client == newClient.phone_client &&
+            customerData.address_complete.address == newClient.address &&
+            customerData.address_complete.complement == newClient.complement &&
+            customerData.address_complete.neighborhood == newClient.neighborhood &&
+            customerData.address_complete.city == newClient.city &&
+            customerData.address_complete.state == newClient.state
+        ) {
+            return setAlertDeuceData("Nenhum dado Alterado");
+        }
+
         try {
             await api.put(`clients/${customerData.id}`, newClient);
-            console.log(customerData.id);
 
             toast.success("Cliente editado com sucesso!", {
                 position: "bottom-right",
@@ -75,14 +89,11 @@ export default function ModalEditCustomers({ setOpenModalCustomers, customerData
                 progress: undefined,
                 theme: "colored",
             });
-
-            const updatedDetailClient = await api.get(`detailclient/${id}`)
-
-            setCustomerData(updatedDetailClient);
+            setUsClientUpdated(true);
             setOpenModalCustomers(false);
 
         } catch (error) {
-            toast.error(`${error.response.mensagem}`, {
+            toast.error(`${error.mensagem}`, {
                 position: "bottom-right",
                 autoClose: 5000,
                 hideProgressBar: false,
@@ -137,7 +148,24 @@ export default function ModalEditCustomers({ setOpenModalCustomers, customerData
         setState("");
         setAlertCep("");
     };
+    useEffect(() => {
 
+        async function updateDataCustomer() {
+            try {
+                const response = await api.get(`detailclient/${customerData.id}`);
+
+                setCustomerData(response.data);
+
+            } catch (error) {
+                console.log(error);
+            }
+        }
+        if (isClientUpdated) {
+            updateDataCustomer();
+            setIsClientUpdated(false);
+        }
+
+    }, [customerData])
     return (
         <div className="container-modal-customer">
             <div className="box-modal-customer">
@@ -614,6 +642,7 @@ export default function ModalEditCustomers({ setOpenModalCustomers, customerData
                                     >
                                         Aplicar
                                     </Button>
+                                    {alertaDeuceData && <span>{alertaDeuceData}</span>}
                                 </Stack>
                             </div>
                         </Box>

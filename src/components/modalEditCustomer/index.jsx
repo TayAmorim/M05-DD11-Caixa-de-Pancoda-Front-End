@@ -2,7 +2,7 @@ import "./style.css";
 import closeIcon from "../../assets/closeIcon.svg";
 import clientsIcon from "../../assets/clients.svg";
 import { Box, TextField, Button, Stack } from "@mui/material";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import api from "../../api/api";
 
 import { toast } from "react-toastify";
@@ -128,7 +128,7 @@ export default function modalEditCustomer({ setOpenModalCustomer }) {
     setState("");
     setAlertCep("");
   };
-
+  useEffect
   return (
     <div className="container-modal-customer">
       <div className="box-modal-customer">
