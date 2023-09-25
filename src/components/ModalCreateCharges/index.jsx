@@ -1,27 +1,35 @@
 import "./style.css";
-import * as React from 'react';
+import * as React from "react";
 import closeIcon from "../../assets/closeIcon.svg";
 import chargeIcon from "../../assets/billingsIcon.svg";
 import { Box, TextField, Button, Stack } from "@mui/material";
 import { useState, useContext } from "react";
-import {AuthContext} from '../../context/myContext'
+import { AuthContext } from "../../context/myContext";
 import api from "../../api/api";
-
+import { NumericFormat } from "react-number-format";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
-
-export default function modalEditCustomer({ setOpenModalCreateCharges, openModalCreateCharges }) {
-  const { setDataCharges, nameModalCreateCharge, idModalCreateCharge, fetchClientList, setFetchClientList } = useContext(AuthContext)
-  const [name, setName] = useState('')
-  const [alertName, setAlertName] = useState('')
-  const [description, setDescription] = useState('')
-  const [alertDescription, setAlertDescription] = useState('')
-  const [dueDate, setDueDate] = useState('')
-  const [alertDueDate, setAlertDueDate] = useState('')
-  const [amount, setAmount] = useState('')
-  const [alertAmount, setAlertAmount] = useState('')
-  const [radioSelected, setRadioSelected] = useState(false)
+export default function modalEditCustomer({
+  setOpenModalCreateCharges,
+  openModalCreateCharges,
+}) {
+  const {
+    setDataCharges,
+    nameModalCreateCharge,
+    idModalCreateCharge,
+    fetchClientList,
+    setFetchClientList,
+  } = useContext(AuthContext);
+  const [name, setName] = useState("");
+  const [alertName, setAlertName] = useState("");
+  const [description, setDescription] = useState("");
+  const [alertDescription, setAlertDescription] = useState("");
+  const [dueDate, setDueDate] = useState("");
+  const [alertDueDate, setAlertDueDate] = useState("");
+  const [amount, setAmount] = useState("");
+  const [alertAmount, setAlertAmount] = useState("");
+  const [radioSelected, setRadioSelected] = useState(false);
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -34,15 +42,18 @@ export default function modalEditCustomer({ setOpenModalCreateCharges, openModal
     if (!amount) {
       return setAlertAmount("Campo obrigatório");
     }
+    const valueWithoutSymbol = amount.replace("R$", "").replace(",", "");
+    const valueInFloat = parseFloat(valueWithoutSymbol);
+    const valueInCentavos = Math.round(valueInFloat * 100);
     try {
-      const response = await api.post('/charges', {
-        "id_customer": String(idModalCreateCharge),
-        "name_client": nameModalCreateCharge,
-        "amount": Number(amount),
-        "due_date": dueDate,
-        "status": radioSelected,
-        "description": description
-      })
+      const response = await api.post("/charges", {
+        id_customer: String(idModalCreateCharge),
+        name_client: nameModalCreateCharge,
+        amount: Number(valueInCentavos),
+        due_date: dueDate,
+        status: radioSelected,
+        description: description,
+      });
 
       toast.success("Cobrança criada com sucesso!", {
         position: "bottom-right",
@@ -54,22 +65,25 @@ export default function modalEditCustomer({ setOpenModalCreateCharges, openModal
         progress: undefined,
         theme: "colored",
       });
-      dataValuesCharges()
-      setOpenModalCreateCharges(false)
-      setFetchClientList(true)
+      dataValuesCharges();
+      setOpenModalCreateCharges(false);
+      setFetchClientList(true);
     } catch (error) {
-      console.log(error.message)
+      console.log(error.message);
     }
-  }
+  };
+  const handleAmountChange = (values) => {
+    const { value } = values;
+    setAmount(value);
+  };
   const dataValuesCharges = async () => {
     try {
-       
-        const response = await api.get('/listcharges');
-        setDataCharges(response.data)
+      const response = await api.get("/listcharges");
+      setDataCharges(response.data);
     } catch (error) {
-        console.log(error)
+      console.log(error);
     }
-}
+  };
   const cancelSubmit = () => {
     setDescription("");
     setDueDate("");
@@ -88,7 +102,7 @@ export default function modalEditCustomer({ setOpenModalCreateCharges, openModal
             />
           </div>
           <div className="box-inputs">
-            <div style={{ marginTop: '2rem' }} className="box-title">
+            <div style={{ marginTop: "2rem" }} className="box-title">
               <img src={chargeIcon} alt="Charges Icon" />
               <h1>Cadastro de Cobrança</h1>
             </div>
@@ -190,7 +204,9 @@ export default function modalEditCustomer({ setOpenModalCreateCharges, openModal
                 {alertDescription && <span>{alertDescription}</span>}
               </Box>
 
-              <div style={{ display: "flex", gap: "1.5rem", marginTop: "5.5rem" }}>
+              <div
+                style={{ display: "flex", gap: "1.5rem", marginTop: "5.5rem" }}
+              >
                 <Box sx={{ display: "flex", flexDirection: "column" }}>
                   <label
                     style={{
@@ -243,16 +259,19 @@ export default function modalEditCustomer({ setOpenModalCreateCharges, openModal
                   >
                     Valor*
                   </label>
-                  <TextField
+                  <NumericFormat
+                    customInput={TextField}
                     id="outlined-basic"
                     variant="outlined"
-                    type="number"
                     placeholder="Digite o valor"
                     value={amount}
                     name="amount"
-                    onChange={(event) => {
-                      setAmount(event.target.value), setAlertAmount("");
-                    }}
+                    onValueChange={handleAmountChange}
+                    thousandSeparator="."
+                    decimalSeparator=","
+                    decimalScale={2}
+                    fixedDecimalScale={true}
+                    prefix={"R$ "}
                     InputProps={{
                       style: {
                         fontSize: "1.6rem",
@@ -260,7 +279,6 @@ export default function modalEditCustomer({ setOpenModalCreateCharges, openModal
                         borderRadius: ".8rem",
                         height: "3.8rem",
                       },
-                      className: alertAmount ? "redOutline" : "",
                     }}
                     InputLabelProps={{
                       style: {
@@ -275,13 +293,29 @@ export default function modalEditCustomer({ setOpenModalCreateCharges, openModal
                 </Box>
               </div>
 
-              <div className="input-radio-box" >
+              <div className="input-radio-box">
                 <label>Status</label>
                 <div>
-                  <input onChange={() => setRadioSelected(false)} type="radio" value='false' name="status_charge" label="Cobrança Paga" checked={!radioSelected} /><label>Cobrança Paga</label>
+                  <input
+                    onChange={() => setRadioSelected(false)}
+                    type="radio"
+                    value="false"
+                    name="status_charge"
+                    label="Cobrança Paga"
+                    checked={!radioSelected}
+                  />
+                  <label>Cobrança Paga</label>
                 </div>
                 <div>
-                  <input onChange={() => setRadioSelected(true)} type="radio" value='true' name="status_charge" label="Cobrança Pendente" checked={radioSelected} /><label>Cobrança Pendente</label>
+                  <input
+                    onChange={() => setRadioSelected(true)}
+                    type="radio"
+                    value="true"
+                    name="status_charge"
+                    label="Cobrança Pendente"
+                    checked={radioSelected}
+                  />
+                  <label>Cobrança Pendente</label>
                 </div>
               </div>
 
