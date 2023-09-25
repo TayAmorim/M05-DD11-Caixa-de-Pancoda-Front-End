@@ -4,13 +4,12 @@ import clientsIcon from "../../assets/clients.svg";
 import { Box, TextField, Button, Stack } from "@mui/material";
 import { useContext, useState } from "react";
 import api from "../../api/api";
-
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { AuthContext } from "../../context/myContext";
 
 export default function modalEditCustomer({ setOpenModalCustomer }) {
-  const {fetchClientList, setFetchClientList} = useContext(AuthContext)
+  const { setFetchClientList } = useContext(AuthContext);
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [cpf, setCpf] = useState("");
@@ -74,7 +73,7 @@ export default function modalEditCustomer({ setOpenModalCustomer }) {
         theme: "colored",
       });
       setOpenModalCustomer(false);
-      setFetchClientList(true)
+      setFetchClientList(true);
     } catch (error) {
       toast.error(`${error.response.data.mensagem}`, {
         position: "bottom-right",

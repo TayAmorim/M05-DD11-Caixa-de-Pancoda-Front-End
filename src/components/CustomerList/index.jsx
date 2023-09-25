@@ -1,5 +1,5 @@
 import "./style.css";
-import * as React from 'react';
+import * as React from "react";
 import {
   Avatar,
   Grid,
@@ -8,7 +8,7 @@ import {
   TextField,
   IconButton,
   Button,
-  CircularProgress
+  CircularProgress,
 } from "@mui/material";
 import NavMenu from "../NavMenu";
 import colors from "../../style/colors";
@@ -18,7 +18,7 @@ import searchControler from "../../assets/customersSettings.svg";
 import sortIconHeaders from "../../assets/sortIconHeaders.svg";
 import addBilling from "../../assets/addBilling.svg";
 import { useContext, useEffect, useState } from "react";
-import api from '../../api/api'
+import api from "../../api/api";
 import { useNavigate } from "react-router-dom";
 import { AuthContext } from "../../context/myContext";
 
@@ -27,14 +27,20 @@ export default function CustomerList({
   setOpenModalCreateCharges,
 }) {
   const userStorage = JSON.parse(localStorage.getItem("user"));
-  const { setCustomerData, setNameModalCreateCharge, setIdModalCreateCharge, fetchClientList, setFetchClientList } = useContext(AuthContext);
+  const {
+    setCustomerData,
+    setNameModalCreateCharge,
+    setIdModalCreateCharge,
+    fetchClientList,
+    setFetchClientList,
+  } = useContext(AuthContext);
   const [customersList, setCustomersList] = useState([]);
   const nameUser = userStorage.name;
   const words = nameUser.split(" ");
   const firstLetters = [];
   const navigate = useNavigate();
-  const [page, setPage] = useState(1)
-  const [totalPage, setTotalPage] = useState('')
+  const [page, setPage] = useState(1);
+  const [totalPage, setTotalPage] = useState("");
 
   for (let i = 0; i < 2; i++) {
     if (words[i] && words[i].length > 0) {
@@ -44,19 +50,18 @@ export default function CustomerList({
   }
 
   useEffect(() => {
-    if(fetchClientList){
-      gettingCustomerList()
+    if (fetchClientList) {
+      gettingCustomerList();
     }
-    setFetchClientList(false)
-  }, [fetchClientList])
-
+    setFetchClientList(false);
+  }, [fetchClientList]);
 
   async function gettingCustomerList(newPage) {
     try {
       const response = await api.get(`/listclients?page=${newPage}`);
 
       const listCustomer = await response.data;
-      setTotalPage(listCustomer.totalPages)
+      setTotalPage(listCustomer.totalPages);
       setCustomersList(
         listCustomer.clientsWithStatus.map((customer) => {
           const newCpf = customer.cpf_client.replace(
@@ -82,14 +87,13 @@ export default function CustomerList({
 
   async function detailCustomer(id) {
     const response = await api.get(`/detailclient/${id}`);
-
     navigate("/clientes/detalhes");
     setCustomerData(response.data);
   }
 
   function createBilling(idCustomer, nameCustomer) {
-    setNameModalCreateCharge(nameCustomer)
-    setIdModalCreateCharge(idCustomer)
+    setNameModalCreateCharge(nameCustomer);
+    setIdModalCreateCharge(idCustomer);
   }
 
   function handlePreviousPage() {
@@ -251,30 +255,52 @@ export default function CustomerList({
                       className="link-detail-customer"
                       onClick={() => detailCustomer(customer.id)}
                     >
-                      {customer.name_client.length < 12 ? customer.name_client : customer.name_client.slice(0, 12) + '...'}
+                      {customer.name_client.length < 12
+                        ? customer.name_client
+                        : customer.name_client.slice(0, 12) + "..."}
                     </li>
                     <li>{customer.cpf_client}</li>
-                    <li>{customer.email_client.length < 15 ? customer.email_client : customer.email_client.slice(0,15) + '...' }</li>
+                    <li>
+                      {customer.email_client.length < 15
+                        ? customer.email_client
+                        : customer.email_client.slice(0, 15) + "..."}
+                    </li>
                     <li>{customer.phone_client}</li>
                     <li
                       className={
-                        !customer.status ? "up-to-date-client" : "expired-client"
+                        !customer.status
+                          ? "up-to-date-client"
+                          : "expired-client"
                       }
                     >
                       {!customer.status ? "Em dia" : "Inadimplente"}
                     </li>
                     <li>
-                      <div style={{display:'flex', alignItems:'center', justifyContent:'center', flexDirection:'column'}}>
-                      <img
-                        onClick={() => {
-                          createBilling(customer.id, customer.name_client);
-                          setOpenModalCreateCharges(true)
-                        }
-                        }
-                        src={addBilling}
-                        alt="Add Billing Icon"
-                      />
-                      <span style={{color:'#DA0175', fontSize:'1.1rem', marginTop:'.5rem'}}>Cobrança</span>
+                      <div
+                        style={{
+                          display: "flex",
+                          alignItems: "center",
+                          justifyContent: "center",
+                          flexDirection: "column",
+                        }}
+                      >
+                        <img
+                          onClick={() => {
+                            createBilling(customer.id, customer.name_client);
+                            setOpenModalCreateCharges(true);
+                          }}
+                          src={addBilling}
+                          alt="Add Billing Icon"
+                        />
+                        <span
+                          style={{
+                            color: "#DA0175",
+                            fontSize: "1.1rem",
+                            marginTop: ".5rem",
+                          }}
+                        >
+                          Cobrança
+                        </span>
                       </div>
                     </li>
                   </ul>
@@ -283,7 +309,11 @@ export default function CustomerList({
 
               <div style={{ margin: "5rem 0" }}>
                 <Stack
-                  sx={{ width: "100%", display: "flex", justifyContent: "center" }}
+                  sx={{
+                    width: "100%",
+                    display: "flex",
+                    justifyContent: "center",
+                  }}
                   direction="row"
                   spacing={2}
                 >
@@ -325,13 +355,21 @@ export default function CustomerList({
                   </Button>
                 </Stack>
               </div>
-
             </div>
           </div>
         ) : (
-            <Box sx={{ display: 'flex', width:'90vw', height:'calc(100vh - 130px)', alignItems:'center', justifyContent:'center', color:'secondary' }}>
-              <CircularProgress />
-            </Box>
+          <Box
+            sx={{
+              display: "flex",
+              width: "90vw",
+              height: "calc(100vh - 130px)",
+              alignItems: "center",
+              justifyContent: "center",
+              color: "secondary",
+            }}
+          >
+            <CircularProgress />
+          </Box>
         )}
       </Grid>
     </>

@@ -16,12 +16,16 @@ import ModalDelete from "../../components/ModalDeleteCharges";
 import ModalEditCharges from "../../components/modalEditCharges/index";
 import ModalCreateCharges from "../../components/ModalCreateCharges/index";
 import CustomerDetails from "../../components/CustomerDetails/index";
+import ModalEditCustomers from "../../components/ModalEditCustomers";
+import { AuthContext } from "../../context/myContext";
 
 export default function Home() {
   const [openModalCustomer, setOpenModalCustomer] = useState(false);
   const [openModalDeleteCharges, setOpenModalDeleteCharges] = useState(false);
   const [openModalEditCharges, setOpenModalEditCharges] = useState(false);
   const [openModalCreateCharges, setOpenModalCreateCharges] = useState(false);
+  const [openModalCustomers, setOpenModalCustomers] = useState(false);
+  const { customerData, setCustomerData } = useContext(AuthContext);
   const { OpenModalEditUser, setOpenModalEditUser, sucess, setSucess } =
     useContext(ModalContext);
 
@@ -51,7 +55,10 @@ export default function Home() {
               />
             }
           />
-          <Route path="clientes/detalhes" element={<CustomerDetails />} />
+          <Route path="clientes/detalhes" element={
+            <CustomerDetails
+              setOpenModalCreateCharges={setOpenModalCreateCharges}
+              setOpenModalCustomers={setOpenModalCustomers} />} />
         </Routes>
 
         {OpenModalEditUser && (
@@ -60,6 +67,10 @@ export default function Home() {
 
         {openModalCustomer && (
           <ModalEditCustomer setOpenModalCustomer={setOpenModalCustomer} />
+        )}
+
+        {openModalCustomers && (
+          <ModalEditCustomers setOpenModalCustomers={setOpenModalCustomers} customerData={customerData} />
         )}
 
         {sucess && <ModalSucess />}

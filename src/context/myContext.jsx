@@ -13,9 +13,10 @@ const AuthProvider = ({ children }) => {
   const [dataChargesById, setDataChargesById] = useState([]);
   const [idEdit, setIdEdit] = useState("");
   const [customerData, setCustomerData] = useState(false);
-  const [fetchClientList, setFetchClientList] = useState(false)
-  const [nameModalCreateCharge, setNameModalCreateCharge] = useState('')
-  const [idModalCreateCharge, setIdModalCreateCharge] = useState('')
+  const [isClientUpdated, setIsClientUpdated] = useState(false);
+  const [fetchClientList, setFetchClientList] = useState(false);
+  const [nameModalCreateCharge, setNameModalCreateCharge] = useState("");
+  const [idModalCreateCharge, setIdModalCreateCharge] = useState("");
 
   return (
     <AuthContext.Provider
@@ -40,11 +41,14 @@ const AuthProvider = ({ children }) => {
         idEdit,
         customerData,
         setCustomerData,
-        nameModalCreateCharge, 
+        isClientUpdated,
+        setIsClientUpdated,
+        nameModalCreateCharge,
         setNameModalCreateCharge,
-        idModalCreateCharge, 
+        idModalCreateCharge,
         setIdModalCreateCharge,
-        fetchClientList, setFetchClientList
+        fetchClientList,
+        setFetchClientList,
       }}
     >
       {children}
