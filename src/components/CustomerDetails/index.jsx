@@ -22,6 +22,7 @@ import { format } from "../../../node_modules/date-fns";
 import ptBr from "date-fns/locale/pt-BR";
 import { ModalContext } from "../../context/modalContext";
 import modalEditUser from "../modalEdituser";
+import { api } from "../../api/api";
 
 export default function CustomerDetails({ setOpenModalCustomers, setOpenModalCreateCharges }) {
   const userStorage = JSON.parse(localStorage.getItem("user"));
@@ -29,8 +30,8 @@ export default function CustomerDetails({ setOpenModalCustomers, setOpenModalCre
   const words = nameUser.split(" ");
   const firstLetters = [];
   const navigate = useNavigate();
-  const { customerData, setCustomerData } = useContext(AuthContext);
-  console.log(customerData);
+  const { customerData, setCustomerData, isClientUpdated, setIsClientUpdated } = useContext(AuthContext);
+
 
   const handleNavigateClients = () => {
     navigate("/clientes");
@@ -46,6 +47,8 @@ export default function CustomerDetails({ setOpenModalCustomers, setOpenModalCre
       firstLetters.push(first);
     }
   }
+
+
 
   return (
     <>

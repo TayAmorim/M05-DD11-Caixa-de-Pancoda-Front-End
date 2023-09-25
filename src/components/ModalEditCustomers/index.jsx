@@ -26,8 +26,7 @@ export default function ModalEditCustomers({ setOpenModalCustomers, customerData
     const [alertPhone, setAlertPhone] = useState("");
     const [alertCep, setAlertCep] = useState("");
     const [alertaDeuceData, setAlertDeuceData] = useState("");
-    const { isClientUpdated, setIsClientUpdated } = useState(false);
-    const { setCustomerData } = useContext(AuthContext);
+    const { setCustomerData, isClientUpdated, setIsClientUpdated } = useContext(AuthContext);
 
 
     const handleSubmit = async (event) => {
@@ -89,7 +88,7 @@ export default function ModalEditCustomers({ setOpenModalCustomers, customerData
                 progress: undefined,
                 theme: "colored",
             });
-            setUsClientUpdated(true);
+            setIsClientUpdated(true);
             setOpenModalCustomers(false);
 
         } catch (error) {
@@ -148,6 +147,7 @@ export default function ModalEditCustomers({ setOpenModalCustomers, customerData
         setState("");
         setAlertCep("");
     };
+
     useEffect(() => {
 
         async function updateDataCustomer() {
@@ -160,12 +160,11 @@ export default function ModalEditCustomers({ setOpenModalCustomers, customerData
                 console.log(error);
             }
         }
-        if (isClientUpdated) {
-            updateDataCustomer();
-            setIsClientUpdated(false);
-        }
 
-    }, [customerData])
+        updateDataCustomer();
+        setIsClientUpdated(false);
+    }, [customerData]);
+
     return (
         <div className="container-modal-customer">
             <div className="box-modal-customer">
@@ -180,7 +179,7 @@ export default function ModalEditCustomers({ setOpenModalCustomers, customerData
                     <div className="box-inputs">
                         <div className="box-title">
                             <img src={clientsIcon} alt="Clients Icon" />
-                            <h1>Cadastro do Cliente</h1>
+                            <h1>Editar Cliente</h1>
                         </div>
                         <Box
                             onSubmit={handleSubmit}
