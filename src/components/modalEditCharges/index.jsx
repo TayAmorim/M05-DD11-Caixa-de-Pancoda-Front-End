@@ -8,7 +8,6 @@ import api from "../../api/api";
 
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import axios from 'axios'
 import { AuthContext } from '../../context/myContext';
 
 
@@ -27,17 +26,17 @@ export default function modalEditCustomer({ setOpenModalEditCharges, openModalEd
 
   const getChargesById = async () => {
     try {
-      const response = await axios.get(`http://localhost:3000/cobrancas/${idEdit}`)
-      data = response.data
+      const response = await api.get(`listcharges/${idEdit}`)
+      data = response.data.charges
       setName(data.name_client)
       setDescription(data.description)
       setDueDate(data.due_date)
       setAmount(data.amount)
-      setRadioSelected(data.status_charge)
+      setRadioSelected(data.status)
 
      
     } catch (error) {
-      console.log(error)
+      // console.log(error.message)
     }
   }
 
@@ -46,52 +45,49 @@ export default function modalEditCustomer({ setOpenModalEditCharges, openModalEd
     getChargesById()
   }, [idEdit])
 
-  const handleSubmit = async (event) => {
-    event.preventDefault();
-    if (!name) {
-      return setAlertName("Este campo deve ser preenchido");
-    }
-    if (!description) {
-      return setAlertDescription("Este campo deve ser preenchido");
-    }
-    if (!dueDate) {
-      return setAlertDueDate("Campo obrigatório");
-    }
-    if (!amount) {
-      return setAlertAmount("Campo obrigatório");
-    }
-    try {
-      const response = await axios.put(`http://localhost:3000/cobrancas/${idEdit}`, {
-        id_charges: idEdit,
-        name_client: name,
-        amount: amount,
-        due_date: dueDate,
-        status_charge: radioSelected,
-        description: description
+  // const handleSubmit = async (event) => {
+  //   event.preventDefault();
+  //   if (!description) {
+  //     return setAlertDescription("Este campo deve ser preenchido");
+  //   }
+  //   if (!dueDate) {
+  //     return setAlertDueDate("Campo obrigatório");
+  //   }
+  //   if (!amount) {
+  //     return setAlertAmount("Campo obrigatório");
+  //   }
+  //   try {
+  //     const response = await axios.put(`http://localhost:3000/cobrancas/${idEdit}`, {
+  //       id_charges: idEdit,
+  //       name_client: name,
+  //       amount: amount,
+  //       due_date: dueDate,
+  //       status_charge: radioSelected,
+  //       description: description
 
-      });
-      setOpenModalEditCharges(false)
-      dataValuesEdit()
-      toast.success("Cobrança editada com sucesso!", {
-        position: "bottom-right",
-        autoClose: 5000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: "colored",
-      });
-    } catch (error) {
-      console.log(error);
-    }
+  //     });
+  //     setOpenModalEditCharges(false)
+  //     dataValuesEdit()
+  //     toast.success("Cobrança editada com sucesso!", {
+  //       position: "bottom-right",
+  //       autoClose: 5000,
+  //       hideProgressBar: false,
+  //       closeOnClick: true,
+  //       pauseOnHover: true,
+  //       draggable: true,
+  //       progress: undefined,
+  //       theme: "colored",
+  //     });
+  //   } catch (error) {
+  //     console.log(error);
+  //   }
 
-  }
+  // }
 
   const dataValuesEdit = async () => {
     try {
        
-        const response = await axios.get('http://localhost:3000/cobrancas');
+        const response = await api.get('/listcharges');
         setDataCharges(response.data)
     } catch (error) {
         console.log(error)
@@ -124,7 +120,7 @@ export default function modalEditCustomer({ setOpenModalEditCharges, openModalEd
               <h1>Editar Cobrança</h1>
             </div>
             <Box
-              onSubmit={handleSubmit}
+              // onSubmit={handleSubmit}
               component="form"
               sx={{
                 display: "flex",
