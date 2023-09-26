@@ -1,6 +1,6 @@
 import axios from "axios";
 const api = axios.create({
-  baseURL: "https://cheerful-red-lemming.cyclic.cloud/",
+  baseURL: "https://pancoda.onrender.com/",
   timeout: 10000,
   headers: { "Content-Type": "application/json" },
 });
@@ -14,4 +14,4 @@ api.interceptors.request.use((request) => {
   return request;
 });
 
-export default api;
+export default api; 

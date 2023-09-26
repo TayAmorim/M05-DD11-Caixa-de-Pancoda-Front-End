@@ -2,6 +2,7 @@ import { Chip } from "@mui/material";
 import "./styles.css";
 import { Stack } from "@mui/system";
 import colors from "../../style/colors";
+import {Link} from 'react-router-dom'
 
 export default function TableCharge({ title, color, number }) {
   let backgroundChip;
@@ -87,7 +88,7 @@ export default function TableCharge({ title, color, number }) {
         <span>R$ 900,00</span>
       </Stack>
       <Stack sx={{ margin: "0 auto", paddingBlock: "1rem" }}>
-        <a className="btn-more">Ver Todos</a>
+        <Link to={'/clientes'}> <a className="btn-more">Ver Todos</a></Link>
       </Stack>
     </Stack>
   );

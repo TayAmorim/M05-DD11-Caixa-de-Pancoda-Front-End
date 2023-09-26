@@ -7,16 +7,16 @@ const AuthProvider = ({ children }) => {
   const [password, setPassword] = useState("");
   const [name, setName] = useState("");
   const [alert, setAlert] = useState("");
-  const [confirmPassword, setConfirmPassword] = useState("");
-  const [paidValue, setPaidValue] = useState(0);
-  const [pendingValue, setPendingValue] = useState(0);
-  const [expiredValue, setExpiredValue] = useState(0);
-  const [paidClient, setPaidClient] = useState([]);
-  const [pendingClient, setPendingClient] = useState([]);
-  const [expiredClient, setExpiredClient] = useState([]);
-  const [shareDataBillings, setShareDataBillings] = useState([]);
   const [userData, setUserData] = useState([]);
   const [idDelete, setIdDelete] = useState("");
+  const [dataCharges, setDataCharges] = useState([]);
+  const [dataChargesById, setDataChargesById] = useState([]);
+  const [idEdit, setIdEdit] = useState("");
+  const [customerData, setCustomerData] = useState(false);
+  const [isClientUpdated, setIsClientUpdated] = useState(false);
+  const [fetchClientList, setFetchClientList] = useState(false);
+  const [nameModalCreateCharge, setNameModalCreateCharge] = useState("");
+  const [idModalCreateCharge, setIdModalCreateCharge] = useState("");
 
   return (
     <AuthContext.Provider
@@ -29,26 +29,26 @@ const AuthProvider = ({ children }) => {
         setAlert,
         name,
         setName,
-        confirmPassword,
-        setConfirmPassword,
-        paidValue,
-        setPaidValue,
-        pendingValue,
-        setPendingValue,
-        expiredValue,
-        setExpiredValue,
-        paidClient,
-        setPaidClient,
-        pendingClient,
-        setPendingClient,
-        expiredClient,
-        setExpiredClient,
-        shareDataBillings,
-        setShareDataBillings,
-        idDelete,
-        setIdDelete,
         userData,
         setUserData,
+        idDelete,
+        setIdDelete,
+        dataCharges,
+        setDataCharges,
+        dataChargesById,
+        setDataChargesById,
+        setIdEdit,
+        idEdit,
+        customerData,
+        setCustomerData,
+        isClientUpdated,
+        setIsClientUpdated,
+        nameModalCreateCharge,
+        setNameModalCreateCharge,
+        idModalCreateCharge,
+        setIdModalCreateCharge,
+        fetchClientList,
+        setFetchClientList,
       }}
     >
       {children}

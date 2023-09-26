@@ -11,6 +11,7 @@ node_modules
 dist
 dist-ssr
 *.local
+db.json
 
 # Editor directories and files
 .vscode/*
@@ -23,3 +24,8 @@ dist-ssr
 *.sln
 *.sw?
 .vite
+<<<<<<< HEAD
+db.json
+=======
+db.json
+>>>>>>> developer
