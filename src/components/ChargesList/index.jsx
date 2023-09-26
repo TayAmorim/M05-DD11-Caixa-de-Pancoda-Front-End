@@ -43,21 +43,22 @@ export default function ChargesList({ setOpenModalDeleteCharges, setOpenModalEdi
         }
     }
 
-    useEffect(() => {
-        const getCharges = async () => {
-            try {
-                const response = await api.get('/listcharges')
-                setDataResponse(response.data)
-                setInfoListCharge(response.data.charges)
-               
-                setTotalPage(response.data.totalPages)  
-            } catch (error) {
-                console.log(error)
-            }
+    const getCharges = async (newPage) => {
+        try {
+            const response = await api.get(`/listcharges?page=${newPage}`)
+            setDataResponse(response.data)
+            setInfoListCharge(response.data.charges)
+            setTotalPage(response.data.totalPages)  
+            console.log(totalPage)
+        } catch (error) {
+            console.log(error)
         }
+    }
     
+    useEffect(() => {
         getCharges();
     }, [])
+
 
     useEffect(()  => {
          setDataCharges(dataResponse)
@@ -67,14 +68,14 @@ export default function ChargesList({ setOpenModalDeleteCharges, setOpenModalEdi
         if (page > 1) {
           const newPage = page - 1;
           setPage(newPage);
-          gettingCustomerList(newPage);
+          getCharges(newPage);
         }
       }
     
       function handleNextPage() {
         const newPage = page + 1;
         setPage(newPage);
-        gettingCustomerList(newPage);
+        getCharges(newPage);
       }
 
     return (
@@ -196,13 +197,13 @@ export default function ChargesList({ setOpenModalDeleteCharges, setOpenModalEdi
                         </div>
                         <div className="body-table-customer charges-table">
 
-                            {infoListCharge.map((charges) => {
+                            {infoListCharge.map((charges, index) => {
                                 
                                 const day = format(new Date(charges.due_date), 'dd/MM/yyy', { locale: ptBr })
                                 const dueDate = new Date(charges.due_date);
                                 const isExpired = charges.status && dueDate < new Date();
                                 return (
-                                    <ul key={charges.id_customer}>
+                                    <ul key={`${charges.id_customer}-${index}`}>
                                         <li>{charges.name_client}</li>
                                         <li>{charges.id_charges}</li>
                                         <li>{`R$: ${(charges.amount / 100).toFixed(2).replace('.', ',')}`}</li>
@@ -247,7 +248,7 @@ export default function ChargesList({ setOpenModalDeleteCharges, setOpenModalEdi
                     variant="contained"
                     type="button"
                     onClick={() => handlePreviousPage()}
-                    disabled={page == 1}
+                    disabled={page === 1}
                   >
                     Anterior
                   </Button>

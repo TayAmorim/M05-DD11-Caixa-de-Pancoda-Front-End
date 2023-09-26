@@ -1,5 +1,5 @@
 import "./styles.css";
-import { useContext } from "react";
+import { useContext, useEffect, useState } from "react";
 import {
   Avatar,
   Grid,
@@ -16,6 +16,7 @@ import sortIconHeaders from "../../assets/sortIconHeaders.svg";
 import { useNavigate } from "react-router-dom";
 import { AuthContext } from "../../context/myContext";
 import { format } from "../../../node_modules/date-fns";
+import api from "../../api/api";
 import ptBr from "date-fns/locale/pt-BR";
 
 export default function CustomerDetails({ setOpenModalCustomers, setOpenModalCreateCharges }) {
@@ -24,7 +25,8 @@ export default function CustomerDetails({ setOpenModalCustomers, setOpenModalCre
   const words = nameUser.split(" ");
   const firstLetters = [];
   const navigate = useNavigate();
-  const { customerData, setCustomerData, isClientUpdated, setIsClientUpdated } = useContext(AuthContext);
+  const { customerData, setCustomerData, setNameModalCreateCharge,
+    setIdModalCreateCharge, isClientUpdated, setIsClientUpdated } = useContext(AuthContext);
 
 
   const handleNavigateClients = () => {
@@ -32,7 +34,14 @@ export default function CustomerDetails({ setOpenModalCustomers, setOpenModalCre
   };
 
   const handleOpenModalEditCustomer = () => {
+    setNameModalCreateCharge(customerData.name_client);
+    setIdModalCreateCharge(customerData.id);
     setOpenModalCustomers(true);
+  }
+
+  function createBilling(idCustomer, nameCustomer) {
+    setNameModalCreateCharge(nameCustomer);
+    setIdModalCreateCharge(idCustomer);
   }
 
   for (let i = 0; i < 2; i++) {
@@ -42,6 +51,22 @@ export default function CustomerDetails({ setOpenModalCustomers, setOpenModalCre
     }
   }
 
+  useEffect(() => {
+
+    async function updateDataCustomer() {
+      try {
+        const response = await api.get(`detailclient/${customerData.id}`);
+
+        setCustomerData(response.data);
+
+      } catch (error) {
+        console.log(error);
+      }
+    }
+
+    updateDataCustomer();
+    setIsClientUpdated(false);
+  }, [customerData]);
 
 
   return (
@@ -219,7 +244,10 @@ export default function CustomerDetails({ setOpenModalCustomers, setOpenModalCre
                 },
                 fontSize: "1.4rem",
               }}
-              onClick={() => setOpenModalCreateCharges(true)}
+              onClick={() => {
+                createBilling(customerData.id, customerData.name_client);
+                setOpenModalCreateCharges(true);
+              }}
               variant="contained"
               type="button"
             >

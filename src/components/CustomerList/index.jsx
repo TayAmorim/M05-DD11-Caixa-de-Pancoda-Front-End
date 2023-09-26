@@ -89,6 +89,7 @@ export default function CustomerList({
     const response = await api.get(`/detailclient/${id}`);
     navigate("/clientes/detalhes");
     setCustomerData(response.data);
+    localStorage.setItem("idClient", JSON.stringify(id));
   }
 
   function createBilling(idCustomer, nameCustomer) {
