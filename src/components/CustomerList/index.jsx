@@ -90,6 +90,7 @@ export default function CustomerList({
     navigate("/clientes/detalhes");
     setCustomerData(response.data);
     localStorage.setItem("idClient", JSON.stringify(id));
+    sessionStorage.setItem("customerDataSession", JSON.stringify(response.data));
   }
 
   function createBilling(idCustomer, nameCustomer) {
