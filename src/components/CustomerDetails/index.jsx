@@ -25,8 +25,16 @@ export default function CustomerDetails({ setOpenModalCustomers, setOpenModalCre
   const words = nameUser.split(" ");
   const firstLetters = [];
   const navigate = useNavigate();
-  const { customerData, setCustomerData, setNameModalCreateCharge,
-    setIdModalCreateCharge, isClientUpdated, setIsClientUpdated } = useContext(AuthContext);
+  const { customerData,
+    setCustomerData,
+    setNameModalCreateCharge,
+    setIdModalCreateCharge,
+    isClientUpdated,
+    setIsClientUpdated,
+    createdChargeStatus,
+    setCreatedChargeStatus } = useContext(AuthContext);
+  const storedData = sessionStorage.getItem("customerDataSession");
+  const parsedData = JSON.parse(storedData);
 
 
   const handleNavigateClients = () => {
@@ -34,8 +42,8 @@ export default function CustomerDetails({ setOpenModalCustomers, setOpenModalCre
   };
 
   const handleOpenModalEditCustomer = () => {
-    setNameModalCreateCharge(customerData.name_client);
-    setIdModalCreateCharge(customerData.id);
+    setNameModalCreateCharge(parsedData.name_client);
+    setIdModalCreateCharge(parsedData.id);
     setOpenModalCustomers(true);
   }
 
@@ -58,15 +66,23 @@ export default function CustomerDetails({ setOpenModalCustomers, setOpenModalCre
         const response = await api.get(`detailclient/${customerData.id}`);
 
         setCustomerData(response.data);
+        sessionStorage.setItem("customerDataSession", JSON.stringify(response.data));
 
       } catch (error) {
         console.log(error);
       }
     }
+    if (isClientUpdated) {
+      updateDataCustomer();
+      setIsClientUpdated(false);
+    }
 
-    updateDataCustomer();
-    setIsClientUpdated(false);
-  }, [customerData]);
+    if (createdChargeStatus) {
+      updateDataCustomer();
+      setCreatedChargeStatus(false);
+    }
+
+  }, [customerData, createdChargeStatus]);
 
 
   return (
@@ -148,7 +164,7 @@ export default function CustomerDetails({ setOpenModalCustomers, setOpenModalCre
           }}
         >
           <img src={clients} alt="" />
-          <h1>{customerData.name_client}</h1>
+          <h1>{parsedData.name_client}</h1>
         </Stack>
       </Grid>
 
@@ -186,42 +202,42 @@ export default function CustomerDetails({ setOpenModalCustomers, setOpenModalCre
         <div className="first-client-data-row">
           <div className="data-client-space">
             <h5>E-Mail</h5>
-            <p>{customerData.email_client}</p>
+            <p>{parsedData.email_client}</p>
           </div>
           <div className="data-client-space">
             <h5>Telefone</h5>
-            <p>{customerData.phone_client}</p>
+            <p>{parsedData.phone_client}</p>
           </div>
           <div className="data-client-space">
             <h5>CPF</h5>
-            <p>{customerData.cpf_client}</p>
+            <p>{parsedData.cpf_client}</p>
           </div>
         </div>
 
         <div className="second-client-data-row">
           <div className="data-client-space">
             <h5>Endereço</h5>
-            <p>{customerData.address_complete.address}</p>
+            <p>{parsedData.address_complete.address}</p>
           </div>
           <div className="data-client-space">
             <h5>Bairro</h5>
-            <p>{customerData.address_complete.neighborhood}</p>
+            <p>{parsedData.address_complete.neighborhood}</p>
           </div>
           <div className="data-client-space">
             <h5>Complemento</h5>
-            <p>{customerData.address_complete.complement}</p>
+            <p>{parsedData.address_complete.complement}</p>
           </div>
           <div className="data-client-space">
             <h5>CEP</h5>
-            <p>{customerData.address_complete.cep}</p>
+            <p>{parsedData.address_complete.cep}</p>
           </div>
           <div className="data-client-space">
             <h5>Cidade</h5>
-            <p>{customerData.address_complete.city}</p>
+            <p>{parsedData.address_complete.city}</p>
           </div>
           <div className="data-client-space">
             <h5>UF</h5>
-            <p>{customerData.address_complete.state}</p>
+            <p>{parsedData.address_complete.state}</p>
           </div>
         </div>
       </Stack>
@@ -230,7 +246,7 @@ export default function CustomerDetails({ setOpenModalCustomers, setOpenModalCre
         <div className="container-billingMain">
           <div className="billing-box-header">
             <div className="title-billing">
-              <h1>Cobrança</h1>
+              <h2>Cobranças do Cliente</h2>
             </div>
             <div className="search-box-users charges"></div>
             <Button
@@ -245,7 +261,7 @@ export default function CustomerDetails({ setOpenModalCustomers, setOpenModalCre
                 fontSize: "1.4rem",
               }}
               onClick={() => {
-                createBilling(customerData.id, customerData.name_client);
+                createBilling(parsedData.id, parsedData.name_client);
                 setOpenModalCreateCharges(true);
               }}
               variant="contained"
@@ -259,10 +275,6 @@ export default function CustomerDetails({ setOpenModalCustomers, setOpenModalCre
               <ul>
                 <li>
                   <img src={sortIconHeaders} alt="Sort Icon" />
-                  Cliente
-                </li>
-                <li>
-                  <img src={sortIconHeaders} alt="Sort Icon" />
                   ID Cob.
                 </li>
                 <li>Valor</li>
@@ -274,7 +286,7 @@ export default function CustomerDetails({ setOpenModalCustomers, setOpenModalCre
               </ul>
             </div>
             <div className="body-table-customer charges-table">
-              {customerData.charges.map((charges) => {
+              {parsedData.charges.map((charges) => {
                 const day = format(new Date(charges.due_date), "dd/MM/yyy", {
                   locale: ptBr,
                 });
@@ -282,7 +294,6 @@ export default function CustomerDetails({ setOpenModalCustomers, setOpenModalCre
                 const isExpired = charges.status && dueDate < new Date();
                 return (
                   <ul key={charges.id_charges}>
-                    <li>{customerData.name_client}</li>
                     <li>{charges.id_charges}</li>
                     <li>{`R$: ${(charges.amount / 100)
                       .toFixed(2)
@@ -313,7 +324,7 @@ export default function CustomerDetails({ setOpenModalCustomers, setOpenModalCre
                     <li>{charges.description}</li>
                     <li></li>
                     <li className="edit-delete">
-                      <div
+                      <div className="icons-table-charge"
                         onClick={() => {
                           setOpenModalEditCharges(true);
                           setIdEdit(charges.id);
@@ -322,7 +333,7 @@ export default function CustomerDetails({ setOpenModalCustomers, setOpenModalCre
                         <img src={editIcon} alt="Edit Icon" />
                         <span>Editar</span>
                       </div>
-                      <div
+                      <div className="icons-table-charge"
                         onClick={() => {
                           setOpenModalDeleteCharges(true);
                           setIdDelete(charges.id);
