@@ -22,6 +22,7 @@ import api from "../../api/api";
 import { useNavigate } from "react-router-dom";
 import { AuthContext } from "../../context/myContext";
 
+
 export default function CustomerList({
   setOpenModalCustomer,
   setOpenModalCreateCharges,
@@ -41,6 +42,8 @@ export default function CustomerList({
   const navigate = useNavigate();
   const [page, setPage] = useState(1);
   const [totalPage, setTotalPage] = useState("");
+  const [alertSearch, setAlertSearch] = useState("");
+  const [sentenceSearch, setSentenceSearch] = useState("");
 
   for (let i = 0; i < 2; i++) {
     if (words[i] && words[i].length > 0) {
@@ -48,6 +51,8 @@ export default function CustomerList({
       firstLetters.push(first);
     }
   }
+
+
 
   useEffect(() => {
     if (fetchClientList) {
@@ -110,6 +115,54 @@ export default function CustomerList({
     const newPage = page + 1;
     setPage(newPage);
     gettingCustomerList(newPage);
+  }
+
+  const handleSearch = async () => {
+    console.log(sentenceSearch);
+    let queryParam = "";
+
+
+    if (sentenceSearch.length < 2) {
+      setAlertSearch("Insira pelo menos 3 caracteres")
+      console.log(alertSearch);
+      return
+    }
+    try {
+      const emailExpression = /[@]/;
+      const cpfExpression = /^\d{11}$/;
+      if (emailExpression.test(sentenceSearch)) {
+        queryParam = "email";
+        console.log(queryParam);
+      } else if (cpfExpression.test(sentenceSearch)) {
+        queryParam = "cpf";
+        console.log(queryParam);
+      } else {
+        queryParam = "name"
+        console.log(queryParam);
+      }
+
+      const response = await api.get(`/listclients?${queryParam}=${sentenceSearch}`);
+      const listCustomer = response.data;
+      console.log(listCustomer);
+
+
+      const newCpf = listCustomer[0].cpf_client.replace(
+        /(\d{3})(\d{3})(\d{3})(\d{2})/,
+        "$1.$2.$3-$4"
+      );
+      const formattedPhoneNumber = listCustomer[0].phone_client.replace(
+        /(\d{2})(\d{4})(\d{4})/,
+        "($1) $2-$3"
+      );
+      listCustomer[0].cpf_client = newCpf;
+      listCustomer[0].phone_client = formattedPhoneNumber;
+      setCustomersList(listCustomer);
+      return
+
+    } catch (error) {
+      console.log(error.message);
+    }
+
   }
 
   return (
@@ -196,6 +249,8 @@ export default function CustomerList({
                       variant="outlined"
                       type="text"
                       name="senha"
+                      value={sentenceSearch}
+                      onChange={(event) => setSentenceSearch(event.target.value)}
                       InputProps={{
                         style: {
                           fontSize: "1.6rem",
@@ -216,6 +271,7 @@ export default function CustomerList({
                               top: "50%",
                               transform: "translateY(-50%)",
                             }}
+                            onClick={() => handleSearch()}
                           >
                             <SearchIcon style={{ fontSize: "3rem" }} />
                           </IconButton>
