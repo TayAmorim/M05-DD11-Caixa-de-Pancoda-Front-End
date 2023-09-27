@@ -1,0 +1,29 @@
+.modal-instructions{
+    padding: 1.5rem 0;
+    background-color: #fff;
+    z-index: 3;
+    margin: .5rem 3rem;
+    border-radius: 1rem;
+    width: 20rem;
+    height: auto;
+    display: flex;
+    gap: .3rem;
+    flex-direction: column;
+    position: absolute;
+    box-shadow: 2px 2px 10px #2525252f;
+    animation: appear 1s ease-in-out ;
+}
+.modal-instructions span:nth-child(1){
+    font-weight: bold;
+    margin-bottom: .2rem;
+}
+.modal-instructions span{
+    padding-left: 1.5rem;
+    font-weight: 500;
+    text-align: left;
+    font-size: 1.2rem;
+}
+@keyframes appear{
+    0%{opacity: 0;}
+    100%{opacity: 1;}
+}

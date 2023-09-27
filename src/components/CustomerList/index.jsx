@@ -21,6 +21,7 @@ import { useContext, useEffect, useState } from "react";
 import api from "../../api/api";
 import { useNavigate } from "react-router-dom";
 import { AuthContext } from "../../context/myContext";
+import ModalInstructions from "../ModalInstructions";
 
 export default function CustomerList({
   setOpenModalCustomer,
@@ -41,6 +42,7 @@ export default function CustomerList({
   const navigate = useNavigate();
   const [page, setPage] = useState(1);
   const [totalPage, setTotalPage] = useState("");
+  const [modalInstruction, setModalInstructions] = useState(false)
 
   for (let i = 0; i < 2; i++) {
     if (words[i] && words[i].length > 0) {
@@ -191,6 +193,8 @@ export default function CustomerList({
                 <div className="set-search-input-img">
                   <Box>
                     <TextField
+                      onFocus={() => setModalInstructions(true)}
+                      onBlur={() => setModalInstructions(false)}
                       id="outlined-basic"
                       label="Pesquisa"
                       variant="outlined"
@@ -231,6 +235,9 @@ export default function CustomerList({
                         },
                       }}
                     />
+                    {modalInstruction &&
+                      <ModalInstructions />
+                    }
                   </Box>
                 </div>
               </div>
