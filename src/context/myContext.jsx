@@ -51,7 +51,7 @@ const AuthProvider = ({ children }) => {
         fetchClientList,
         setFetchClientList,
         createdChargeStatus,
-        setCreatedChargeStatus
+        setCreatedChargeStatus,
       }}
     >
       {children}
