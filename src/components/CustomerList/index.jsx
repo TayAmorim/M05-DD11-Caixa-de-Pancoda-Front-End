@@ -50,47 +50,47 @@ export default function CustomerList({
   }
 
   useEffect(() => {
+    async function gettingCustomerList() {
+      console.log({ page, fetchClientList });
+      try {
+        const response = await api.get(`/listclients?page=${page}`);
+        const listCustomer = await response.data;
+        setTotalPage(listCustomer.totalPages);
+        setCustomersList(
+          listCustomer.clientsWithStatus.map((customer) => {
+            const newCpf = customer.cpf_client.replace(
+              /(\d{3})(\d{3})(\d{3})(\d{2})/,
+              "$1.$2.$3-$4"
+            );
+            const formattedPhoneNumber = customer.phone_client.replace(
+              /(\d{2})(\d{4})(\d{4})/,
+              "($1) $2-$3"
+            );
+            customer.cpf_client = newCpf;
+            customer.phone_client = formattedPhoneNumber;
+            return customer;
+          })
+        );
+        setFetchClientList(false);
+      } catch (error) {
+        console.log(error.message);
+      }
+    }
+    gettingCustomerList();
     if (fetchClientList) {
       gettingCustomerList();
     }
-    setFetchClientList(false);
-  }, [fetchClientList]);
-
-  async function gettingCustomerList(newPage) {
-    try {
-      const response = await api.get(`/listclients?page=${newPage}`);
-
-      const listCustomer = await response.data;
-      setTotalPage(listCustomer.totalPages);
-      setCustomersList(
-        listCustomer.clientsWithStatus.map((customer) => {
-          const newCpf = customer.cpf_client.replace(
-            /(\d{3})(\d{3})(\d{3})(\d{2})/,
-            "$1.$2.$3-$4"
-          );
-          const formattedPhoneNumber = customer.phone_client.replace(
-            /(\d{2})(\d{4})(\d{4})/,
-            "($1) $2-$3"
-          );
-          customer.cpf_client = newCpf;
-          customer.phone_client = formattedPhoneNumber;
-          return customer;
-        })
-      );
-    } catch (error) {
-      console.log(error.message);
-    }
-  }
-  useEffect(() => {
-    gettingCustomerList();
-  }, []);
+  }, [fetchClientList, page, setFetchClientList]);
 
   async function detailCustomer(id) {
     const response = await api.get(`/detailclient/${id}`);
     navigate("/clientes/detalhes");
     setCustomerData(response.data);
     localStorage.setItem("idClient", JSON.stringify(id));
-    sessionStorage.setItem("customerDataSession", JSON.stringify(response.data));
+    sessionStorage.setItem(
+      "customerDataSession",
+      JSON.stringify(response.data)
+    );
   }
 
   function createBilling(idCustomer, nameCustomer) {
@@ -102,14 +102,12 @@ export default function CustomerList({
     if (page > 1) {
       const newPage = page - 1;
       setPage(newPage);
-      gettingCustomerList(newPage);
     }
   }
 
   function handleNextPage() {
     const newPage = page + 1;
     setPage(newPage);
-    gettingCustomerList(newPage);
   }
 
   return (
