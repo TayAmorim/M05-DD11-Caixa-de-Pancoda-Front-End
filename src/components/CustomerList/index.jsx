@@ -58,7 +58,6 @@ export default function CustomerList({
 
   useEffect(() => {
     async function gettingCustomerList() {
-      console.log({ page, fetchClientList });
       try {
         const response = await api.get(`/listclients?page=${page}`);
         const listCustomer = await response.data;
@@ -132,13 +131,10 @@ export default function CustomerList({
   }
 
   const handleSearch = async () => {
-    console.log(sentenceSearch);
     let queryParam = "";
-
 
     if (sentenceSearch.length < 2) {
       setAlertSearch("Insira pelo menos 3 caracteres")
-      console.log(alertSearch);
       return
     }
     try {
@@ -146,13 +142,10 @@ export default function CustomerList({
       const cpfExpression = /^[0-9]+$/;
       if (emailExpression.test(sentenceSearch)) {
         queryParam = "email";
-        console.log(queryParam);
       } else if (cpfExpression.test(sentenceSearch)) {
         queryParam = "cpf";
-        console.log(queryParam);
       } else {
         queryParam = "name"
-        console.log(queryParam);
       }
 
       const response = await api.get(`/listclients?${queryParam}=${sentenceSearch}`);
@@ -316,6 +309,7 @@ export default function CustomerList({
                       variant="outlined"
                       type="text"
                       name="senha"
+                      value={sentenceSearch}
                       onChange={(event) => setSentenceSearch(event.target.value)}
                       InputProps={{
                         style: {
