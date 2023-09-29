@@ -22,6 +22,7 @@ import api from "../../api/api";
 import { useNavigate } from "react-router-dom";
 import { AuthContext } from "../../context/myContext";
 
+
 export default function CustomerList({
   setOpenModalCustomer,
   setOpenModalCreateCharges,
@@ -41,6 +42,12 @@ export default function CustomerList({
   const navigate = useNavigate();
   const [page, setPage] = useState(1);
   const [totalPage, setTotalPage] = useState("");
+  const [alertSearch, setAlertSearch] = useState("");
+  const [sentenceSearch, setSentenceSearch] = useState("");
+  const [searchActive, setSearchActive] = useState(false);
+  const [ordenedListActive, setOrdenedListActive] = useState(false);
+  const [inalteredCustomersList, setInalteredCustomersList] = useState([]);
+  const [countOrderClients, setCountOrderClients] = useState(0);
 
   for (let i = 0; i < 2; i++) {
     if (words[i] && words[i].length > 0) {
@@ -51,7 +58,6 @@ export default function CustomerList({
 
   useEffect(() => {
     async function gettingCustomerList() {
-      console.log({ page, fetchClientList });
       try {
         const response = await api.get(`/listclients?page=${page}`);
         const listCustomer = await response.data;
@@ -71,6 +77,19 @@ export default function CustomerList({
             return customer;
           })
         );
+        setInalteredCustomersList(listCustomer.clientsWithStatus.map((customer) => {
+          const newCpf = customer.cpf_client.replace(
+            /(\d{3})(\d{3})(\d{3})(\d{2})/,
+            "$1.$2.$3-$4"
+          );
+          const formattedPhoneNumber = customer.phone_client.replace(
+            /(\d{2})(\d{4})(\d{4})/,
+            "($1) $2-$3"
+          );
+          customer.cpf_client = newCpf;
+          customer.phone_client = formattedPhoneNumber;
+          return customer;
+        }))
         setFetchClientList(false);
       } catch (error) {
         console.log(error.message);
@@ -81,6 +100,7 @@ export default function CustomerList({
       gettingCustomerList();
     }
   }, [fetchClientList, page, setFetchClientList]);
+
 
   async function detailCustomer(id) {
     const response = await api.get(`/detailclient/${id}`);
@@ -109,6 +129,101 @@ export default function CustomerList({
     const newPage = page + 1;
     setPage(newPage);
   }
+
+  const handleSearch = async () => {
+    let queryParam = "";
+
+    if (sentenceSearch.length < 2) {
+      setAlertSearch("Insira pelo menos 3 caracteres")
+      return
+    }
+    try {
+      const emailExpression = /[@]/;
+      const cpfExpression = /^[0-9]+$/;
+      if (emailExpression.test(sentenceSearch)) {
+        queryParam = "email";
+      } else if (cpfExpression.test(sentenceSearch)) {
+        queryParam = "cpf";
+      } else {
+        queryParam = "name"
+      }
+
+      const response = await api.get(`/listclients?${queryParam}=${sentenceSearch}`);
+      const listCustomer = response.data;
+      setCustomersList(
+        listCustomer.map((customer) => {
+          const newCpf = customer.cpf_client.replace(
+            /(\d{3})(\d{3})(\d{3})(\d{2})/,
+            "$1.$2.$3-$4"
+          );
+          const formattedPhoneNumber = customer.phone_client.replace(
+            /(\d{2})(\d{4})(\d{4})/,
+            "($1) $2-$3"
+          );
+          customer.cpf_client = newCpf;
+          customer.phone_client = formattedPhoneNumber;
+          return customer;
+        })
+      );
+      setInalteredCustomersList(listCustomer.map((customer) => {
+        const newCpf = customer.cpf_client.replace(
+          /(\d{3})(\d{3})(\d{3})(\d{2})/,
+          "$1.$2.$3-$4"
+        );
+        const formattedPhoneNumber = customer.phone_client.replace(
+          /(\d{2})(\d{4})(\d{4})/,
+          "($1) $2-$3"
+        );
+        customer.cpf_client = newCpf;
+        customer.phone_client = formattedPhoneNumber;
+        return customer;
+      }))
+      setSearchActive(true);
+
+      return
+
+    } catch (error) {
+      console.log(error.message);
+    }
+
+  }
+
+  const handleSortByName = async () => {
+    if (countOrderClients > 1) {
+      return
+    }
+
+    const customersListOrdened = customersList;
+
+    customersListOrdened.sort((a, b) => {
+      const nomeA = a.name_client[0].toUpperCase();
+      const nomeB = b.name_client[0].toUpperCase();
+
+      if (nomeA < nomeB) {
+        return -1;
+      }
+      if (nomeA > nomeB) {
+        return 1;
+      }
+      return 0;
+    })
+
+
+    if (!ordenedListActive) {
+
+      setOrdenedListActive(true);
+      setCustomersList(customersListOrdened);
+      return
+    }
+    if (ordenedListActive) {
+      setCustomersList(inalteredCustomersList);
+      setOrdenedListActive(false);
+      return
+    }
+
+
+  }
+
 
   return (
     <>
@@ -194,6 +309,8 @@ export default function CustomerList({
                       variant="outlined"
                       type="text"
                       name="senha"
+                      value={sentenceSearch}
+                      onChange={(event) => setSentenceSearch(event.target.value)}
                       InputProps={{
                         style: {
                           fontSize: "1.6rem",
@@ -214,6 +331,7 @@ export default function CustomerList({
                               top: "50%",
                               transform: "translateY(-50%)",
                             }}
+                            onClick={() => { handleSearch(), setSentenceSearch(""), setCountOrderClients(0) }}
                           >
                             <SearchIcon style={{ fontSize: "3rem" }} />
                           </IconButton>
@@ -238,7 +356,9 @@ export default function CustomerList({
               <div className="table-header-customer">
                 <ul>
                   <li>
-                    <img src={sortIconHeaders} alt="Sort Icon" />
+                    {countOrderClients > 1 ? "" : <img src={sortIconHeaders} alt="Sort Icon"
+                      onClick={() => { handleSortByName(), setCountOrderClients(countOrderClients + 1) }}
+                    />}
                     Cliente
                   </li>
                   <li>CPF</li>
@@ -308,52 +428,82 @@ export default function CustomerList({
               </div>
 
               <div style={{ margin: "5rem 0" }}>
-                <Stack
-                  sx={{
-                    width: "100%",
-                    display: "flex",
-                    justifyContent: "center",
-                  }}
-                  direction="row"
-                  spacing={2}
-                >
-                  <Button
+                {!searchActive ?
+                  <Stack
                     sx={{
-                      width: "16rem",
-                      height: "4.4rem",
-                      borderRadius: ".8rem",
-                      backgroundColor: "#DA0175",
-                      "&:hover": {
-                        backgroundColor: "#790342",
-                      },
-                      fontSize: "1.4rem",
+                      width: "100%",
+                      display: "flex",
+                      justifyContent: "center",
                     }}
-                    variant="contained"
-                    type="button"
-                    onClick={() => handlePreviousPage()}
-                    disabled={page == 1}
+                    direction="row"
+                    spacing={2}
                   >
-                    Anterior
-                  </Button>
-                  <Button
+                    <Button
+                      sx={{
+                        width: "16rem",
+                        height: "4.4rem",
+                        borderRadius: ".8rem",
+                        backgroundColor: "#DA0175",
+                        "&:hover": {
+                          backgroundColor: "#790342",
+                        },
+                        fontSize: "1.4rem",
+                      }}
+                      variant="contained"
+                      type="button"
+                      onClick={() => { handlePreviousPage(), setCountOrderClients(0) }}
+                      disabled={page == 1}
+                    >
+                      Anterior
+                    </Button>
+                    <Button
+                      sx={{
+                        width: "16rem",
+                        height: "4.4rem",
+                        borderRadius: ".8rem",
+                        backgroundColor: "#DA0175",
+                        "&:hover": {
+                          backgroundColor: "#790342",
+                        },
+                        fontSize: "1.4rem",
+                      }}
+                      variant="contained"
+                      type="button"
+                      onClick={() => { handleNextPage(), setCountOrderClients(0) }}
+                      disabled={page >= totalPage}
+                    >
+                      Proximo
+                    </Button>
+                  </Stack>
+                  :
+                  <Stack
                     sx={{
-                      width: "16rem",
-                      height: "4.4rem",
-                      borderRadius: ".8rem",
-                      backgroundColor: "#DA0175",
-                      "&:hover": {
-                        backgroundColor: "#790342",
-                      },
-                      fontSize: "1.4rem",
+                      width: "100%",
+                      display: "flex",
+                      justifyContent: "center",
                     }}
-                    variant="contained"
-                    type="button"
-                    onClick={() => handleNextPage()}
-                    disabled={page >= totalPage}
+                    direction="row"
+                    spacing={2}
                   >
-                    Proximo
-                  </Button>
-                </Stack>
+                    <Button
+                      sx={{
+                        width: "16rem",
+                        height: "4.4rem",
+                        borderRadius: ".8rem",
+                        backgroundColor: "#DA0175",
+                        "&:hover": {
+                          backgroundColor: "#790342",
+                        },
+                        fontSize: "1.4rem",
+                      }}
+                      variant="contained"
+                      type="button"
+                      onClick={() => { setFetchClientList(true), setSearchActive(false), setCountOrderClients(0) }}
+                    >
+                      Voltar
+                    </Button>
+                  </Stack>}
+
               </div>
             </div>
           </div>
