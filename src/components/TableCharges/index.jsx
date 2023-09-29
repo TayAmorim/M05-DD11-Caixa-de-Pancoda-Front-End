@@ -2,9 +2,9 @@ import { Chip } from "@mui/material";
 import "./styles.css";
 import { Stack } from "@mui/system";
 import colors from "../../style/colors";
-import {Link} from 'react-router-dom'
+import { Link } from "react-router-dom";
 
-export default function TableCharge({ title, color, number }) {
+export default function TableCharge({ title, color, number, children }) {
   let backgroundChip;
   let colorChip;
   switch (color) {
@@ -51,45 +51,8 @@ export default function TableCharge({ title, color, number }) {
         <span>ID da cob.</span>
         <span>Valor</span>
       </Stack>
-      <Stack
-        className="table-clients"
-        direction="row"
-        justifyContent="space-between"
-      >
-        <span>Sara Silva</span>
-        <span>223456787</span>
-        <span>R$ 1000,00</span>
-      </Stack>
-      <Stack
-        className="table-clients"
-        direction="row"
-        justifyContent="space-between"
-      >
-        <span>Carlos Prado</span>
-        <span>223456781</span>
-        <span>R$ 400,00</span>
-      </Stack>
-      <Stack
-        className="table-clients"
-        direction="row"
-        justifyContent="space-between"
-      >
-        <span>Lara Brito</span>
-        <span>223456781</span>
-        <span>R$ 900,00</span>
-      </Stack>
-      <Stack
-        className="table-clients"
-        direction="row"
-        justifyContent="space-between"
-      >
-        <span>Lara Brito</span>
-        <span>223456781</span>
-        <span>R$ 900,00</span>
-      </Stack>
-      <Stack sx={{ margin: "0 auto", paddingBlock: "1rem" }}>
-        <Link to={'/clientes'}> <a className="btn-more">Ver Todos</a></Link>
-      </Stack>
+
+      {children}
     </Stack>
   );
 }
