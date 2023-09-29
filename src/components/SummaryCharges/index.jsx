@@ -73,7 +73,15 @@ function SummaryCharges() {
                 <PaidSvg />
                 <div className="charge-texts">
                   <h3>Cobrança Pagas</h3>
-                  <h2>{`R$ ${chargesReport?.paid.amount / 100}`}</h2>
+                  <h2>
+                    {(chargesReport?.paid.amount / 100).toLocaleString(
+                      "pt-BR",
+                      {
+                        style: "currency",
+                        currency: "BRL",
+                      }
+                    )}
+                  </h2>
                 </div>
               </div>
             </Grid>
@@ -82,7 +90,15 @@ function SummaryCharges() {
                 <ExpiredSvg />
                 <div className="charge-texts">
                   <h3>Cobranças Vencidas</h3>
-                  <h2>{`R$ ${chargesReport?.overdue.amount / 100}`}</h2>
+                  <h2>
+                    {(chargesReport?.overdue.amount / 100).toLocaleString(
+                      "pt-BR",
+                      {
+                        style: "currency",
+                        currency: "BRL",
+                      }
+                    )}
+                  </h2>
                 </div>
               </div>
             </Grid>
@@ -91,7 +107,15 @@ function SummaryCharges() {
                 <Billings />
                 <div className="charge-texts">
                   <h3>Cobranças Previstas</h3>
-                  <h2>{`R$ ${chargesReport?.preview.amount / 100}`}</h2>
+                  <h2>
+                    {(chargesReport?.preview.amount / 100).toLocaleString(
+                      "pt-BR",
+                      {
+                        style: "currency",
+                        currency: "BRL",
+                      }
+                    )}
+                  </h2>
                 </div>
               </div>
             </Grid>
@@ -112,11 +136,16 @@ function SummaryCharges() {
                   >
                     <span>{charge?.name_client}</span>
                     <span>{charge?.id_charge}</span>
-                    <span>{charge?.amount / 100}</span>
+                    <span>
+                      {(charge?.amount / 100).toLocaleString("pt-BR", {
+                        style: "currency",
+                        currency: "BRL",
+                      })}
+                    </span>
                   </Stack>
                 ))}
                 <Stack sx={{ margin: "0 auto", paddingBlock: "1rem" }}>
-                  <Link to={"/clientes"}>
+                  <Link to={"/cobranca?state=paid"}>
                     {" "}
                     <a className="btn-more">Ver Todos</a>
                   </Link>
@@ -138,11 +167,16 @@ function SummaryCharges() {
                   >
                     <span>{charge?.name_client}</span>
                     <span>{charge?.id_charge}</span>
-                    <span>{charge?.amount / 100}</span>
+                    <span>
+                      {(charge?.amount / 100).toLocaleString("pt-BR", {
+                        style: "currency",
+                        currency: "BRL",
+                      })}
+                    </span>
                   </Stack>
                 ))}
                 <Stack sx={{ margin: "0 auto", paddingBlock: "1rem" }}>
-                  <Link to={"/clientes"}>
+                  <Link to={"/cobranca?state=overdue"}>
                     {" "}
                     <a className="btn-more">Ver Todos</a>
                   </Link>
@@ -164,11 +198,16 @@ function SummaryCharges() {
                   >
                     <span>{charge?.name_client}</span>
                     <span>{charge?.id_charge}</span>
-                    <span>{charge?.amount / 100}</span>
+                    <span>
+                      {(charge?.amount / 100).toLocaleString("pt-BR", {
+                        style: "currency",
+                        currency: "BRL",
+                      })}
+                    </span>
                   </Stack>
                 ))}
                 <Stack sx={{ margin: "0 auto", paddingBlock: "1rem" }}>
-                  <Link to={"/clientes"}>
+                  <Link to={"/cobranca?state=preview"}>
                     {" "}
                     <a className="btn-more">Ver Todos</a>
                   </Link>
@@ -180,16 +219,58 @@ function SummaryCharges() {
             <Grid item xs={6}>
               <TableChargeClients
                 title="Clientes Inadimplentes"
-                number="08"
+                number={String(customersReport?.defaulters.total).padStart(
+                  2,
+                  "0"
+                )}
                 defaulter={true}
-              />
+              >
+                {customersReport?.defaulters.clients.map((customer) => (
+                  <Stack
+                    key={customer?.id}
+                    className="customer-clients"
+                    direction="row"
+                    justifyContent="space-between"
+                  >
+                    <span>{customer?.name_client}</span>
+                    <span>{customer?.id}</span>
+                    <span>{customer?.cpf_client}</span>
+                  </Stack>
+                ))}
+                <Stack sx={{ margin: "0 auto", paddingBlock: "1rem" }}>
+                  <Link to={"/clientes?status=true"}>
+                    <a className="btn-more">Ver Todos</a>
+                  </Link>
+                </Stack>
+              </TableChargeClients>
             </Grid>
             <Grid item xs={6}>
               <TableChargeClients
                 title="Clientes em dia"
-                number="08"
+                number={String(customersReport?.compliant.total).padStart(
+                  2,
+                  "0"
+                )}
                 defaulter={false}
-              />
+              >
+                {customersReport?.compliant.clients.map((customer) => (
+                  <Stack
+                    key={customer?.id}
+                    className="customer-clients"
+                    direction="row"
+                    justifyContent="space-between"
+                  >
+                    <span>{customer?.name_client}</span>
+                    <span>{customer?.id}</span>
+                    <span>{customer?.cpf_client}</span>
+                  </Stack>
+                ))}
+                <Stack sx={{ margin: "0 auto", paddingBlock: "1rem" }}>
+                  <Link to={"/clientes?status=false"}>
+                    <a className="btn-more">Ver Todos</a>
+                  </Link>
+                </Stack>
+              </TableChargeClients>
             </Grid>
           </Grid>
         </div>
