@@ -26,7 +26,7 @@ import ptBr from 'date-fns/locale/pt-BR'
 export default function ChargesList({ setOpenModalDeleteCharges, setOpenModalEditCharges }) {
     const currentDate = new Date()
     const currentDateFormat = format(new Date(currentDate), 'dd/MM/yyyy', { locale: ptBr })
-    const { setIdDelete, dataCharges, setDataCharges, setIdEdit } = useContext(AuthContext)
+    const { setIdDelete, dataCharges, setDataCharges, setIdEdit, infoListCharge, setInfoListCharge, fetchChargesList, setFetchChargesList } = useContext(AuthContext)
     const [dataResponse, setDataResponse] = useState([])
     const userStorage = JSON.parse(localStorage.getItem("user"));
     const [page, setPage] = useState(1)
@@ -34,31 +34,32 @@ export default function ChargesList({ setOpenModalDeleteCharges, setOpenModalEdi
     const nameUser = userStorage.name;
     const words = nameUser.split(' ');
     const firstLetters = [];
-    const [infoListCharge, setInfoListCharge] = useState([])
-    
+   
     for (let i = 0; i < 2; i++) {
         if (words[i] && words[i].length > 0) {
             const first = words[i][0];
             firstLetters.push(first);
         }
     }
-
+    
+    useEffect(() => {
     const getCharges = async (newPage) => {
         try {
             const response = await api.get(`/listcharges?page=${newPage}`)
             setDataResponse(response.data)
             setInfoListCharge(response.data.charges)
             setTotalPage(response.data.totalPages)  
-            console.log(totalPage)
+            setFetchChargesList(false)
         } catch (error) {
             console.log(error)
         }
     }
     
-    useEffect(() => {
         getCharges();
-    }, [])
-
+        if(fetchChargesList){
+            getCharges()
+        }
+    }, [ ,fetchChargesList])
 
     useEffect(()  => {
          setDataCharges(dataResponse)
@@ -68,7 +69,7 @@ export default function ChargesList({ setOpenModalDeleteCharges, setOpenModalEdi
         if (page > 1) {
           const newPage = page - 1;
           setPage(newPage);
-          getCharges(newPage);
+          getCharges(newPage);  
         }
       }
     
@@ -77,6 +78,7 @@ export default function ChargesList({ setOpenModalDeleteCharges, setOpenModalEdi
         setPage(newPage);
         getCharges(newPage);
       }
+
 
     return (
         <>
@@ -219,7 +221,7 @@ export default function ChargesList({ setOpenModalDeleteCharges, setOpenModalEdi
                                             <img src={editIcon} alt="Edit Icon" />
                                             <span>Editar</span>
                                         </div>
-                                        <div onClick={() => { setOpenModalDeleteCharges(true); setIdDelete(charges.id_customer) }}>
+                                        <div onClick={() => { setOpenModalDeleteCharges(true); setIdDelete(charges.id_charges) }}>
                                             <img src={deleteIcon} alt="Delete Icon" />
                                             <span>Deletar</span>
                                         </div>
