@@ -39,8 +39,6 @@ export default function CustomerDetails({
   const storedData = sessionStorage.getItem("customerDataSession");
   const parsedData = JSON.parse(storedData);
 
-  console.log(idDelete);
-
   const handleNavigateClients = () => {
     navigate("/clientes");
   };

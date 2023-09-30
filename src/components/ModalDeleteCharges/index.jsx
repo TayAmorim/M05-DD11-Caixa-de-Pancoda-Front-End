@@ -14,7 +14,6 @@ export default function ModalDelete({ setOpenModalDeleteCharges }) {
   const detailCharge = async () => {
     try {
       const response = await api.get(`/detailcharge/${idDelete}`);
-      console.log(response.data[0].due_date);
       const dueDate = new Date(response.data[0].due_date);
       const isPending = response.data[0].status && dueDate >= new Date();
       const isExpired = response.data[0].status && dueDate <= new Date();
