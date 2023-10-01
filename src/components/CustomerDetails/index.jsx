@@ -1,11 +1,6 @@
 import "./styles.css";
 import { useContext, useEffect, useState } from "react";
-import {
-  Avatar,
-  Grid,
-  Stack,
-  Button,
-} from "@mui/material";
+import { Avatar, Grid, Stack, Button } from "@mui/material";
 import NavMenu from "../NavMenu/index";
 import colors from "../../style/colors";
 import clients from "../../assets/clients.svg";
@@ -19,23 +14,30 @@ import { format } from "../../../node_modules/date-fns";
 import api from "../../api/api";
 import ptBr from "date-fns/locale/pt-BR";
 
-export default function CustomerDetails({ setOpenModalCustomers, setOpenModalCreateCharges }) {
+export default function CustomerDetails({
+  setOpenModalCustomers,
+  setOpenModalCreateCharges,
+  setOpenModalDeleteCharges,
+}) {
   const userStorage = JSON.parse(localStorage.getItem("user"));
   const nameUser = userStorage.name;
   const words = nameUser.split(" ");
   const firstLetters = [];
   const navigate = useNavigate();
-  const { customerData,
+  const {
+    customerData,
     setCustomerData,
     setNameModalCreateCharge,
     setIdModalCreateCharge,
     isClientUpdated,
     setIsClientUpdated,
     createdChargeStatus,
-    setCreatedChargeStatus } = useContext(AuthContext);
+    setCreatedChargeStatus,
+    setIdDelete,
+    idDelete,
+  } = useContext(AuthContext);
   const storedData = sessionStorage.getItem("customerDataSession");
   const parsedData = JSON.parse(storedData);
-
 
   const handleNavigateClients = () => {
     navigate("/clientes");
@@ -45,7 +47,7 @@ export default function CustomerDetails({ setOpenModalCustomers, setOpenModalCre
     setNameModalCreateCharge(parsedData.name_client);
     setIdModalCreateCharge(parsedData.id);
     setOpenModalCustomers(true);
-  }
+  };
 
   function createBilling(idCustomer, nameCustomer) {
     setNameModalCreateCharge(nameCustomer);
@@ -60,14 +62,14 @@ export default function CustomerDetails({ setOpenModalCustomers, setOpenModalCre
   }
 
   useEffect(() => {
-
     async function updateDataCustomer() {
       try {
         const response = await api.get(`detailclient/${customerData.id}`);
-
         setCustomerData(response.data);
-        sessionStorage.setItem("customerDataSession", JSON.stringify(response.data));
-
+        sessionStorage.setItem(
+          "customerDataSession",
+          JSON.stringify(response.data)
+        );
       } catch (error) {
         console.log(error);
       }
@@ -81,9 +83,7 @@ export default function CustomerDetails({ setOpenModalCustomers, setOpenModalCre
       updateDataCustomer();
       setCreatedChargeStatus(false);
     }
-
   }, [customerData, createdChargeStatus]);
-
 
   return (
     <>
@@ -286,66 +286,77 @@ export default function CustomerDetails({ setOpenModalCustomers, setOpenModalCre
               </ul>
             </div>
             <div className="body-table-customer charges-table">
-              {parsedData.charges.map((charges) => {
-                const day = format(new Date(charges.due_date), "dd/MM/yyy", {
-                  locale: ptBr,
-                });
-                const dueDate = new Date(charges.due_date);
-                const isExpired = charges.status && dueDate < new Date();
-                return (
-                  <ul key={charges.id_charges}>
-                    <li>{charges.id_charges}</li>
-                    <li>{`R$: ${(charges.amount / 100)
-                      .toFixed(2)
-                      .replace(".", ",")}`}</li>
-                    <li>
-                      {String(Number(day.slice(0, 2)) + 1) +
-                        "/" +
-                        day.slice(3, 5) +
-                        "/" +
-                        day.slice(6)}
-                    </li>
-                    <li
-                      className={
-                        charges.status
-                          ? isExpired
-                            ? "expired-client"
-                            : "pending-client"
-                          : "paid-client"
+              {parsedData.charges
+                ? parsedData.charges.map((charges) => {
+                    const day = format(
+                      new Date(charges.due_date),
+                      "dd/MM/yyy",
+                      {
+                        locale: ptBr,
                       }
-                    >
-                      {charges.status
-                        ? isExpired
-                          ? "Vencido"
-                          : "Pendente"
-                        : "Pago"}
-                    </li>
+                    );
+                    const dueDate = new Date(charges.due_date);
+                    const isExpired = charges.status && dueDate < new Date();
+                    return (
+                      <ul key={charges.id_charges}>
+                        <li>{charges.id_charges}</li>
+                        <li>{`R$: ${(charges.amount / 100)
+                          .toFixed(2)
+                          .replace(".", ",")}`}</li>
+                        <li>
+                          {String(Number(day.slice(0, 2)) + 1) +
+                            "/" +
+                            day.slice(3, 5) +
+                            "/" +
+                            day.slice(6)}
+                        </li>
+                        <li
+                          className={
+                            charges.status
+                              ? isExpired
+                                ? "expired-client"
+                                : "pending-client"
+                              : "paid-client"
+                          }
+                        >
+                          {charges.status
+                            ? isExpired
+                              ? "Vencido"
+                              : "Pendente"
+                            : "Pago"}
+                        </li>
 
-                    <li>{charges.description}</li>
-                    <li></li>
-                    <li className="edit-delete">
-                      <div className="icons-table-charge"
-                        onClick={() => {
-                          setOpenModalEditCharges(true);
-                          setIdEdit(charges.id);
-                        }}
-                      >
-                        <img src={editIcon} alt="Edit Icon" />
-                        <span>Editar</span>
-                      </div>
-                      <div className="icons-table-charge"
-                        onClick={() => {
-                          setOpenModalDeleteCharges(true);
-                          setIdDelete(charges.id);
-                        }}
-                      >
-                        <img src={deleteIcon} alt="Delete Icon" />
-                        <span>Deletar</span>
-                      </div>
-                    </li>
-                  </ul>
-                );
-              })}
+                        <li>{charges.description}</li>
+                        <li></li>
+                        <li className="edit-delete">
+                          <div
+                            className="icons-table-charge"
+                            onClick={() => {
+                              setOpenModalEditCharges(true);
+                              setIdEdit(charges.id);
+                            }}
+                          >
+                            <img src={editIcon} alt="Edit Icon" />
+                            <span>Editar</span>
+                          </div>
+                          <div
+                            className="icons-table-charge"
+                            onClick={() => {
+                              setOpenModalDeleteCharges(true);
+                            }}
+                          >
+                            <img
+                              onClick={() => setIdDelete(charges.id_charges)}
+                              src={deleteIcon}
+                              alt="Delete Icon"
+                            />
+                            <span>Deletar</span>
+                          </div>
+                        </li>
+                      </ul>
+                    );
+                  })
+                : ""}
             </div>
           </div>
         </div>
