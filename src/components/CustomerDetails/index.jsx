@@ -18,6 +18,7 @@ export default function CustomerDetails({
   setOpenModalCustomers,
   setOpenModalCreateCharges,
   setOpenModalEditCharges,
+  setOpenModalDeleteCharges,
 }) {
   const userStorage = JSON.parse(localStorage.getItem("user"));
   const nameUser = userStorage.name;
@@ -344,7 +345,7 @@ export default function CustomerDetails({
                             className="icons-table-charge"
                             onClick={() => {
                               setOpenModalDeleteCharges(true);
-                              setIdDelete(charges.id);
+                              setIdDelete(charges.id_charges);
                             }}
                           >
                             <img src={deleteIcon} alt="Delete Icon" />
