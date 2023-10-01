@@ -5,14 +5,14 @@ import chargeIcon from "../../assets/billingsIcon.svg";
 import { Box, TextField, Button, Stack } from "@mui/material";
 import { useState, useContext } from "react";
 import api from "../../api/api";
-
+import { NumericFormat } from "react-number-format";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { AuthContext } from '../../context/myContext';
 
 
-export default function modalEditCustomer({ setOpenModalEditCharges, openModalEditCharges }) {
-  const { idEdit, setDataCharges } = useContext(AuthContext)
+export default function modalEditCustomer({ setOpenModalEditCharges }) {
+  const { idEdit, setDataCharges, setFetchChargesList } = useContext(AuthContext)
   const [name, setName] = useState('')
   const [alertName, setAlertName] = useState('')
   const [description, setDescription] = useState('')
@@ -22,80 +22,93 @@ export default function modalEditCustomer({ setOpenModalEditCharges, openModalEd
   const [amount, setAmount] = useState('')
   const [alertAmount, setAlertAmount] = useState('')
   const [radioSelected, setRadioSelected] = useState(false)
-  let data = []
+  const storedData = sessionStorage.getItem("customerDataSession");
+  const parsedData = JSON.parse(storedData);
 
   const getChargesById = async () => {
     try {
-      const response = await api.get(`listcharges/${idEdit}`)
-      data = response.data.charges
-      setName(data.name_client)
-      setDescription(data.description)
-      setDueDate(data.due_date)
-      setAmount(data.amount)
-      setRadioSelected(data.status)
-
-     
+      const response = await api.get(`detailcharge/${idEdit}`)
+      setName(response.data[0].name_client)
+      setDescription(response.data[0].description)
+      const dueDateFromDB = new Date(response.data[0].due_date);
+      const formattedDueDate = dueDateFromDB.toISOString().split('T')[0];
+      setDueDate(formattedDueDate)
+      setAmount(response.data[0].amount)
+      setRadioSelected(response.data[0].status)
     } catch (error) {
-      // console.log(error.message)
+      console.log(error.message)
     }
   }
-
 
   React.useEffect(() => {
     getChargesById()
   }, [idEdit])
 
-  // const handleSubmit = async (event) => {
-  //   event.preventDefault();
-  //   if (!description) {
-  //     return setAlertDescription("Este campo deve ser preenchido");
-  //   }
-  //   if (!dueDate) {
-  //     return setAlertDueDate("Campo obrigatório");
-  //   }
-  //   if (!amount) {
-  //     return setAlertAmount("Campo obrigatório");
-  //   }
-  //   try {
-  //     const response = await axios.put(`http://localhost:3000/cobrancas/${idEdit}`, {
-  //       id_charges: idEdit,
-  //       name_client: name,
-  //       amount: amount,
-  //       due_date: dueDate,
-  //       status_charge: radioSelected,
-  //       description: description
-
-  //     });
-  //     setOpenModalEditCharges(false)
-  //     dataValuesEdit()
-  //     toast.success("Cobrança editada com sucesso!", {
-  //       position: "bottom-right",
-  //       autoClose: 5000,
-  //       hideProgressBar: false,
-  //       closeOnClick: true,
-  //       pauseOnHover: true,
-  //       draggable: true,
-  //       progress: undefined,
-  //       theme: "colored",
-  //     });
-  //   } catch (error) {
-  //     console.log(error);
-  //   }
-
-  // }
-
-  const dataValuesEdit = async () => {
-    try {
-       
-        const response = await api.get('/listcharges');
-        setDataCharges(response.data)
-    } catch (error) {
-        console.log(error)
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+    if (!description) {
+      return setAlertDescription("Este campo deve ser preenchido");
     }
-}
+    if (!dueDate) {
+      return setAlertDueDate("Campo obrigatório");
+    }
+    if (!amount) {
+      return setAlertAmount("Campo obrigatório");
+    }
+    const valueWithoutSymbol = amount.replace("R$", "").replace(",", "");
+    const valueInFloat = parseFloat(valueWithoutSymbol);
+    const valueInCentavos = Math.round(valueInFloat * 100);
+    try {
+      const updateObject = {
+        id_charges: idEdit,
+        name_client: name,
+        amount: Number(valueInCentavos),
+        due_date: dueDate,
+        status: radioSelected,
+        description: description
+      }
+      const response = await api.put(`/updatecharge`, updateObject);
 
+      const chargeFilterList = parsedData.charges.filter(
+        (charge) => charge.id_charges !== idEdit
+      );
 
+      const updatedCharge = updateObject
 
+      const updatedCharges = [...chargeFilterList, updatedCharge];
+
+      const sessionUpdate = {
+        ...parsedData,
+        charges: updatedCharges,
+      };
+
+      sessionStorage.setItem(
+        "customerDataSession",
+        JSON.stringify(sessionUpdate)
+      );
+      
+      setOpenModalEditCharges(false)
+      toast.success("Cobrança editada com sucesso!", {
+        position: "bottom-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "colored",
+      });
+      setFetchChargesList(true)
+
+    } catch (error) {
+      console.log(error);
+    }
+
+  }
+  const handleAmountChange = (values) => {
+    const { value } = values;
+    setAmount(value);
+  };
 
   const cancelSubmit = () => {
     setDescription("");
@@ -120,7 +133,7 @@ export default function modalEditCustomer({ setOpenModalEditCharges, openModalEd
               <h1>Editar Cobrança</h1>
             </div>
             <Box
-              // onSubmit={handleSubmit}
+              onSubmit={handleSubmit}
               component="form"
               sx={{
                 display: "flex",
@@ -269,16 +282,19 @@ export default function modalEditCustomer({ setOpenModalEditCharges, openModalEd
                   >
                     Valor*
                   </label>
-                  <TextField
+                  <NumericFormat
+                    customInput={TextField}
                     id="outlined-basic"
                     variant="outlined"
-                    type="number"
                     placeholder="Digite o valor"
                     value={amount}
                     name="amount"
-                    onChange={(event) => {
-                      setAmount(event.target.value), setAlertAmount("");
-                    }}
+                    onValueChange={handleAmountChange}
+                    thousandSeparator="."
+                    decimalSeparator=","
+                    decimalScale={2}
+                    fixedDecimalScale={true}
+                    prefix={"R$ "}
                     InputProps={{
                       style: {
                         fontSize: "1.6rem",
@@ -286,7 +302,6 @@ export default function modalEditCustomer({ setOpenModalEditCharges, openModalEd
                         borderRadius: ".8rem",
                         height: "3.8rem",
                       },
-                      className: alertAmount ? "redOutline" : "",
                     }}
                     InputLabelProps={{
                       style: {

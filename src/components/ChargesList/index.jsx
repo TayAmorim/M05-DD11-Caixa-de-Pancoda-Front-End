@@ -26,7 +26,7 @@ import ptBr from 'date-fns/locale/pt-BR'
 export default function ChargesList({ setOpenModalDeleteCharges, setOpenModalEditCharges }) {
     const currentDate = new Date()
     const currentDateFormat = format(new Date(currentDate), 'dd/MM/yyyy', { locale: ptBr })
-    const { setIdDelete, dataCharges, setDataCharges, setIdEdit } = useContext(AuthContext)
+    const { setIdDelete, dataCharges, setDataCharges, setIdEdit, fetchChargesList, setFetchChargesList } = useContext(AuthContext)
     const [dataResponse, setDataResponse] = useState([])
     const userStorage = JSON.parse(localStorage.getItem("user"));
     const [page, setPage] = useState(1)
@@ -43,21 +43,25 @@ export default function ChargesList({ setOpenModalDeleteCharges, setOpenModalEdi
         }
     }
 
+    useEffect(() => {
     const getCharges = async (newPage) => {
         try {
             const response = await api.get(`/listcharges?page=${newPage}`)
             setDataResponse(response.data)
             setInfoListCharge(response.data.charges)
             setTotalPage(response.data.totalPages)  
-            console.log(totalPage)
+            setFetchChargesList(false)
         } catch (error) {
             console.log(error)
         }
     }
     
-    useEffect(() => {
         getCharges();
-    }, [])
+
+        if(fetchChargesList){
+            getCharges()
+        }
+    }, [fetchChargesList])
 
 
     useEffect(()  => {
@@ -215,7 +219,7 @@ export default function ChargesList({ setOpenModalDeleteCharges, setOpenModalEdi
                                         <li>{charges.description}</li>
                                     <li></li>
                                     <li className="edit-delete">
-                                        <div onClick={() => { setOpenModalEditCharges(true); setIdEdit(charges.id_customer) }}>
+                                        <div onClick={() => { setOpenModalEditCharges(true); setIdEdit(charges.id_charges) }}>
                                             <img src={editIcon} alt="Edit Icon" />
                                             <span>Editar</span>
                                         </div>

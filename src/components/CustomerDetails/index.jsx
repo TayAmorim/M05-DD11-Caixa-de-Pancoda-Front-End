@@ -19,7 +19,7 @@ import { format } from "../../../node_modules/date-fns";
 import api from "../../api/api";
 import ptBr from "date-fns/locale/pt-BR";
 
-export default function CustomerDetails({ setOpenModalCustomers, setOpenModalCreateCharges }) {
+export default function CustomerDetails({ setOpenModalCustomers, setOpenModalCreateCharges, setOpenModalEditCharges }) {
   const userStorage = JSON.parse(localStorage.getItem("user"));
   const nameUser = userStorage.name;
   const words = nameUser.split(" ");
@@ -32,7 +32,8 @@ export default function CustomerDetails({ setOpenModalCustomers, setOpenModalCre
     isClientUpdated,
     setIsClientUpdated,
     createdChargeStatus,
-    setCreatedChargeStatus } = useContext(AuthContext);
+    setCreatedChargeStatus,
+    setIdEdit, } = useContext(AuthContext);
   const storedData = sessionStorage.getItem("customerDataSession");
   const parsedData = JSON.parse(storedData);
 
@@ -45,6 +46,7 @@ export default function CustomerDetails({ setOpenModalCustomers, setOpenModalCre
     setNameModalCreateCharge(parsedData.name_client);
     setIdModalCreateCharge(parsedData.id);
     setOpenModalCustomers(true);
+    
   }
 
   function createBilling(idCustomer, nameCustomer) {
@@ -327,7 +329,7 @@ export default function CustomerDetails({ setOpenModalCustomers, setOpenModalCre
                       <div className="icons-table-charge"
                         onClick={() => {
                           setOpenModalEditCharges(true);
-                          setIdEdit(charges.id);
+                          setIdEdit(charges.id_charges);
                         }}
                       >
                         <img src={editIcon} alt="Edit Icon" />
