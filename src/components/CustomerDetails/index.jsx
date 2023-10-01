@@ -17,7 +17,7 @@ import ptBr from "date-fns/locale/pt-BR";
 export default function CustomerDetails({
   setOpenModalCustomers,
   setOpenModalCreateCharges,
-  setOpenModalDeleteCharges,
+  setOpenModalEditCharges,
 }) {
   const userStorage = JSON.parse(localStorage.getItem("user"));
   const nameUser = userStorage.name;
@@ -33,6 +33,7 @@ export default function CustomerDetails({
     setIsClientUpdated,
     createdChargeStatus,
     setCreatedChargeStatus,
+    setIdEdit,
     setIdDelete,
     idDelete,
   } = useContext(AuthContext);
@@ -333,7 +334,7 @@ export default function CustomerDetails({
                             className="icons-table-charge"
                             onClick={() => {
                               setOpenModalEditCharges(true);
-                              setIdEdit(charges.id);
+                              setIdEdit(charges.id_charges);
                             }}
                           >
                             <img src={editIcon} alt="Edit Icon" />
@@ -343,13 +344,10 @@ export default function CustomerDetails({
                             className="icons-table-charge"
                             onClick={() => {
                               setOpenModalDeleteCharges(true);
+                              setIdDelete(charges.id);
                             }}
                           >
-                            <img
-                              onClick={() => setIdDelete(charges.id_charges)}
-                              src={deleteIcon}
-                              alt="Delete Icon"
-                            />
+                            <img src={deleteIcon} alt="Delete Icon" />
                             <span>Deletar</span>
                           </div>
                         </li>

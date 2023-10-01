@@ -36,8 +36,6 @@ export default function ChargesList({
     dataCharges,
     setDataCharges,
     setIdEdit,
-    infoListCharge,
-    setInfoListCharge,
     fetchChargesList,
     setFetchChargesList,
   } = useContext(AuthContext);
@@ -48,6 +46,7 @@ export default function ChargesList({
   const nameUser = userStorage.name;
   const words = nameUser.split(" ");
   const firstLetters = [];
+  const [infoListCharge, setInfoListCharge] = useState([]);
 
   for (let i = 0; i < 2; i++) {
     if (words[i] && words[i].length > 0) {
@@ -252,7 +251,7 @@ export default function ChargesList({
                         <div
                           onClick={() => {
                             setOpenModalEditCharges(true);
-                            setIdEdit(charges.id_customer);
+                            setIdEdit(charges.id_charges);
                           }}
                         >
                           <img src={editIcon} alt="Edit Icon" />
