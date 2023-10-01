@@ -1,12 +1,12 @@
-import './style.css'
+import './style.css';
 
-export default function ModalInstructions() {
+export default function ModalInstructions({ title, instructions }) {
     return (
         <div className="modal-instructions">
-            <span>Pesquisas aceitas</span>
-            <span><strong>Nome:</strong> mínimo 3 letras</span>
-            <span><strong>CPF:</strong> mínimo 3 números</span>
-            <span><strong>Email:</strong> 3 letras + @</span>
+            <span>{title}</span>
+            {instructions.map((instruction, index) => (
+                <span key={index}><strong>{instruction.label}:</strong> {instruction.description}</span>
+            ))}
         </div>
     )
 }

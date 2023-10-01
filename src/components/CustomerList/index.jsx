@@ -44,6 +44,12 @@ export default function CustomerList({
   const [totalPage, setTotalPage] = useState("");
   const [modalInstruction, setModalInstructions] = useState(false)
 
+  const partialInstructions = [
+    { label: 'Nome', description: 'mínimo 3 letras' },
+    { label: 'CPF', description: 'mínimo 3 números' },
+    { label: 'Email', description: 'mínimo 3 letras + @' },
+];
+
   for (let i = 0; i < 2; i++) {
     if (words[i] && words[i].length > 0) {
       const first = words[i][0];
@@ -236,7 +242,7 @@ export default function CustomerList({
                       }}
                     />
                     {modalInstruction &&
-                      <ModalInstructions />
+                     <ModalInstructions title="Pesquisas aceitas" instructions={partialInstructions} />
                     }
                   </Box>
                 </div>

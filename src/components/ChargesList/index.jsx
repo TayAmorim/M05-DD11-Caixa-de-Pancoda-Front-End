@@ -38,6 +38,12 @@ export default function ChargesList({ setOpenModalDeleteCharges, setOpenModalEdi
     const [infoListCharge, setInfoListCharge] = useState([])
     const [modalInstruction, setModalInstructions] = useState(false)
 
+    const partialInstructions = [
+        { label: 'Nome', description: 'mínimo 3 letras' },
+        { label: 'ID', description: 'mínimo 1 número' },
+    ];
+    
+
     for (let i = 0; i < 2; i++) {
         if (words[i] && words[i].length > 0) {
             const first = words[i][0];
@@ -177,7 +183,7 @@ export default function ChargesList({ setOpenModalDeleteCharges, setOpenModalEdi
                                             }}
                                         />
                                         {modalInstruction &&
-                                            <ModalInstructions/>
+                                           <ModalInstructions title="Pesquisas aceitas" instructions={partialInstructions} />
                                         }
                                     </Box>
                                 </div>
