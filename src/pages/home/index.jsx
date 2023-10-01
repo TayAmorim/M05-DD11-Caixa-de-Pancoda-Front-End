@@ -62,6 +62,7 @@ export default function Home() {
                 setOpenModalCreateCharges={setOpenModalCreateCharges}
                 setOpenModalCustomers={setOpenModalCustomers}
                 setOpenModalEditCharges={setOpenModalEditCharges}
+                setOpenModalDeleteCharges={setOpenModalDeleteCharges}
               />
             }
           />
