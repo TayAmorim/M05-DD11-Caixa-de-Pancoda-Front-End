@@ -1,5 +1,5 @@
 import "./style.css";
-import * as React from 'react';
+import * as React from "react";
 import closeIcon from "../../assets/closeIcon.svg";
 import chargeIcon from "../../assets/billingsIcon.svg";
 import { Box, TextField, Button, Stack } from "@mui/material";
@@ -8,41 +8,41 @@ import api from "../../api/api";
 import { NumericFormat } from "react-number-format";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { AuthContext } from '../../context/myContext';
-
+import { AuthContext } from "../../context/myContext";
 
 export default function modalEditCustomer({ setOpenModalEditCharges }) {
-  const { idEdit, setDataCharges, setFetchChargesList } = useContext(AuthContext)
-  const [name, setName] = useState('')
-  const [alertName, setAlertName] = useState('')
-  const [description, setDescription] = useState('')
-  const [alertDescription, setAlertDescription] = useState('')
-  const [dueDate, setDueDate] = useState('')
-  const [alertDueDate, setAlertDueDate] = useState('')
-  const [amount, setAmount] = useState('')
-  const [alertAmount, setAlertAmount] = useState('')
-  const [radioSelected, setRadioSelected] = useState(false)
+  const { idEdit, setDataCharges, setFetchChargesList } =
+    useContext(AuthContext);
+  const [name, setName] = useState("");
+  const [alertName, setAlertName] = useState("");
+  const [description, setDescription] = useState("");
+  const [alertDescription, setAlertDescription] = useState("");
+  const [dueDate, setDueDate] = useState("");
+  const [alertDueDate, setAlertDueDate] = useState("");
+  const [amount, setAmount] = useState("");
+  const [alertAmount, setAlertAmount] = useState("");
+  const [radioSelected, setRadioSelected] = useState(false);
   const storedData = sessionStorage.getItem("customerDataSession");
   const parsedData = JSON.parse(storedData);
 
   const getChargesById = async () => {
     try {
-      const response = await api.get(`detailcharge/${idEdit}`)
-      setName(response.data[0].name_client)
-      setDescription(response.data[0].description)
+      const response = await api.get(`detailcharge/${idEdit}`);
+      setName(response.data[0].name_client);
+      setDescription(response.data[0].description);
       const dueDateFromDB = new Date(response.data[0].due_date);
-      const formattedDueDate = dueDateFromDB.toISOString().split('T')[0];
-      setDueDate(formattedDueDate)
-      setAmount(response.data[0].amount)
-      setRadioSelected(response.data[0].status)
+      const formattedDueDate = dueDateFromDB.toISOString().split("T")[0];
+      setDueDate(formattedDueDate);
+      setAmount(response.data[0].amount / 100);
+      setRadioSelected(response.data[0].status);
     } catch (error) {
-      console.log(error.message)
+      console.log(error.message);
     }
-  }
+  };
 
   React.useEffect(() => {
-    getChargesById()
-  }, [idEdit])
+    getChargesById();
+  }, [idEdit]);
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -55,9 +55,8 @@ export default function modalEditCustomer({ setOpenModalEditCharges }) {
     if (!amount) {
       return setAlertAmount("Campo obrigatório");
     }
-    const valueWithoutSymbol = amount.replace("R$", "").replace(",", "");
-    const valueInFloat = parseFloat(valueWithoutSymbol);
-    const valueInCentavos = Math.round(valueInFloat * 100);
+
+    const valueInCentavos = amount * 100;
     try {
       const updateObject = {
         id_charges: idEdit,
@@ -65,15 +64,15 @@ export default function modalEditCustomer({ setOpenModalEditCharges }) {
         amount: Number(valueInCentavos),
         due_date: dueDate,
         status: radioSelected,
-        description: description
-      }
+        description: description,
+      };
       const response = await api.put(`/updatecharge`, updateObject);
 
       const chargeFilterList = parsedData.charges.filter(
         (charge) => charge.id_charges !== idEdit
       );
 
-      const updatedCharge = updateObject
+      const updatedCharge = updateObject;
 
       const updatedCharges = [...chargeFilterList, updatedCharge];
 
@@ -86,8 +85,8 @@ export default function modalEditCustomer({ setOpenModalEditCharges }) {
         "customerDataSession",
         JSON.stringify(sessionUpdate)
       );
-      
-      setOpenModalEditCharges(false)
+
+      setOpenModalEditCharges(false);
       toast.success("Cobrança editada com sucesso!", {
         position: "bottom-right",
         autoClose: 5000,
@@ -98,13 +97,11 @@ export default function modalEditCustomer({ setOpenModalEditCharges }) {
         progress: undefined,
         theme: "colored",
       });
-      setFetchChargesList(true)
-
+      setFetchChargesList(true);
     } catch (error) {
       console.log(error);
     }
-
-  }
+  };
   const handleAmountChange = (values) => {
     const { value } = values;
     setAmount(value);
@@ -128,7 +125,7 @@ export default function modalEditCustomer({ setOpenModalEditCharges }) {
             />
           </div>
           <div className="box-inputs">
-            <div style={{ marginTop: '2rem' }} className="box-title">
+            <div style={{ marginTop: "2rem" }} className="box-title">
               <img src={chargeIcon} alt="Charges Icon" />
               <h1>Editar Cobrança</h1>
             </div>
@@ -230,7 +227,9 @@ export default function modalEditCustomer({ setOpenModalEditCharges }) {
                 {alertDescription && <span>{alertDescription}</span>}
               </Box>
 
-              <div style={{ display: "flex", gap: "1.5rem", marginTop: "5.5rem" }}>
+              <div
+                style={{ display: "flex", gap: "1.5rem", marginTop: "5.5rem" }}
+              >
                 <Box sx={{ display: "flex", flexDirection: "column" }}>
                   <label
                     style={{
@@ -316,13 +315,29 @@ export default function modalEditCustomer({ setOpenModalEditCharges }) {
                 </Box>
               </div>
 
-              <div className="input-radio-box" >
+              <div className="input-radio-box">
                 <label>Status</label>
                 <div>
-                  <input onChange={() => setRadioSelected(false)} type="radio" value='false' name="status_charge" label="Cobrança Paga" checked={!radioSelected} /><label>Cobrança Paga</label>
+                  <input
+                    onChange={() => setRadioSelected(false)}
+                    type="radio"
+                    value="false"
+                    name="status_charge"
+                    label="Cobrança Paga"
+                    checked={!radioSelected}
+                  />
+                  <label>Cobrança Paga</label>
                 </div>
                 <div>
-                  <input onChange={() => setRadioSelected(true)} type="radio" value='true' name="status_charge" label="Cobrança Pendente" checked={radioSelected} /><label>Cobrança Pendente</label>
+                  <input
+                    onChange={() => setRadioSelected(true)}
+                    type="radio"
+                    value="true"
+                    name="status_charge"
+                    label="Cobrança Pendente"
+                    checked={radioSelected}
+                  />
+                  <label>Cobrança Pendente</label>
                 </div>
               </div>
 

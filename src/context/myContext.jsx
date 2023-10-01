@@ -19,6 +19,8 @@ const AuthProvider = ({ children }) => {
   const [nameModalCreateCharge, setNameModalCreateCharge] = useState("");
   const [idModalCreateCharge, setIdModalCreateCharge] = useState("");
   const [createdChargeStatus, setCreatedChargeStatus] = useState(false);
+  const [infoListCharge, setInfoListCharge] = useState([]);
+  const [shareSessionStorage, setShareSessionStorage] = useState([]);
 
   return (
     <AuthContext.Provider
@@ -51,9 +53,14 @@ const AuthProvider = ({ children }) => {
         setIdModalCreateCharge,
         fetchClientList,
         setFetchClientList,
+        fetchChargesList,
+        setFetchChargesList,
         createdChargeStatus,
         setCreatedChargeStatus,
-        fetchChargesList, setFetchChargesList
+        infoListCharge,
+        setInfoListCharge,
+        shareSessionStorage,
+        setShareSessionStorage,
       }}
     >
       {children}

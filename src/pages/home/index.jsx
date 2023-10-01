@@ -55,11 +55,16 @@ export default function Home() {
               />
             }
           />
-          <Route path="clientes/detalhes" element={
-            <CustomerDetails
-              setOpenModalCreateCharges={setOpenModalCreateCharges}
-              setOpenModalCustomers={setOpenModalCustomers} 
-              setOpenModalEditCharges={setOpenModalEditCharges}/>} />
+          <Route
+            path="clientes/detalhes"
+            element={
+              <CustomerDetails
+                setOpenModalCreateCharges={setOpenModalCreateCharges}
+                setOpenModalCustomers={setOpenModalCustomers}
+                setOpenModalEditCharges={setOpenModalEditCharges}
+              />
+            }
+          />
         </Routes>
 
         {OpenModalEditUser && (
@@ -71,7 +76,10 @@ export default function Home() {
         )}
 
         {openModalCustomers && (
-          <ModalEditCustomers setOpenModalCustomers={setOpenModalCustomers} customerData={customerData} />
+          <ModalEditCustomers
+            setOpenModalCustomers={setOpenModalCustomers}
+            customerData={customerData}
+          />
         )}
 
         {sucess && <ModalSucess />}
