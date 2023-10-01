@@ -23,7 +23,7 @@ import { AuthContext } from '../../context/myContext';
 import { format } from '../../../node_modules/date-fns'
 import ptBr from 'date-fns/locale/pt-BR'
 
-export default function ChargesList({ setOpenModalDeleteCharges, setOpenModalEditCharges, setModalChargeDetails,openModalChargeDetails }) {
+export default function ChargesList({ setOpenModalDeleteCharges, setOpenModalEditCharges, setModalChargeDetails, openModalChargeDetails }) {
     const currentDate = new Date()
     const currentDateFormat = format(new Date(currentDate), 'dd/MM/yyyy', { locale: ptBr })
     const { setIdDelete, dataCharges, setDataCharges, setIdEdit, setIdDetailsCharge, setDetailCharge, idDetailsCharge, detailCharge } = useContext(AuthContext)
@@ -89,7 +89,7 @@ export default function ChargesList({ setOpenModalDeleteCharges, setOpenModalEdi
     useEffect(() => {
         detailsCharges()
     }, [openModalChargeDetails, idDetailsCharge])
-    
+
     return (
         <>
             <Grid item xs={11}>
@@ -216,20 +216,51 @@ export default function ChargesList({ setOpenModalDeleteCharges, setOpenModalEdi
                                     const isExpired = charges.status && dueDate < new Date();
                                     return (
                                         <ul key={`${charges.id_customer}-${index}`}>
+
                                             <li className="name-charge" onClick={() => {
                                                 setModalChargeDetails(true);
                                                 setIdDetailsCharge(charges.id_charges);
                                                 detailsCharges()
                                             }}>{charges.name_client}
                                             </li>
-                                            <li>{charges.id_charges}</li>
-                                            <li>{`R$: ${(charges.amount / 100).toFixed(2).replace('.', ',')}`}</li>
-                                            <li>{String(Number(day.slice(0, 2)) + 1) + '/' + day.slice(3, 5) + '/' + day.slice(6)}</li>
-                                            <li className={charges.status ? (isExpired ? "expired-client" : "pending-client") : "paid-client"}>
+
+                                            <li className="name-charge" onClick={() => {
+                                                setModalChargeDetails(true);
+                                                setIdDetailsCharge(charges.id_charges);
+                                                detailsCharges()
+                                            }}>{charges.id_charges}</li>
+
+                                            <li className="name-charge" onClick={() => {
+                                                setModalChargeDetails(true);
+                                                setIdDetailsCharge(charges.id_charges);
+                                                detailsCharges()
+                                            }}>{`R$: ${(charges.amount / 100).toFixed(2).replace('.', ',')}`}
+                                            </li>
+
+                                            <li className="name-charge" onClick={() => {
+                                                setModalChargeDetails(true);
+                                                setIdDetailsCharge(charges.id_charges);
+                                                detailsCharges()
+                                            }}>{String(Number(day.slice(0, 2)) + 1) + '/' + day.slice(3, 5) + '/' + day.slice(6)}
+                                            </li>
+
+                                            <li onClick={() => {
+                                                setModalChargeDetails(true);
+                                                setIdDetailsCharge(charges.id_charges);
+                                                detailsCharges()
+                                            }}
+                                                style={{ cursor: 'pointer' }}
+                                                className={charges.status ? (isExpired ? "expired-client" : "pending-client") : "paid-client"}>
                                                 {charges.status ? (isExpired ? "Vencido" : "Pendente") : "Pago"}
                                             </li>
 
-                                            <li>{charges.description}</li>
+                                            <li onClick={() => {
+                                                setModalChargeDetails(true);
+                                                setIdDetailsCharge(charges.id_charges);
+                                                detailsCharges()
+                                            }}>{charges.description}
+                                            </li>
+
                                             <li></li>
                                             <li className="edit-delete">
                                                 <div onClick={() => { setOpenModalEditCharges(true); setIdEdit(charges.id_customer) }}>

@@ -62,7 +62,11 @@ export default function Home() {
           <Route path="clientes/detalhes" element={
             <CustomerDetails
               setOpenModalCreateCharges={setOpenModalCreateCharges}
-              setOpenModalCustomers={setOpenModalCustomers} />} />
+              setOpenModalCustomers={setOpenModalCustomers} 
+              setModalChargeDetails={setModalChargeDetails}
+              openModalChargeDetails={openModalChargeDetails}
+              />}
+              />
         </Routes>
 
         {OpenModalEditUser && (
