@@ -44,3 +44,10 @@
     color: var(--greenSupport-normal);
     background-color: var(--greenSupport-light);
 }
+.name-charge{
+    cursor: pointer;
+}
+.name-charge:hover{
+    text-decoration: underline;
+    color: #DA0175;
+}

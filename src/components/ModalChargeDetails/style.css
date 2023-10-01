@@ -1,0 +1,66 @@
+.container-modal-details{
+    position: fixed;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100vw;
+    height: 100vh;
+    background-color: #2525255c;
+}
+.box-info-details{
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    width: 40vw;
+    height: 60vh;
+    background-color: #fff;
+    border-radius: 3rem ;
+    box-shadow: 2px 2px 5px #2525256a;
+}
+.title-box{
+    margin:2rem 0;
+    display: flex;
+    align-items: center;
+    width: 80%;
+}
+.title-box h1{
+    font-size: 2.5rem;
+    color: #252525;
+}
+.box-infos{
+    width: 75%;
+}
+.box-infos h3{ 
+    color: #252525;
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+    font-size: 1.5rem;
+}
+.amount-date{
+    grid-template: repeat(2, 1fr);
+    display: flex;
+}
+.amount-date div:nth-child(1) {
+    width: 50%;
+}
+
+.box-buttons-details{
+    margin-top: 5rem;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 3rem;
+}
+.btn-yes{
+    border: none;
+    border-radius: 1.5rem;
+    width: 10rem;
+    height: 3.5rem;
+    font-weight: bold;
+    cursor: pointer;
+}
+.btn-yes{
+    background-color: #EEF6F6;
+    color: #1FA7AF;
+}
