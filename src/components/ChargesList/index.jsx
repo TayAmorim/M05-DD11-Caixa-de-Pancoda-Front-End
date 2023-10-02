@@ -70,12 +70,14 @@ export default function ChargesList({
     const getCharges = async () => {
       try {
         if (searchIsActive) {
-          const response = await api.get(`/listcharges?${queryParams}=${sentenceSearch}`);
+          const response = await api.get(
+            `/listcharges?${queryParams}=${sentenceSearch}`
+          );
           setInfoListCharge(response.data);
           setInalteredListCharges(response.data);
           setFetchChargesList(false);
           setSortActive(false);
-          return
+          return;
         }
         const response = await api.get(`/listcharges?page=${page}`);
         setDataResponse(response.data);
@@ -97,13 +99,6 @@ export default function ChargesList({
       }
     }
   }, [fetchChargesList]);
-
-  useEffect(() => {
-    if (!searchIsActive) {
-      setDataCharges(dataResponse);
-    }
-
-  }, [dataResponse]);
 
   useEffect(() => {
     if (!searchIsActive) {
@@ -148,74 +143,66 @@ export default function ChargesList({
         queryParam = "name_client";
         setQueryParams("name_client");
       }
-      const response = await api.get(`/listcharges?${queryParam}=${sentenceSearch}`);
+      const response = await api.get(
+        `/listcharges?${queryParam}=${sentenceSearch}`
+      );
       if (response.data.length < 1) {
         console.log(response.data);
         console.log("busca sem resultados");
-        return
+        return;
       }
       setInfoListCharge(response.data);
       setInalteredListCharges(response.data);
       setSearchIsActive(true);
-      return
+      return;
     } catch (error) {
       console.log(error.message);
     }
-  }
+  };
 
   const handleSort = async (typeSort) => {
-    try {
-      if (sortActive && !searchIsActive) {
-        setFetchChargesList(true);
-        return
-      }
-
-      if (sortActive) {
-        setFetchChargesList(true);
-      }
-
-      if (typeSort == "byName") {
-        const chargesListOrdened = inalteredListCharges;
-        chargesListOrdened.sort((a, b) => {
-          const nomeA = a.name_client[0].toUpperCase();
-          const nomeB = b.name_client[0].toUpperCase();
-
-          if (nomeA < nomeB) {
-            return -1;
-          }
-          if (nomeA > nomeB) {
-            return 1;
-          }
-          return 0;
-        })
-        setInfoListCharge(chargesListOrdened);
-        setSortActive(true)
-        return
-      }
-      if (typeSort == "byId") {
-        const chargesListOrdened = inalteredListCharges;
-        chargesListOrdened.sort((a, b) => {
-          const idA = a.id_charges
-          const idB = b.id_charges
-
-          if (idA < idB) {
-            return -1;
-          }
-          if (idA > idB) {
-            return 1;
-          }
-          return 0;
-        })
-        setInfoListCharge(chargesListOrdened);
-        setSortActive(true)
-        return
-      }
-    } catch (error) {
-      console.log(error);
+    if (typeSort === sortActive) {
+      setSortActive(undefined);
+      return setInfoListCharge(inalteredListCharges);
     }
 
+    if (typeSort == "byName") {
+      const chargesListOrdened = [...inalteredListCharges];
+      chargesListOrdened.sort((a, b) => {
+        const nomeA = a.name_client[0].toUpperCase();
+        const nomeB = b.name_client[0].toUpperCase();
 
-  }
+        if (nomeA < nomeB) {
+          return -1;
+        }
+        if (nomeA > nomeB) {
+          return 1;
+        }
+        return 0;
+      });
+      setInfoListCharge(chargesListOrdened);
+      setSortActive("byName");
+      return;
+    }
+    if (typeSort == "byId") {
+      const chargesListOrdened = [...inalteredListCharges];
+      chargesListOrdened.sort((a, b) => {
+        const idA = a.id_charges;
+        const idB = b.id_charges;
+
+        if (idA < idB) {
+          return -1;
+        }
+        if (idA > idB) {
+          return 1;
+        }
+        return 0;
+      });
+      setInfoListCharge(chargesListOrdened);
+      setSortActive("byId");
+      return;
+    }
+  };
   return (
     <>
       <Grid item xs={11}>
@@ -275,7 +262,9 @@ export default function ChargesList({
                       type="text"
                       name="search"
                       value={sentenceSearch}
-                      onChange={(event) => { setSentenceSearch(event.target.value) }}
+                      onChange={(event) => {
+                        setSentenceSearch(event.target.value);
+                      }}
                       InputProps={{
                         style: {
                           fontSize: "1.6rem",
@@ -290,7 +279,9 @@ export default function ChargesList({
                           <IconButton
                             aria-label="toggle password visibility"
                             edge="end"
-                            onClick={() => { handleSearch() }}
+                            onClick={() => {
+                              handleSearch();
+                            }}
                             sx={{
                               position: "absolute",
                               right: "1.5rem",
@@ -320,11 +311,25 @@ export default function ChargesList({
               <div className="table-header-customer charges-table">
                 <ul>
                   <li>
-                    <img src={sortIconHeaders} alt="Sort Icon" name="byName" onClick={(event) => { setInfoListCharge(true), handleSort(event.target.name), setSortActive(true) }} />
+                    <img
+                      src={sortIconHeaders}
+                      alt="Sort Icon"
+                      name="byName"
+                      onClick={(event) => {
+                        setInfoListCharge(true), handleSort(event.target.name);
+                      }}
+                    />
                     Cliente
                   </li>
                   <li>
-                    <img src={sortIconHeaders} alt="Sort Icon" name="byId" onClick={(event) => { setInfoListCharge(true), handleSort(event.target.name), setSortActive(true) }} />
+                    <img
+                      src={sortIconHeaders}
+                      alt="Sort Icon"
+                      name="byId"
+                      onClick={(event) => {
+                        setInfoListCharge(true), handleSort(event.target.name);
+                      }}
+                    />
                     ID Cob.
                   </li>
                   <li>Valor</li>
@@ -453,7 +458,7 @@ export default function ChargesList({
                   direction="row"
                   spacing={2}
                 >
-                  {searchIsActive ?
+                  {searchIsActive ? (
                     <Button
                       sx={{
                         width: "16rem",
@@ -467,47 +472,55 @@ export default function ChargesList({
                       }}
                       variant="contained"
                       type="button"
-                      onClick={() => { setFetchChargesList(true), setSearchIsActive(false), setSortActive(false), setSentenceSearch("") }}
+                      onClick={() => {
+                        setFetchChargesList(true),
+                          setSearchIsActive(false),
+                          setSortActive(false),
+                          setSentenceSearch("");
+                      }}
                     >
                       Voltar
                     </Button>
-                    :
-                    <><Button
-                      sx={{
-                        width: "16rem",
-                        height: "4.4rem",
-                        borderRadius: ".8rem",
-                        backgroundColor: "#DA0175",
-                        "&:hover": {
-                          backgroundColor: "#790342",
-                        },
-                        fontSize: "1.4rem",
-                      }}
-                      variant="contained"
-                      type="button"
-                      onClick={() => handlePreviousPage()}
-                      disabled={page === 1}
-                    >
-                      Anterior
-                    </Button><Button
-                      sx={{
-                        width: "16rem",
-                        height: "4.4rem",
-                        borderRadius: ".8rem",
-                        backgroundColor: "#DA0175",
-                        "&:hover": {
-                          backgroundColor: "#790342",
-                        },
-                        fontSize: "1.4rem",
-                      }}
-                      variant="contained"
-                      type="button"
-                      onClick={() => handleNextPage()}
-                      disabled={page >= totalPage}
-                    >
+                  ) : (
+                    <>
+                      <Button
+                        sx={{
+                          width: "16rem",
+                          height: "4.4rem",
+                          borderRadius: ".8rem",
+                          backgroundColor: "#DA0175",
+                          "&:hover": {
+                            backgroundColor: "#790342",
+                          },
+                          fontSize: "1.4rem",
+                        }}
+                        variant="contained"
+                        type="button"
+                        onClick={() => handlePreviousPage()}
+                        disabled={page === 1}
+                      >
+                        Anterior
+                      </Button>
+                      <Button
+                        sx={{
+                          width: "16rem",
+                          height: "4.4rem",
+                          borderRadius: ".8rem",
+                          backgroundColor: "#DA0175",
+                          "&:hover": {
+                            backgroundColor: "#790342",
+                          },
+                          fontSize: "1.4rem",
+                        }}
+                        variant="contained"
+                        type="button"
+                        onClick={() => handleNextPage()}
+                        disabled={page >= totalPage}
+                      >
                         Proximo
-                      </Button></>}
-
+                      </Button>
+                    </>
+                  )}
                 </Stack>
               </div>
             </div>
