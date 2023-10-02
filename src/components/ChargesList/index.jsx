@@ -53,6 +53,11 @@ export default function ChargesList({
   const words = nameUser.split(" ");
   const firstLetters = [];
   const [infoListCharge, setInfoListCharge] = useState([]);
+  const [sentenceSearch, setSentenceSearch] = useState("");
+  const [inalteredListCharges, setInalteredListCharges] = useState([]);
+  const [searchIsActive, setSearchIsActive] = useState(false);
+  const [sortActive, setSortActive] = useState(false);
+  const [queryParams, setQueryParams] = useState("");
 
   for (let i = 0; i < 2; i++) {
     if (words[i] && words[i].length > 0) {
@@ -64,28 +69,41 @@ export default function ChargesList({
   useEffect(() => {
     const getCharges = async () => {
       try {
+        if (searchIsActive) {
+          const response = await api.get(
+            `/listcharges?${queryParams}=${sentenceSearch}`
+          );
+          setInfoListCharge(response.data);
+          setInalteredListCharges(response.data);
+          setFetchChargesList(false);
+          setSortActive(false);
+          return;
+        }
         const response = await api.get(`/listcharges?page=${page}`);
         setDataResponse(response.data);
         setInfoListCharge(response.data.charges);
+        setInalteredListCharges(response.data.charges);
         setTotalPage(response.data.totalPages);
         setFetchChargesList(false);
+        setSearchIsActive(false);
+        setSortActive(false);
       } catch (error) {
         console.log(error);
       }
     };
 
     getCharges();
-    if (fetchChargesList) {
-      getCharges();
+    if (!searchIsActive) {
+      if (fetchChargesList) {
+        getCharges();
+      }
     }
   }, [fetchChargesList]);
 
   useEffect(() => {
-    setDataCharges(dataResponse);
-  }, [dataResponse]);
-
-  useEffect(() => {
-    setDataCharges(dataResponse);
+    if (!searchIsActive) {
+      setDataCharges(dataResponse);
+    }
   }, [dataResponse]);
 
   function handlePreviousPage() {
@@ -113,6 +131,78 @@ export default function ChargesList({
     detailsCharges();
   }, [openModalChargeDetails, idDetailsCharge]);
 
+  const handleSearch = async () => {
+    let queryParam = "";
+    try {
+      let idExpression = /^[0-9]+$/;
+
+      if (idExpression.test(sentenceSearch)) {
+        queryParam = "id_charges";
+        setQueryParams("id_charges");
+      } else {
+        queryParam = "name_client";
+        setQueryParams("name_client");
+      }
+      const response = await api.get(
+        `/listcharges?${queryParam}=${sentenceSearch}`
+      );
+      if (response.data.length < 1) {
+        console.log(response.data);
+        console.log("busca sem resultados");
+        return;
+      }
+      setInfoListCharge(response.data);
+      setInalteredListCharges(response.data);
+      setSearchIsActive(true);
+      return;
+    } catch (error) {
+      console.log(error.message);
+    }
+  };
+
+  const handleSort = async (typeSort) => {
+    if (typeSort === sortActive) {
+      setSortActive(undefined);
+      return setInfoListCharge(inalteredListCharges);
+    }
+
+    if (typeSort == "byName") {
+      const chargesListOrdened = [...inalteredListCharges];
+      chargesListOrdened.sort((a, b) => {
+        const nomeA = a.name_client[0].toUpperCase();
+        const nomeB = b.name_client[0].toUpperCase();
+
+        if (nomeA < nomeB) {
+          return -1;
+        }
+        if (nomeA > nomeB) {
+          return 1;
+        }
+        return 0;
+      });
+      setInfoListCharge(chargesListOrdened);
+      setSortActive("byName");
+      return;
+    }
+    if (typeSort == "byId") {
+      const chargesListOrdened = [...inalteredListCharges];
+      chargesListOrdened.sort((a, b) => {
+        const idA = a.id_charges;
+        const idB = b.id_charges;
+
+        if (idA < idB) {
+          return -1;
+        }
+        if (idA > idB) {
+          return 1;
+        }
+        return 0;
+      });
+      setInfoListCharge(chargesListOrdened);
+      setSortActive("byId");
+      return;
+    }
+  };
   return (
     <>
       <Grid item xs={11}>
@@ -170,7 +260,11 @@ export default function ChargesList({
                       label="Pesquisa"
                       variant="outlined"
                       type="text"
-                      name="senha"
+                      name="search"
+                      value={sentenceSearch}
+                      onChange={(event) => {
+                        setSentenceSearch(event.target.value);
+                      }}
                       InputProps={{
                         style: {
                           fontSize: "1.6rem",
@@ -185,6 +279,9 @@ export default function ChargesList({
                           <IconButton
                             aria-label="toggle password visibility"
                             edge="end"
+                            onClick={() => {
+                              handleSearch();
+                            }}
                             sx={{
                               position: "absolute",
                               right: "1.5rem",
@@ -214,11 +311,25 @@ export default function ChargesList({
               <div className="table-header-customer charges-table">
                 <ul>
                   <li>
-                    <img src={sortIconHeaders} alt="Sort Icon" />
+                    <img
+                      src={sortIconHeaders}
+                      alt="Sort Icon"
+                      name="byName"
+                      onClick={(event) => {
+                        setInfoListCharge(true), handleSort(event.target.name);
+                      }}
+                    />
                     Cliente
                   </li>
                   <li>
-                    <img src={sortIconHeaders} alt="Sort Icon" />
+                    <img
+                      src={sortIconHeaders}
+                      alt="Sort Icon"
+                      name="byId"
+                      onClick={(event) => {
+                        setInfoListCharge(true), handleSort(event.target.name);
+                      }}
+                    />
                     ID Cob.
                   </li>
                   <li>Valor</li>
@@ -347,42 +458,69 @@ export default function ChargesList({
                   direction="row"
                   spacing={2}
                 >
-                  <Button
-                    sx={{
-                      width: "16rem",
-                      height: "4.4rem",
-                      borderRadius: ".8rem",
-                      backgroundColor: "#DA0175",
-                      "&:hover": {
-                        backgroundColor: "#790342",
-                      },
-                      fontSize: "1.4rem",
-                    }}
-                    variant="contained"
-                    type="button"
-                    onClick={() => handlePreviousPage()}
-                    disabled={page === 1}
-                  >
-                    Anterior
-                  </Button>
-                  <Button
-                    sx={{
-                      width: "16rem",
-                      height: "4.4rem",
-                      borderRadius: ".8rem",
-                      backgroundColor: "#DA0175",
-                      "&:hover": {
-                        backgroundColor: "#790342",
-                      },
-                      fontSize: "1.4rem",
-                    }}
-                    variant="contained"
-                    type="button"
-                    onClick={() => handleNextPage()}
-                    disabled={page >= totalPage}
-                  >
-                    Proximo
-                  </Button>
+                  {searchIsActive ? (
+                    <Button
+                      sx={{
+                        width: "16rem",
+                        height: "4.4rem",
+                        borderRadius: ".8rem",
+                        backgroundColor: "#DA0175",
+                        "&:hover": {
+                          backgroundColor: "#790342",
+                        },
+                        fontSize: "1.4rem",
+                      }}
+                      variant="contained"
+                      type="button"
+                      onClick={() => {
+                        setFetchChargesList(true),
+                          setSearchIsActive(false),
+                          setSortActive(false),
+                          setSentenceSearch("");
+                      }}
+                    >
+                      Voltar
+                    </Button>
+                  ) : (
+                    <>
+                      <Button
+                        sx={{
+                          width: "16rem",
+                          height: "4.4rem",
+                          borderRadius: ".8rem",
+                          backgroundColor: "#DA0175",
+                          "&:hover": {
+                            backgroundColor: "#790342",
+                          },
+                          fontSize: "1.4rem",
+                        }}
+                        variant="contained"
+                        type="button"
+                        onClick={() => handlePreviousPage()}
+                        disabled={page === 1}
+                      >
+                        Anterior
+                      </Button>
+                      <Button
+                        sx={{
+                          width: "16rem",
+                          height: "4.4rem",
+                          borderRadius: ".8rem",
+                          backgroundColor: "#DA0175",
+                          "&:hover": {
+                            backgroundColor: "#790342",
+                          },
+                          fontSize: "1.4rem",
+                        }}
+                        variant="contained"
+                        type="button"
+                        onClick={() => handleNextPage()}
+                        disabled={page >= totalPage}
+                      >
+                        Proximo
+                      </Button>
+                    </>
+                  )}
                 </Stack>
               </div>
             </div>
