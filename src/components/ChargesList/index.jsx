@@ -22,6 +22,7 @@ import { useContext, useEffect, useState } from "react";
 import { AuthContext } from "../../context/myContext";
 import { format } from "../../../node_modules/date-fns";
 import ptBr from "date-fns/locale/pt-BR";
+import MessageSearch from "../MessageSearch";
 
 export default function ChargesList({
   setOpenModalDeleteCharges,
@@ -58,6 +59,7 @@ export default function ChargesList({
   const [searchIsActive, setSearchIsActive] = useState(false);
   const [sortActive, setSortActive] = useState(false);
   const [queryParams, setQueryParams] = useState("");
+  const [openMessageSearch, setOpenMessageSearch] = useState(false)
 
   for (let i = 0; i < 2; i++) {
     if (words[i] && words[i].length > 0) {
@@ -147,13 +149,13 @@ export default function ChargesList({
         `/listcharges?${queryParam}=${sentenceSearch}`
       );
       if (response.data.length < 1) {
-        console.log(response.data);
-        console.log("busca sem resultados");
+        setOpenMessageSearch(true);
         return;
       }
       setInfoListCharge(response.data);
       setInalteredListCharges(response.data);
       setSearchIsActive(true);
+      setOpenMessageSearch(false)
       return;
     } catch (error) {
       console.log(error.message);
@@ -307,223 +309,228 @@ export default function ChargesList({
                 </div>
               </div>
             </div>
-            <div className="box-table-billings ">
-              <div className="table-header-customer charges-table">
-                <ul>
-                  <li>
-                    <img
-                      src={sortIconHeaders}
-                      alt="Sort Icon"
-                      name="byName"
-                      onClick={(event) => {
-                        setInfoListCharge(true), handleSort(event.target.name);
-                      }}
-                    />
-                    Cliente
-                  </li>
-                  <li>
-                    <img
-                      src={sortIconHeaders}
-                      alt="Sort Icon"
-                      name="byId"
-                      onClick={(event) => {
-                        setInfoListCharge(true), handleSort(event.target.name);
-                      }}
-                    />
-                    ID Cob.
-                  </li>
-                  <li>Valor</li>
-                  <li>Data de Venc.</li>
-                  <li>Status</li>
-                  <li>Descrição</li>
-                  <li></li>
-                  <li></li>
-                </ul>
-              </div>
-              <div className="body-table-customer charges-table">
-                {infoListCharge.map((charges, index) => {
-                  const day = format(new Date(charges.due_date), "dd/MM/yyy", {
-                    locale: ptBr,
-                  });
-                  const dueDate = new Date(charges.due_date);
-                  const isExpired = charges.status && dueDate < new Date();
-                  return (
-                    <ul key={`${charges.id_customer}-${index}`}>
-                      <li
-                        className="name-charge"
-                        onClick={() => {
-                          setModalChargeDetails(true);
-                          setIdDetailsCharge(charges.id_charges);
-                          detailsCharges();
-                        }}
-                      >
-                        {charges.name_client}
-                      </li>
-                      <li
-                        className="name-charge"
-                        onClick={() => {
-                          setModalChargeDetails(true);
-                          setIdDetailsCharge(charges.id_charges);
-                          detailsCharges();
-                        }}
-                      >
-                        {charges.id_charges}
-                      </li>
-                      <li
-                        className="name-charge"
-                        onClick={() => {
-                          setModalChargeDetails(true);
-                          setIdDetailsCharge(charges.id_charges);
-                          detailsCharges();
-                        }}
-                      >{`R$: ${(charges.amount / 100)
-                        .toFixed(2)
-                        .replace(".", ",")}`}</li>
-                      <li
-                        className="name-charge"
-                        onClick={() => {
-                          setModalChargeDetails(true);
-                          setIdDetailsCharge(charges.id_charges);
-                          detailsCharges();
-                        }}
-                      >
-                        {String(Number(day.slice(0, 2)) + 1) +
-                          "/" +
-                          day.slice(3, 5) +
-                          "/" +
-                          day.slice(6)}
-                      </li>
-                      <li
-                        onClick={() => {
-                          setModalChargeDetails(true);
-                          setIdDetailsCharge(charges.id_charges);
-                          detailsCharges();
-                        }}
-                        className={
-                          charges.status
-                            ? isExpired
-                              ? "expired-client"
-                              : "pending-client"
-                            : "paid-client"
-                        }
-                      >
-                        {charges.status
-                          ? isExpired
-                            ? "Vencido"
-                            : "Pendente"
-                          : "Pago"}
-                      </li>
 
-                      <li
-                        onClick={() => {
-                          setModalChargeDetails(true);
-                          setIdDetailsCharge(charges.id_charges);
-                          detailsCharges();
-                        }}
-                      >
-                        {charges.description}
+            {openMessageSearch ? <MessageSearch /> : (
+              <div>
+                <div className="box-table-billings ">
+                  <div className="table-header-customer charges-table">
+                    <ul>
+                      <li>
+                        <img
+                          src={sortIconHeaders}
+                          alt="Sort Icon"
+                          name="byName"
+                          onClick={(event) => {
+                            setInfoListCharge(true), handleSort(event.target.name);
+                          }}
+                        />
+                        Cliente
                       </li>
+                      <li>
+                        <img
+                          src={sortIconHeaders}
+                          alt="Sort Icon"
+                          name="byId"
+                          onClick={(event) => {
+                            setInfoListCharge(true), handleSort(event.target.name);
+                          }}
+                        />
+                        ID Cob.
+                      </li>
+                      <li>Valor</li>
+                      <li>Data de Venc.</li>
+                      <li>Status</li>
+                      <li>Descrição</li>
                       <li></li>
-                      <li className="edit-delete">
-                        <div
-                          onClick={() => {
-                            setOpenModalEditCharges(true);
-                            setIdEdit(charges.id_charges);
-                          }}
-                        >
-                          <img src={editIcon} alt="Edit Icon" />
-                          <span>Editar</span>
-                        </div>
-                        <div
-                          onClick={() => {
-                            setOpenModalDeleteCharges(true);
-                            setIdDelete(charges.id_charges);
-                          }}
-                        >
-                          <img src={deleteIcon} alt="Delete Icon" />
-                          <span>Deletar</span>
-                        </div>
-                      </li>
+                      <li></li>
                     </ul>
-                  );
-                })}
-              </div>
-              <div style={{ margin: "5rem 0" }}>
-                <Stack
-                  sx={{
-                    width: "100%",
-                    display: "flex",
-                    justifyContent: "center",
-                  }}
-                  direction="row"
-                  spacing={2}
-                >
-                  {searchIsActive ? (
-                    <Button
+                  </div>
+                  <div className="body-table-customer charges-table">
+                    {infoListCharge.map((charges, index) => {
+                      const day = format(new Date(charges.due_date), "dd/MM/yyy", {
+                        locale: ptBr,
+                      });
+                      const dueDate = new Date(charges.due_date);
+                      const isExpired = charges.status && dueDate < new Date();
+                      return (
+                        <ul key={`${charges.id_customer}-${index}`}>
+                          <li
+                            className="name-charge"
+                            onClick={() => {
+                              setModalChargeDetails(true);
+                              setIdDetailsCharge(charges.id_charges);
+                              detailsCharges();
+                            }}
+                          >
+                            {charges.name_client}
+                          </li>
+                          <li
+                            className="name-charge"
+                            onClick={() => {
+                              setModalChargeDetails(true);
+                              setIdDetailsCharge(charges.id_charges);
+                              detailsCharges();
+                            }}
+                          >
+                            {charges.id_charges}
+                          </li>
+                          <li
+                            className="name-charge"
+                            onClick={() => {
+                              setModalChargeDetails(true);
+                              setIdDetailsCharge(charges.id_charges);
+                              detailsCharges();
+                            }}
+                          >{`R$: ${(charges.amount / 100)
+                            .toFixed(2)
+                            .replace(".", ",")}`}</li>
+                          <li
+                            className="name-charge"
+                            onClick={() => {
+                              setModalChargeDetails(true);
+                              setIdDetailsCharge(charges.id_charges);
+                              detailsCharges();
+                            }}
+                          >
+                            {String(Number(day.slice(0, 2)) + 1) +
+                              "/" +
+                              day.slice(3, 5) +
+                              "/" +
+                              day.slice(6)}
+                          </li>
+                          <li
+                            onClick={() => {
+                              setModalChargeDetails(true);
+                              setIdDetailsCharge(charges.id_charges);
+                              detailsCharges();
+                            }}
+                            className={
+                              charges.status
+                                ? isExpired
+                                  ? "expired-client"
+                                  : "pending-client"
+                                : "paid-client"
+                            }
+                          >
+                            {charges.status
+                              ? isExpired
+                                ? "Vencido"
+                                : "Pendente"
+                              : "Pago"}
+                          </li>
+
+                          <li
+                            onClick={() => {
+                              setModalChargeDetails(true);
+                              setIdDetailsCharge(charges.id_charges);
+                              detailsCharges();
+                            }}
+                          >
+                            {charges.description}
+                          </li>
+                          <li></li>
+                          <li className="edit-delete">
+                            <div
+                              onClick={() => {
+                                setOpenModalEditCharges(true);
+                                setIdEdit(charges.id_charges);
+                              }}
+                            >
+                              <img src={editIcon} alt="Edit Icon" />
+                              <span>Editar</span>
+                            </div>
+                            <div
+                              onClick={() => {
+                                setOpenModalDeleteCharges(true);
+                                setIdDelete(charges.id_charges);
+                              }}
+                            >
+                              <img src={deleteIcon} alt="Delete Icon" />
+                              <span>Deletar</span>
+                            </div>
+                          </li>
+                        </ul>
+                      );
+                    })}
+                  </div>
+                  <div style={{ margin: "5rem 0" }}>
+                    <Stack
                       sx={{
-                        width: "16rem",
-                        height: "4.4rem",
-                        borderRadius: ".8rem",
-                        backgroundColor: "#DA0175",
-                        "&:hover": {
-                          backgroundColor: "#790342",
-                        },
-                        fontSize: "1.4rem",
+                        width: "100%",
+                        display: "flex",
+                        justifyContent: "center",
                       }}
-                      variant="contained"
-                      type="button"
-                      onClick={() => {
-                        setFetchChargesList(true),
-                          setSearchIsActive(false),
-                          setSortActive(false),
-                          setSentenceSearch("");
-                      }}
+                      direction="row"
+                      spacing={2}
                     >
-                      Voltar
-                    </Button>
-                  ) : (
-                    <>
-                      <Button
-                        sx={{
-                          width: "16rem",
-                          height: "4.4rem",
-                          borderRadius: ".8rem",
-                          backgroundColor: "#DA0175",
-                          "&:hover": {
-                            backgroundColor: "#790342",
-                          },
-                          fontSize: "1.4rem",
-                        }}
-                        variant="contained"
-                        type="button"
-                        onClick={() => handlePreviousPage()}
-                        disabled={page === 1}
-                      >
-                        Anterior
-                      </Button>
-                      <Button
-                        sx={{
-                          width: "16rem",
-                          height: "4.4rem",
-                          borderRadius: ".8rem",
-                          backgroundColor: "#DA0175",
-                          "&:hover": {
-                            backgroundColor: "#790342",
-                          },
-                          fontSize: "1.4rem",
-                        }}
-                        variant="contained"
-                        type="button"
-                        onClick={() => handleNextPage()}
-                        disabled={page >= totalPage}
-                      >
-                        Proximo
-                      </Button>
-                    </>
-                  )}
-                </Stack>
-              </div>
-            </div>
+                      {searchIsActive ? (
+                        <Button
+                          sx={{
+                            width: "16rem",
+                            height: "4.4rem",
+                            borderRadius: ".8rem",
+                            backgroundColor: "#DA0175",
+                            "&:hover": {
+                              backgroundColor: "#790342",
+                            },
+                            fontSize: "1.4rem",
+                          }}
+                          variant="contained"
+                          type="button"
+                          onClick={() => {
+                            setFetchChargesList(true),
+                              setSearchIsActive(false),
+                              setSortActive(false),
+                              setSentenceSearch("");
+                          }}
+                        >
+                          Voltar
+                        </Button>
+                      ) : (
+                        <>
+                          <Button
+                            sx={{
+                              width: "16rem",
+                              height: "4.4rem",
+                              borderRadius: ".8rem",
+                              backgroundColor: "#DA0175",
+                              "&:hover": {
+                                backgroundColor: "#790342",
+                              },
+                              fontSize: "1.4rem",
+                            }}
+                            variant="contained"
+                            type="button"
+                            onClick={() => handlePreviousPage()}
+                            disabled={page === 1}
+                          >
+                            Anterior
+                          </Button>
+                          <Button
+                            sx={{
+                              width: "16rem",
+                              height: "4.4rem",
+                              borderRadius: ".8rem",
+                              backgroundColor: "#DA0175",
+                              "&:hover": {
+                                backgroundColor: "#790342",
+                              },
+                              fontSize: "1.4rem",
+                            }}
+                            variant="contained"
+                            type="button"
+                            onClick={() => handleNextPage()}
+                            disabled={page >= totalPage}
+                          >
+                            Proximo
+                          </Button>
+                        </>
+                      )}
+                    </Stack>
+                  </div>
+                </div>
+              </div>)}
+
           </div>
         ) : (
           <Box
@@ -539,6 +546,7 @@ export default function ChargesList({
             <CircularProgress />
           </Box>
         )}
+
       </Grid>
     </>
   );
