@@ -15,6 +15,7 @@ import ModalSucess from "../../components/modalSucess";
 import ModalDelete from "../../components/ModalDeleteCharges";
 import ModalEditCharges from "../../components/modalEditCharges/index";
 import ModalCreateCharges from "../../components/ModalCreateCharges/index";
+import ModalChargeDetails from "../../components/ModalChargeDetails";
 import CustomerDetails from "../../components/CustomerDetails/index";
 import ModalEditCustomers from "../../components/ModalEditCustomers";
 import { AuthContext } from "../../context/myContext";
@@ -25,6 +26,7 @@ export default function Home() {
   const [openModalEditCharges, setOpenModalEditCharges] = useState(false);
   const [openModalCreateCharges, setOpenModalCreateCharges] = useState(false);
   const [openModalCustomers, setOpenModalCustomers] = useState(false);
+  const [openModalChargeDetails, setModalChargeDetails] = useState(false);
   const { customerData, setCustomerData } = useContext(AuthContext);
   const { OpenModalEditUser, setOpenModalEditUser, sucess, setSucess } =
     useContext(ModalContext);
@@ -52,6 +54,8 @@ export default function Home() {
               <ChargesList
                 setOpenModalDeleteCharges={setOpenModalDeleteCharges}
                 setOpenModalEditCharges={setOpenModalEditCharges}
+                setModalChargeDetails={setModalChargeDetails}
+                openModalChargeDetails={openModalChargeDetails}
               />
             }
           />
@@ -63,6 +67,8 @@ export default function Home() {
                 setOpenModalCustomers={setOpenModalCustomers}
                 setOpenModalEditCharges={setOpenModalEditCharges}
                 setOpenModalDeleteCharges={setOpenModalDeleteCharges}
+                setModalChargeDetails={setModalChargeDetails}
+                openModalChargeDetails={openModalChargeDetails}
               />
             }
           />
@@ -99,6 +105,9 @@ export default function Home() {
             setOpenModalCreateCharges={setOpenModalCreateCharges}
             openModalCreateCharges={openModalCreateCharges}
           />
+        )}
+        {openModalChargeDetails && (
+          <ModalChargeDetails setModalChargeDetails={setModalChargeDetails} />
         )}
       </Grid>
     </>

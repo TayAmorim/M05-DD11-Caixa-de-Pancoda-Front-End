@@ -12,6 +12,8 @@ const AuthProvider = ({ children }) => {
   const [dataCharges, setDataCharges] = useState([]);
   const [dataChargesById, setDataChargesById] = useState([]);
   const [idEdit, setIdEdit] = useState("");
+  const [idDetailsCharge, setIdDetailsCharge] = useState("");
+  const [detailCharge, setDetailCharge] = useState([]);
   const [customerData, setCustomerData] = useState(false);
   const [isClientUpdated, setIsClientUpdated] = useState(false);
   const [fetchClientList, setFetchClientList] = useState(false);
@@ -57,6 +59,10 @@ const AuthProvider = ({ children }) => {
         setFetchChargesList,
         createdChargeStatus,
         setCreatedChargeStatus,
+        idDetailsCharge,
+        setIdDetailsCharge,
+        detailCharge,
+        setDetailCharge,
         infoListCharge,
         setInfoListCharge,
         shareSessionStorage,

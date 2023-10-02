@@ -19,6 +19,8 @@ export default function CustomerDetails({
   setOpenModalCreateCharges,
   setOpenModalEditCharges,
   setOpenModalDeleteCharges,
+  setModalChargeDetails,
+  openModalChargeDetails,
 }) {
   const userStorage = JSON.parse(localStorage.getItem("user"));
   const nameUser = userStorage.name;
@@ -34,6 +36,9 @@ export default function CustomerDetails({
     setIsClientUpdated,
     createdChargeStatus,
     setCreatedChargeStatus,
+    setIdDetailsCharge,
+    idDetailsCharge,
+    setDetailCharge,
     setIdEdit,
     setIdDelete,
     idDelete,
@@ -86,6 +91,19 @@ export default function CustomerDetails({
       setCreatedChargeStatus(false);
     }
   }, [customerData, createdChargeStatus]);
+
+  const detailsCharges = async () => {
+    try {
+      const response = await api.get(`/detailcharge/${idDetailsCharge}`);
+      setDetailCharge(response.data);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  useEffect(() => {
+    detailsCharges();
+  }, [openModalChargeDetails, idDetailsCharge]);
 
   return (
     <>
@@ -301,11 +319,34 @@ export default function CustomerDetails({
                     const isExpired = charges.status && dueDate < new Date();
                     return (
                       <ul key={charges.id_charges}>
-                        <li>{charges.id_charges}</li>
-                        <li>{`R$: ${(charges.amount / 100)
+                        <li
+                          className="name-charge"
+                          onClick={() => {
+                            setModalChargeDetails(true);
+                            setIdDetailsCharge(charges.id_charges);
+                            detailsCharges();
+                          }}
+                        >
+                          {charges.id_charges}
+                        </li>
+                        <li
+                          className="name-charge"
+                          onClick={() => {
+                            setModalChargeDetails(true);
+                            setIdDetailsCharge(charges.id_charges);
+                            detailsCharges();
+                          }}
+                        >{`R$: ${(charges.amount / 100)
                           .toFixed(2)
                           .replace(".", ",")}`}</li>
-                        <li>
+                        <li
+                          className="name-charge"
+                          onClick={() => {
+                            setModalChargeDetails(true);
+                            setIdDetailsCharge(charges.id_charges);
+                            detailsCharges();
+                          }}
+                        >
                           {String(Number(day.slice(0, 2)) + 1) +
                             "/" +
                             day.slice(3, 5) +
@@ -313,6 +354,11 @@ export default function CustomerDetails({
                             day.slice(6)}
                         </li>
                         <li
+                          onClick={() => {
+                            setModalChargeDetails(true);
+                            setIdDetailsCharge(charges.id_charges);
+                            detailsCharges();
+                          }}
                           className={
                             charges.status
                               ? isExpired
@@ -328,7 +374,17 @@ export default function CustomerDetails({
                             : "Pago"}
                         </li>
 
-                        <li>{charges.description}</li>
+                        <li
+                          className="name-charge"
+                          onClick={() => {
+                            setModalChargeDetails(true);
+                            setIdDetailsCharge(charges.id_charges);
+                            detailsCharges();
+                          }}
+                        >
+                          {charges.description}
+                        </li>
+
                         <li></li>
                         <li className="edit-delete">
                           <div

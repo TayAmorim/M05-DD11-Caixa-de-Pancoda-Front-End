@@ -26,6 +26,8 @@ import ptBr from "date-fns/locale/pt-BR";
 export default function ChargesList({
   setOpenModalDeleteCharges,
   setOpenModalEditCharges,
+  setModalChargeDetails,
+  openModalChargeDetails,
 }) {
   const currentDate = new Date();
   const currentDateFormat = format(new Date(currentDate), "dd/MM/yyyy", {
@@ -35,9 +37,13 @@ export default function ChargesList({
     setIdDelete,
     dataCharges,
     setDataCharges,
-    setIdEdit,
     fetchChargesList,
     setFetchChargesList,
+    setIdEdit,
+    setIdDetailsCharge,
+    setDetailCharge,
+    idDetailsCharge,
+    detailCharge,
   } = useContext(AuthContext);
   const [dataResponse, setDataResponse] = useState([]);
   const userStorage = JSON.parse(localStorage.getItem("user"));
@@ -56,9 +62,9 @@ export default function ChargesList({
   }
 
   useEffect(() => {
-    const getCharges = async (newPage) => {
+    const getCharges = async () => {
       try {
-        const response = await api.get(`/listcharges?page=${newPage}`);
+        const response = await api.get(`/listcharges?page=${page}`);
         setDataResponse(response.data);
         setInfoListCharge(response.data.charges);
         setTotalPage(response.data.totalPages);
@@ -78,19 +84,34 @@ export default function ChargesList({
     setDataCharges(dataResponse);
   }, [dataResponse]);
 
+  useEffect(() => {
+    setDataCharges(dataResponse);
+  }, [dataResponse]);
+
   function handlePreviousPage() {
     if (page > 1) {
       const newPage = page - 1;
       setPage(newPage);
-      getCharges(newPage);
     }
   }
 
   function handleNextPage() {
     const newPage = page + 1;
     setPage(newPage);
-    getCharges(newPage);
   }
+
+  const detailsCharges = async () => {
+    try {
+      const response = await api.get(`/detailcharge/${idDetailsCharge}`);
+      setDetailCharge(response.data);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  useEffect(() => {
+    detailsCharges();
+  }, [openModalChargeDetails, idDetailsCharge]);
 
   return (
     <>
@@ -217,12 +238,44 @@ export default function ChargesList({
                   const isExpired = charges.status && dueDate < new Date();
                   return (
                     <ul key={`${charges.id_customer}-${index}`}>
-                      <li>{charges.name_client}</li>
-                      <li>{charges.id_charges}</li>
-                      <li>{`R$: ${(charges.amount / 100)
+                      <li
+                        className="name-charge"
+                        onClick={() => {
+                          setModalChargeDetails(true);
+                          setIdDetailsCharge(charges.id_charges);
+                          detailsCharges();
+                        }}
+                      >
+                        {charges.name_client}
+                      </li>
+                      <li
+                        className="name-charge"
+                        onClick={() => {
+                          setModalChargeDetails(true);
+                          setIdDetailsCharge(charges.id_charges);
+                          detailsCharges();
+                        }}
+                      >
+                        {charges.id_charges}
+                      </li>
+                      <li
+                        className="name-charge"
+                        onClick={() => {
+                          setModalChargeDetails(true);
+                          setIdDetailsCharge(charges.id_charges);
+                          detailsCharges();
+                        }}
+                      >{`R$: ${(charges.amount / 100)
                         .toFixed(2)
                         .replace(".", ",")}`}</li>
-                      <li>
+                      <li
+                        className="name-charge"
+                        onClick={() => {
+                          setModalChargeDetails(true);
+                          setIdDetailsCharge(charges.id_charges);
+                          detailsCharges();
+                        }}
+                      >
                         {String(Number(day.slice(0, 2)) + 1) +
                           "/" +
                           day.slice(3, 5) +
@@ -230,6 +283,11 @@ export default function ChargesList({
                           day.slice(6)}
                       </li>
                       <li
+                        onClick={() => {
+                          setModalChargeDetails(true);
+                          setIdDetailsCharge(charges.id_charges);
+                          detailsCharges();
+                        }}
                         className={
                           charges.status
                             ? isExpired
@@ -245,7 +303,15 @@ export default function ChargesList({
                           : "Pago"}
                       </li>
 
-                      <li>{charges.description}</li>
+                      <li
+                        onClick={() => {
+                          setModalChargeDetails(true);
+                          setIdDetailsCharge(charges.id_charges);
+                          detailsCharges();
+                        }}
+                      >
+                        {charges.description}
+                      </li>
                       <li></li>
                       <li className="edit-delete">
                         <div
