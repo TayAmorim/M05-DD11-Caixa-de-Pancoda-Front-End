@@ -15,7 +15,7 @@ import ModalSucess from "../../components/modalSucess";
 import ModalDelete from "../../components/ModalDeleteCharges";
 import ModalEditCharges from "../../components/modalEditCharges/index";
 import ModalCreateCharges from "../../components/ModalCreateCharges/index";
-import ModalChargeDetails from "../../components/ModalChargeDetails"
+import ModalChargeDetails from "../../components/ModalChargeDetails";
 import CustomerDetails from "../../components/CustomerDetails/index";
 import ModalEditCustomers from "../../components/ModalEditCustomers";
 import { AuthContext } from "../../context/myContext";
@@ -59,14 +59,19 @@ export default function Home() {
               />
             }
           />
-          <Route path="clientes/detalhes" element={
-            <CustomerDetails
-              setOpenModalCreateCharges={setOpenModalCreateCharges}
-              setOpenModalCustomers={setOpenModalCustomers} 
-              setModalChargeDetails={setModalChargeDetails}
-              openModalChargeDetails={openModalChargeDetails}
-              />}
+          <Route
+            path="clientes/detalhes"
+            element={
+              <CustomerDetails
+                setOpenModalCreateCharges={setOpenModalCreateCharges}
+                setOpenModalCustomers={setOpenModalCustomers}
+                setOpenModalEditCharges={setOpenModalEditCharges}
+                setOpenModalDeleteCharges={setOpenModalDeleteCharges}
+                setModalChargeDetails={setModalChargeDetails}
+                openModalChargeDetails={openModalChargeDetails}
               />
+            }
+          />
         </Routes>
 
         {OpenModalEditUser && (
@@ -78,7 +83,10 @@ export default function Home() {
         )}
 
         {openModalCustomers && (
-          <ModalEditCustomers setOpenModalCustomers={setOpenModalCustomers} customerData={customerData} />
+          <ModalEditCustomers
+            setOpenModalCustomers={setOpenModalCustomers}
+            customerData={customerData}
+          />
         )}
 
         {sucess && <ModalSucess />}
@@ -99,7 +107,7 @@ export default function Home() {
           />
         )}
         {openModalChargeDetails && (
-          <ModalChargeDetails setModalChargeDetails={setModalChargeDetails}/>
+          <ModalChargeDetails setModalChargeDetails={setModalChargeDetails} />
         )}
       </Grid>
     </>
