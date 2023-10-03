@@ -77,17 +77,21 @@ export default function ModalDelete({ setOpenModalDeleteCharges }) {
   const deleteCharges = async () => {
     try {
       await api.delete(`/charges/${idDelete}`);
-      const chargeFilterList = parsedData.charges.filter(
-        (charge) => charge.id_charges !== idDelete
-      );
-      const customerSession = {
-        ...parsedData,
-        charges: [...chargeFilterList],
-      };
-      sessionStorage.setItem(
-        "customerDataSession",
-        JSON.stringify(customerSession)
-      );
+
+      if (parsedData) {
+        const chargeFilterList = parsedData.charges.filter(
+          (charge) => charge.id_charges !== idDelete
+        );
+        const customerSession = {
+          ...parsedData,
+          charges: [...chargeFilterList],
+        };
+        sessionStorage.setItem(
+          "customerDataSession",
+          JSON.stringify(customerSession)
+        );
+      }
+
       setOpenModalDeleteCharges(false);
       setFetchChargesList(true);
     } catch (error) {
