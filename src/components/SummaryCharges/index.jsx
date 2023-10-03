@@ -42,7 +42,7 @@ function SummaryCharges() {
   return (
     <>
       {chargesReport || customersReport ? (
-        <Grid item xs={11}>
+        <Grid className="container-list-customer" item xs={11}>
           <Stack
             direction="row"
             spacing={1}

@@ -23,7 +23,7 @@ import { AuthContext } from "../../context/myContext";
 import { format } from "../../../node_modules/date-fns";
 import ptBr from "date-fns/locale/pt-BR";
 import MessageSearch from "../MessageSearch";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 
 export default function ChargesList({
   setOpenModalDeleteCharges,
@@ -53,6 +53,7 @@ export default function ChargesList({
   const [inalteredListCharges, setInalteredListCharges] = useState([]);
   const [searchIsActive, setSearchIsActive] = useState(false);
   const [sortActive, setSortActive] = useState(false);
+  const navigate = useNavigate();
 
   const [openMessageSearch, setOpenMessageSearch] = useState(false);
 
@@ -197,6 +198,12 @@ export default function ChargesList({
       return;
     }
   };
+
+  function clearQueryParams() {
+    const novaURL = location.pathname;
+    navigate(novaURL);
+    setFetchChargesList(true);
+  }
   return (
     <>
       <Grid item xs={11}>
@@ -215,7 +222,9 @@ export default function ChargesList({
               color: "#0E8750",
               alignSelf: "flex-end",
               marginBottom: "-2rem",
+              cursor: "pointer",
             }}
+            onClick={clearQueryParams}
           >
             Cobrança
           </h1>
