@@ -11,7 +11,7 @@ import "react-toastify/dist/ReactToastify.css";
 import { AuthContext } from "../../context/myContext";
 
 export default function modalEditCustomer({ setOpenModalEditCharges }) {
-  const { idEdit, setDataCharges, setFetchChargesList } =
+  const { idEdit, setFetchChargesList } =
     useContext(AuthContext);
   const [name, setName] = useState("");
   const [alertName, setAlertName] = useState("");
