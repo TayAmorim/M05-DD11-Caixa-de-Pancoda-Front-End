@@ -362,7 +362,29 @@ export default function CustomerList({
               </div>
             </div>
             {openMessageSearch ? (
-              <MessageSearch />
+              <MessageSearch>
+                <Button
+                  sx={{
+                    width: "16rem",
+                    margin: "0 auto",
+                    height: "4.4rem",
+                    borderRadius: ".8rem",
+                    backgroundColor: "#DA0175",
+                    "&:hover": {
+                      backgroundColor: "#790342",
+                    },
+                    fontSize: "1.4rem",
+                  }}
+                  variant="contained"
+                  type="button"
+                  onClick={() => {
+                    setSentenceSearch("");
+                    setOpenMessageSearch(false);
+                  }}
+                >
+                  Voltar
+                </Button>
+              </MessageSearch>
             ) : (
               <div>
                 <div className="box-table-billings">
