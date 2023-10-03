@@ -23,6 +23,7 @@ import { AuthContext } from "../../context/myContext";
 import { format } from "../../../node_modules/date-fns";
 import ptBr from "date-fns/locale/pt-BR";
 import MessageSearch from "../MessageSearch";
+import { Navigate, useLocation, useNavigate } from "react-router-dom";
 
 export default function ChargesList({
   setOpenModalDeleteCharges,
@@ -52,8 +53,11 @@ export default function ChargesList({
   const [inalteredListCharges, setInalteredListCharges] = useState([]);
   const [searchIsActive, setSearchIsActive] = useState(false);
   const [sortActive, setSortActive] = useState(false);
-  const [queryParams, setQueryParams] = useState("");
+
   const [openMessageSearch, setOpenMessageSearch] = useState(false);
+
+  const location = useLocation();
+  const navigate = useNavigate();
 
   for (let i = 0; i < 2; i++) {
     if (words[i] && words[i].length > 0) {
@@ -79,10 +83,9 @@ export default function ChargesList({
     };
 
     getCharges();
-    if (!searchIsActive) {
-      if (fetchChargesList) {
-        getCharges();
-      }
+
+    if (fetchChargesList || !searchIsActive) {
+      getCharges();
     }
   }, [fetchChargesList]);
 
@@ -124,10 +127,8 @@ export default function ChargesList({
 
       if (idExpression.test(sentenceSearch)) {
         queryParam = "id_charges";
-        setQueryParams("id_charges");
       } else {
         queryParam = "name_client";
-        setQueryParams("name_client");
       }
       const response = await api.get(
         `/listcharges?${queryParam}=${sentenceSearch}`
@@ -295,7 +296,28 @@ export default function ChargesList({
             </div>
 
             {openMessageSearch ? (
-              <MessageSearch />
+              <MessageSearch>
+                <Button
+                  sx={{
+                    width: "16rem",
+                    margin: "0 auto",
+                    height: "4.4rem",
+                    borderRadius: ".8rem",
+                    backgroundColor: "#DA0175",
+                    "&:hover": {
+                      backgroundColor: "#790342",
+                    },
+                    fontSize: "1.4rem",
+                  }}
+                  variant="contained"
+                  type="button"
+                  onClick={() => {
+                    setOpenMessageSearch(false);
+                  }}
+                >
+                  Voltar
+                </Button>
+              </MessageSearch>
             ) : (
               <div>
                 <div className="box-table-billings ">

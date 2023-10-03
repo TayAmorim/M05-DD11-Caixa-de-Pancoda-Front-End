@@ -1,10 +1,11 @@
-.container-message-search{
-    width: 80vw;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-direction: column;
+.container-message-search {
+  width: 80vw;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
 }
-.container-message-search h1{
-    color: #252525;
+.container-message-search h1 {
+  color: #252525;
+  margin-bottom: 1rem;
 }
