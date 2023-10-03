@@ -1,14 +1,13 @@
-import { Button, Grid, Stack } from "@mui/material";
+import { Grid } from "@mui/material";
 import TabPanel from "../../components/TabPanel";
 import "./styles.css";
-import { Navigate, Route, Routes } from "react-router-dom";
+import { Route, Routes } from "react-router-dom";
 import SummaryCharges from "../../components/SummaryCharges";
 import CustomerList from "../../components/CustomerList";
 import ChargesList from "../../components/ChargesList";
 import colors from "../../style/colors";
 import ModalEditCustomer from "../../components/modalEditCustomer/index";
 import { useContext, useState } from "react";
-
 import ModalEditUser from "../../components/modalEdituser";
 import { ModalContext } from "../../context/modalContext";
 import ModalSucess from "../../components/modalSucess";
@@ -27,8 +26,8 @@ export default function Home() {
   const [openModalCreateCharges, setOpenModalCreateCharges] = useState(false);
   const [openModalCustomers, setOpenModalCustomers] = useState(false);
   const [openModalChargeDetails, setModalChargeDetails] = useState(false);
-  const { customerData, setCustomerData } = useContext(AuthContext);
-  const { OpenModalEditUser, setOpenModalEditUser, sucess, setSucess } =
+  const { customerData } = useContext(AuthContext);
+  const { OpenModalEditUser, setOpenModalEditUser, sucess } =
     useContext(ModalContext);
 
   return (
