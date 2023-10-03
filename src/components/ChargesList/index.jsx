@@ -312,6 +312,7 @@ export default function ChargesList({
                   variant="contained"
                   type="button"
                   onClick={() => {
+                    setSentenceSearch("");
                     setOpenMessageSearch(false);
                   }}
                 >
