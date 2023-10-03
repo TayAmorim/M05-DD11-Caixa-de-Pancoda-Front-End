@@ -21,6 +21,7 @@ import { useContext, useEffect, useState } from "react";
 import api from "../../api/api";
 import { useNavigate } from "react-router-dom";
 import { AuthContext } from "../../context/myContext";
+import MessageSearch from "../MessageSearch";
 
 
 export default function CustomerList({
@@ -48,6 +49,7 @@ export default function CustomerList({
   const [ordenedListActive, setOrdenedListActive] = useState(false);
   const [inalteredCustomersList, setInalteredCustomersList] = useState([]);
   const [countOrderClients, setCountOrderClients] = useState(0);
+  const [openMessageSearch, setOpenMessageSearch] = useState(false)
 
   for (let i = 0; i < 2; i++) {
     if (words[i] && words[i].length > 0) {
@@ -150,6 +152,10 @@ export default function CustomerList({
 
       const response = await api.get(`/listclients?${queryParam}=${sentenceSearch}`);
       const listCustomer = response.data;
+      if (response.data.length < 1) {
+        setOpenMessageSearch(true);
+        return;
+      }
       setCustomersList(
         listCustomer.map((customer) => {
           const newCpf = customer.cpf_client.replace(
@@ -179,7 +185,7 @@ export default function CustomerList({
         return customer;
       }))
       setSearchActive(true);
-
+      setOpenMessageSearch(false)
       return
 
     } catch (error) {
@@ -351,161 +357,163 @@ export default function CustomerList({
                 </div>
               </div>
             </div>
+            {openMessageSearch ? <MessageSearch /> : (<div>
 
-            <div className="box-table-billings">
-              <div className="table-header-customer">
-                <ul>
-                  <li>
-                    {countOrderClients > 1 ? "" : <img src={sortIconHeaders} alt="Sort Icon"
-                      onClick={() => { handleSortByName(), setCountOrderClients(countOrderClients + 1) }}
-                    />}
-                    Cliente
-                  </li>
-                  <li>CPF</li>
-                  <li>E-mail</li>
-                  <li>Telefone</li>
-                  <li>Status</li>
-                  <li>Criar Cobrança</li>
-                </ul>
-              </div>
-              <div className="body-table-customer">
-                {customersList.map((customer) => (
-                  <ul key={customer.id}>
-                    <li
-                      className="link-detail-customer"
-                      onClick={() => detailCustomer(customer.id)}
-                    >
-                      {customer.name_client.length < 12
-                        ? customer.name_client
-                        : customer.name_client.slice(0, 12) + "..."}
-                    </li>
-                    <li>{customer.cpf_client}</li>
+              <div className="box-table-billings">
+                <div className="table-header-customer">
+                  <ul>
                     <li>
-                      {customer.email_client.length < 15
-                        ? customer.email_client
-                        : customer.email_client.slice(0, 15) + "..."}
+                      {countOrderClients > 1 ? "" : <img src={sortIconHeaders} alt="Sort Icon"
+                        onClick={() => { handleSortByName(), setCountOrderClients(countOrderClients + 1) }}
+                      />}
+                      Cliente
                     </li>
-                    <li>{customer.phone_client}</li>
-                    <li
-                      className={
-                        !customer.status
-                          ? "up-to-date-client"
-                          : "expired-client"
-                      }
-                    >
-                      {!customer.status ? "Em dia" : "Inadimplente"}
-                    </li>
-                    <li>
-                      <div
-                        style={{
-                          display: "flex",
-                          alignItems: "center",
-                          justifyContent: "center",
-                          flexDirection: "column",
-                        }}
+                    <li>CPF</li>
+                    <li>E-mail</li>
+                    <li>Telefone</li>
+                    <li>Status</li>
+                    <li>Criar Cobrança</li>
+                  </ul>
+                </div>
+                <div className="body-table-customer">
+                  {customersList.map((customer) => (
+                    <ul key={customer.id}>
+                      <li
+                        className="link-detail-customer"
+                        onClick={() => detailCustomer(customer.id)}
                       >
-                        <img
-                          onClick={() => {
-                            createBilling(customer.id, customer.name_client);
-                            setOpenModalCreateCharges(true);
-                          }}
-                          src={addBilling}
-                          alt="Add Billing Icon"
-                        />
-                        <span
+                        {customer.name_client.length < 12
+                          ? customer.name_client
+                          : customer.name_client.slice(0, 12) + "..."}
+                      </li>
+                      <li>{customer.cpf_client}</li>
+                      <li>
+                        {customer.email_client.length < 15
+                          ? customer.email_client
+                          : customer.email_client.slice(0, 15) + "..."}
+                      </li>
+                      <li>{customer.phone_client}</li>
+                      <li
+                        className={
+                          !customer.status
+                            ? "paid-client"
+                            : "expired-client"
+                        }
+                      >
+                        {!customer.status ? "Em dia" : "Inadimplente"}
+                      </li>
+                      <li>
+                        <div
                           style={{
-                            color: "#DA0175",
-                            fontSize: "1.1rem",
-                            marginTop: ".5rem",
+                            display: "flex",
+                            alignItems: "center",
+                            justifyContent: "center",
+                            flexDirection: "column",
                           }}
                         >
-                          Cobrança
-                        </span>
-                      </div>
-                    </li>
-                  </ul>
-                ))}
-              </div>
+                          <img
+                            onClick={() => {
+                              createBilling(customer.id, customer.name_client);
+                              setOpenModalCreateCharges(true);
+                            }}
+                            src={addBilling}
+                            alt="Add Billing Icon"
+                          />
+                          <span
+                            style={{
+                              color: "#DA0175",
+                              fontSize: "1.1rem",
+                              marginTop: ".5rem",
+                            }}
+                          >
+                            Cobrança
+                          </span>
+                        </div>
+                      </li>
+                    </ul>
+                  ))}
+                </div>
 
-              <div style={{ margin: "5rem 0" }}>
-                {!searchActive ?
-                  <Stack
-                    sx={{
-                      width: "100%",
-                      display: "flex",
-                      justifyContent: "center",
-                    }}
-                    direction="row"
-                    spacing={2}
-                  >
-                    <Button
+                <div style={{ margin: "5rem 0" }}>
+                  {!searchActive ?
+                    <Stack
                       sx={{
-                        width: "16rem",
-                        height: "4.4rem",
-                        borderRadius: ".8rem",
-                        backgroundColor: "#DA0175",
-                        "&:hover": {
-                          backgroundColor: "#790342",
-                        },
-                        fontSize: "1.4rem",
+                        width: "100%",
+                        display: "flex",
+                        justifyContent: "center",
                       }}
-                      variant="contained"
-                      type="button"
-                      onClick={() => { handlePreviousPage(), setCountOrderClients(0) }}
-                      disabled={page == 1}
+                      direction="row"
+                      spacing={2}
                     >
-                      Anterior
-                    </Button>
-                    <Button
+                      <Button
+                        sx={{
+                          width: "16rem",
+                          height: "4.4rem",
+                          borderRadius: ".8rem",
+                          backgroundColor: "#DA0175",
+                          "&:hover": {
+                            backgroundColor: "#790342",
+                          },
+                          fontSize: "1.4rem",
+                        }}
+                        variant="contained"
+                        type="button"
+                        onClick={() => { handlePreviousPage(), setCountOrderClients(0) }}
+                        disabled={page == 1}
+                      >
+                        Anterior
+                      </Button>
+                      <Button
+                        sx={{
+                          width: "16rem",
+                          height: "4.4rem",
+                          borderRadius: ".8rem",
+                          backgroundColor: "#DA0175",
+                          "&:hover": {
+                            backgroundColor: "#790342",
+                          },
+                          fontSize: "1.4rem",
+                        }}
+                        variant="contained"
+                        type="button"
+                        onClick={() => { handleNextPage(), setCountOrderClients(0) }}
+                        disabled={page >= totalPage}
+                      >
+                        Proximo
+                      </Button>
+                    </Stack>
+                    :
+                    <Stack
                       sx={{
-                        width: "16rem",
-                        height: "4.4rem",
-                        borderRadius: ".8rem",
-                        backgroundColor: "#DA0175",
-                        "&:hover": {
-                          backgroundColor: "#790342",
-                        },
-                        fontSize: "1.4rem",
+                        width: "100%",
+                        display: "flex",
+                        justifyContent: "center",
                       }}
-                      variant="contained"
-                      type="button"
-                      onClick={() => { handleNextPage(), setCountOrderClients(0) }}
-                      disabled={page >= totalPage}
+                      direction="row"
+                      spacing={2}
                     >
-                      Proximo
-                    </Button>
-                  </Stack>
-                  :
-                  <Stack
-                    sx={{
-                      width: "100%",
-                      display: "flex",
-                      justifyContent: "center",
-                    }}
-                    direction="row"
-                    spacing={2}
-                  >
-                    <Button
-                      sx={{
-                        width: "16rem",
-                        height: "4.4rem",
-                        borderRadius: ".8rem",
-                        backgroundColor: "#DA0175",
-                        "&:hover": {
-                          backgroundColor: "#790342",
-                        },
-                        fontSize: "1.4rem",
-                      }}
-                      variant="contained"
-                      type="button"
-                      onClick={() => { setFetchClientList(true), setSearchActive(false), setCountOrderClients(0) }}
-                    >
-                      Voltar
-                    </Button>
-                  </Stack>}
+                      <Button
+                        sx={{
+                          width: "16rem",
+                          height: "4.4rem",
+                          borderRadius: ".8rem",
+                          backgroundColor: "#DA0175",
+                          "&:hover": {
+                            backgroundColor: "#790342",
+                          },
+                          fontSize: "1.4rem",
+                        }}
+                        variant="contained"
+                        type="button"
+                        onClick={() => { setFetchClientList(true), setSearchActive(false), setCountOrderClients(0) }}
+                      >
+                        Voltar
+                      </Button>
+                    </Stack>}
 
+                </div>
               </div>
-            </div>
+            </div>)}
           </div>
         ) : (
           <Box
