@@ -23,6 +23,7 @@ import { AuthContext } from "../../context/myContext";
 import { format } from "../../../node_modules/date-fns";
 import ptBr from "date-fns/locale/pt-BR";
 import MessageSearch from "../MessageSearch";
+import { useLocation } from "react-router-dom";
 
 export default function ChargesList({
   setOpenModalDeleteCharges,
@@ -30,13 +31,8 @@ export default function ChargesList({
   setModalChargeDetails,
   openModalChargeDetails,
 }) {
-  const currentDate = new Date();
-  const currentDateFormat = format(new Date(currentDate), "dd/MM/yyyy", {
-    locale: ptBr,
-  });
   const {
     setIdDelete,
-    dataCharges,
     setDataCharges,
     fetchChargesList,
     setFetchChargesList,
@@ -44,7 +40,6 @@ export default function ChargesList({
     setIdDetailsCharge,
     setDetailCharge,
     idDetailsCharge,
-    detailCharge,
   } = useContext(AuthContext);
   const [dataResponse, setDataResponse] = useState([]);
   const userStorage = JSON.parse(localStorage.getItem("user"));
@@ -58,8 +53,12 @@ export default function ChargesList({
   const [inalteredListCharges, setInalteredListCharges] = useState([]);
   const [searchIsActive, setSearchIsActive] = useState(false);
   const [sortActive, setSortActive] = useState(false);
-  const [queryParams, setQueryParams] = useState("");
+
   const [openMessageSearch, setOpenMessageSearch] = useState(false);
+
+  const location = useLocation();
+  const queryParams = new URLSearchParams(location.search);
+  const state = queryParams.get("state");
 
   for (let i = 0; i < 2; i++) {
     if (words[i] && words[i].length > 0) {
@@ -71,17 +70,13 @@ export default function ChargesList({
   useEffect(() => {
     const getCharges = async () => {
       try {
-        if (searchIsActive) {
-          const response = await api.get(
-            `/listcharges?${queryParams}=${sentenceSearch}`
-          );
-          setInfoListCharge(response.data);
-          setInalteredListCharges(response.data);
-          setFetchChargesList(false);
-          setSortActive(false);
-          return;
-        }
-        const response = await api.get(`/listcharges?page=${page}`);
+        const formattedState =
+          state === "paid" || state === "preview" || state === "overdue"
+            ? `&state=${state}`
+            : "";
+        const response = await api.get(
+          `/listcharges?page=${page}${formattedState}`
+        );
         setDataResponse(response.data);
         setInfoListCharge(response.data.charges);
         setInalteredListCharges(response.data.charges);
@@ -95,10 +90,9 @@ export default function ChargesList({
     };
 
     getCharges();
-    if (!searchIsActive) {
-      if (fetchChargesList) {
-        getCharges();
-      }
+
+    if (fetchChargesList || !searchIsActive) {
+      getCharges();
     }
   }, [fetchChargesList]);
 
@@ -140,10 +134,8 @@ export default function ChargesList({
 
       if (idExpression.test(sentenceSearch)) {
         queryParam = "id_charges";
-        setQueryParams("id_charges");
       } else {
         queryParam = "name_client";
-        setQueryParams("name_client");
       }
       const response = await api.get(
         `/listcharges?${queryParam}=${sentenceSearch}`
@@ -311,7 +303,29 @@ export default function ChargesList({
             </div>
 
             {openMessageSearch ? (
-              <MessageSearch />
+              <MessageSearch>
+                <Button
+                  sx={{
+                    width: "16rem",
+                    margin: "0 auto",
+                    height: "4.4rem",
+                    borderRadius: ".8rem",
+                    backgroundColor: "#DA0175",
+                    "&:hover": {
+                      backgroundColor: "#790342",
+                    },
+                    fontSize: "1.4rem",
+                  }}
+                  variant="contained"
+                  type="button"
+                  onClick={() => {
+                    setSentenceSearch("");
+                    setOpenMessageSearch(false);
+                  }}
+                >
+                  Voltar
+                </Button>
+              </MessageSearch>
             ) : (
               <div>
                 <div className="box-table-billings ">
