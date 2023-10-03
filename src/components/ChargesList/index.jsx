@@ -30,13 +30,8 @@ export default function ChargesList({
   setModalChargeDetails,
   openModalChargeDetails,
 }) {
-  const currentDate = new Date();
-  const currentDateFormat = format(new Date(currentDate), "dd/MM/yyyy", {
-    locale: ptBr,
-  });
   const {
     setIdDelete,
-    dataCharges,
     setDataCharges,
     fetchChargesList,
     setFetchChargesList,
@@ -44,7 +39,6 @@ export default function ChargesList({
     setIdDetailsCharge,
     setDetailCharge,
     idDetailsCharge,
-    detailCharge,
   } = useContext(AuthContext);
   const [dataResponse, setDataResponse] = useState([]);
   const userStorage = JSON.parse(localStorage.getItem("user"));
