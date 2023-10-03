@@ -231,6 +231,12 @@ export default function CustomerList({
     }
   };
 
+  function clearQueryParams() {
+    const novaURL = location.pathname;
+    navigate(novaURL);
+    setFetchClientList(true);
+  }
+
   return (
     <>
       <Grid item xs={11}>
@@ -249,7 +255,9 @@ export default function CustomerList({
               color: "#0E8750",
               alignSelf: "flex-end",
               marginBottom: "-2rem",
+              cursor: "pointer",
             }}
+            onClick={clearQueryParams}
           >
             Clientes
           </h1>
