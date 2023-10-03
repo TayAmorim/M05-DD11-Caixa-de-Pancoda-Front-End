@@ -47,7 +47,7 @@ export default function CustomerList({
   const [searchActive, setSearchActive] = useState(false);
   const [ordenedListActive, setOrdenedListActive] = useState(false);
   const [inalteredCustomersList, setInalteredCustomersList] = useState([]);
-  const [countOrderClients, setCountOrderClients] = useState(0);
+
   const [openMessageSearch, setOpenMessageSearch] = useState(false);
 
   const location = useLocation();
@@ -205,11 +205,7 @@ export default function CustomerList({
   };
 
   const handleSortByName = async () => {
-    if (countOrderClients > 1) {
-      return;
-    }
-
-    const customersListOrdened = customersList;
+    const customersListOrdened = [...customersList];
 
     customersListOrdened.sort((a, b) => {
       const nomeA = a.name_client[0].toUpperCase();
@@ -345,9 +341,7 @@ export default function CustomerList({
                               transform: "translateY(-50%)",
                             }}
                             onClick={() => {
-                              handleSearch(),
-                                setSentenceSearch(""),
-                                setCountOrderClients(0);
+                              handleSearch(), setSentenceSearch("");
                             }}
                           >
                             <SearchIcon style={{ fontSize: "3rem" }} />
@@ -376,18 +370,13 @@ export default function CustomerList({
                   <div className="table-header-customer">
                     <ul>
                       <li>
-                        {countOrderClients > 1 ? (
-                          ""
-                        ) : (
-                          <img
-                            src={sortIconHeaders}
-                            alt="Sort Icon"
-                            onClick={() => {
-                              handleSortByName(),
-                                setCountOrderClients(countOrderClients + 1);
-                            }}
-                          />
-                        )}
+                        <img
+                          src={sortIconHeaders}
+                          alt="Sort Icon"
+                          onClick={() => {
+                            handleSortByName();
+                          }}
+                        />
                         Cliente
                       </li>
                       <li>CPF</li>
@@ -482,7 +471,7 @@ export default function CustomerList({
                           variant="contained"
                           type="button"
                           onClick={() => {
-                            handlePreviousPage(), setCountOrderClients(0);
+                            handlePreviousPage();
                           }}
                           disabled={page == 1}
                         >
@@ -502,7 +491,7 @@ export default function CustomerList({
                           variant="contained"
                           type="button"
                           onClick={() => {
-                            handleNextPage(), setCountOrderClients(0);
+                            handleNextPage();
                           }}
                           disabled={page >= totalPage}
                         >
@@ -533,9 +522,7 @@ export default function CustomerList({
                           variant="contained"
                           type="button"
                           onClick={() => {
-                            setFetchClientList(true),
-                              setSearchActive(false),
-                              setCountOrderClients(0);
+                            setFetchClientList(true), setSearchActive(false);
                           }}
                         >
                           Voltar
