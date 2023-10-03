@@ -47,7 +47,6 @@ export default function CustomerList({
   const [searchActive, setSearchActive] = useState(false);
   const [ordenedListActive, setOrdenedListActive] = useState(false);
   const [inalteredCustomersList, setInalteredCustomersList] = useState([]);
-
   const [openMessageSearch, setOpenMessageSearch] = useState(false);
 
   const location = useLocation();
