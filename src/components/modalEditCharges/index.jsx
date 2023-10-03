@@ -68,23 +68,25 @@ export default function modalEditCustomer({ setOpenModalEditCharges }) {
       };
       const response = await api.put(`/updatecharge`, updateObject);
 
-      const chargeFilterList = parsedData.charges.filter(
-        (charge) => charge.id_charges !== idEdit
-      );
+      if (parsedData) {
+        const chargeFilterList = parsedData.charges.filter(
+          (charge) => charge.id_charges !== idEdit
+        );
 
-      const updatedCharge = updateObject;
+        const updatedCharge = updateObject;
 
-      const updatedCharges = [...chargeFilterList, updatedCharge];
+        const updatedCharges = [...chargeFilterList, updatedCharge];
 
-      const sessionUpdate = {
-        ...parsedData,
-        charges: updatedCharges,
-      };
+        const sessionUpdate = {
+          ...parsedData,
+          charges: updatedCharges,
+        };
 
-      sessionStorage.setItem(
-        "customerDataSession",
-        JSON.stringify(sessionUpdate)
-      );
+        sessionStorage.setItem(
+          "customerDataSession",
+          JSON.stringify(sessionUpdate)
+        );
+      }
 
       setOpenModalEditCharges(false);
       toast.success("Cobrança editada com sucesso!", {

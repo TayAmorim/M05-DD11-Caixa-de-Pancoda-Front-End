@@ -59,7 +59,7 @@ export default function ChargesList({
   const [searchIsActive, setSearchIsActive] = useState(false);
   const [sortActive, setSortActive] = useState(false);
   const [queryParams, setQueryParams] = useState("");
-  const [openMessageSearch, setOpenMessageSearch] = useState(false)
+  const [openMessageSearch, setOpenMessageSearch] = useState(false);
 
   for (let i = 0; i < 2; i++) {
     if (words[i] && words[i].length > 0) {
@@ -155,7 +155,7 @@ export default function ChargesList({
       setInfoListCharge(response.data);
       setInalteredListCharges(response.data);
       setSearchIsActive(true);
-      setOpenMessageSearch(false)
+      setOpenMessageSearch(false);
       return;
     } catch (error) {
       console.log(error.message);
@@ -310,7 +310,9 @@ export default function ChargesList({
               </div>
             </div>
 
-            {openMessageSearch ? <MessageSearch /> : (
+            {openMessageSearch ? (
+              <MessageSearch />
+            ) : (
               <div>
                 <div className="box-table-billings ">
                   <div className="table-header-customer charges-table">
@@ -321,7 +323,8 @@ export default function ChargesList({
                           alt="Sort Icon"
                           name="byName"
                           onClick={(event) => {
-                            setInfoListCharge(true), handleSort(event.target.name);
+                            setInfoListCharge(true),
+                              handleSort(event.target.name);
                           }}
                         />
                         Cliente
@@ -332,7 +335,8 @@ export default function ChargesList({
                           alt="Sort Icon"
                           name="byId"
                           onClick={(event) => {
-                            setInfoListCharge(true), handleSort(event.target.name);
+                            setInfoListCharge(true),
+                              handleSort(event.target.name);
                           }}
                         />
                         ID Cob.
@@ -347,9 +351,13 @@ export default function ChargesList({
                   </div>
                   <div className="body-table-customer charges-table">
                     {infoListCharge.map((charges, index) => {
-                      const day = format(new Date(charges.due_date), "dd/MM/yyy", {
-                        locale: ptBr,
-                      });
+                      const day = format(
+                        new Date(charges.due_date),
+                        "dd/MM/yyy",
+                        {
+                          locale: ptBr,
+                        }
+                      );
                       const dueDate = new Date(charges.due_date);
                       const isExpired = charges.status && dueDate < new Date();
                       return (
@@ -529,8 +537,8 @@ export default function ChargesList({
                     </Stack>
                   </div>
                 </div>
-              </div>)}
-
+              </div>
+            )}
           </div>
         ) : (
           <Box
@@ -546,7 +554,6 @@ export default function ChargesList({
             <CircularProgress />
           </Box>
         )}
-
       </Grid>
     </>
   );
