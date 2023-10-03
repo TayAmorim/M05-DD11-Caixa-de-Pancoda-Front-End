@@ -63,16 +63,9 @@ export default function NavMenu() {
   const [anchorEl, setAnchorEl] = React.useState(null);
   const open = Boolean(anchorEl);
   const {
-    name,
-    setName,
-    email,
     setEmail,
     userData,
     setUserData,
-    phone,
-    setPhone,
-    cpf,
-    setCpf,
     setAlert,
     setPassword,
   } = useContext(AuthContext);
@@ -122,7 +115,7 @@ export default function NavMenu() {
           onClick={handleClick}
           endIcon={<KeyboardArrowDownIcon />}
         >
-          {userStorage.name.length < 7 ? userStorage.name : userStorage.name.slice(0, 7) + '...' }
+          {userStorage.name.length < 7 ? userStorage.name : userStorage.name.slice(0, 7) + '...'}
         </Button>
         <StyledMenu
           id="demo-customized-menu"

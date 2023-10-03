@@ -4,7 +4,6 @@ import { ReactComponent as DefaultingSvg } from "../../assets/defaultingCustomer
 import { ReactComponent as CompliantSvg } from "../../assets/compliant.svg";
 import "./styles.css";
 import colors from "../../style/colors";
-import { Link } from "react-router-dom";
 
 function TableChargeClients({ title, defaulter, number, children }) {
   const backgroundChip = defaulter

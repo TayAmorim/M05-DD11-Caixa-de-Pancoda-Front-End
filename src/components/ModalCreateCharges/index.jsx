@@ -23,7 +23,6 @@ export default function modalEditCustomer({
     createdChargeStatus,
     setCreatedChargeStatus
   } = useContext(AuthContext);
-  const [name, setName] = useState("");
   const [alertName, setAlertName] = useState("");
   const [description, setDescription] = useState("");
   const [alertDescription, setAlertDescription] = useState("");

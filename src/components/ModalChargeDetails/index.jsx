@@ -3,7 +3,6 @@ import billings from '../../assets/billings.svg'
 import { useContext } from 'react';
 import { AuthContext } from '../../context/myContext';
 import { format } from 'date-fns'
-import ptBr from 'date-fns/locale/pt-BR'
 import {
     Box,
     CircularProgress
@@ -53,8 +52,8 @@ export default function ModalDelete({ setModalChargeDetails }) {
                             <div>
                                 <h3>Status</h3>
                                 <span className={detailCharge[0].status ? (isExpired ? "expired-client" : "pending-client") : "paid-client"}>
-                                                {detailCharge[0].status ? (isExpired ? "Vencido" : "Pendente") : "Pago"}
-                                            </span>
+                                    {detailCharge[0].status ? (isExpired ? "Vencido" : "Pendente") : "Pago"}
+                                </span>
                             </div>
                         </div>
                     </>
