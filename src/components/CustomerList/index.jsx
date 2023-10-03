@@ -19,10 +19,9 @@ import sortIconHeaders from "../../assets/sortIconHeaders.svg";
 import addBilling from "../../assets/addBilling.svg";
 import { useContext, useEffect, useState } from "react";
 import api from "../../api/api";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { AuthContext } from "../../context/myContext";
 import MessageSearch from "../MessageSearch";
-
 
 export default function CustomerList({
   setOpenModalCustomer,
@@ -49,7 +48,11 @@ export default function CustomerList({
   const [ordenedListActive, setOrdenedListActive] = useState(false);
   const [inalteredCustomersList, setInalteredCustomersList] = useState([]);
   const [countOrderClients, setCountOrderClients] = useState(0);
-  const [openMessageSearch, setOpenMessageSearch] = useState(false)
+  const [openMessageSearch, setOpenMessageSearch] = useState(false);
+
+  const location = useLocation();
+  const queryParams = new URLSearchParams(location.search);
+  const status = queryParams.get("status");
 
   for (let i = 0; i < 2; i++) {
     if (words[i] && words[i].length > 0) {
@@ -61,7 +64,11 @@ export default function CustomerList({
   useEffect(() => {
     async function gettingCustomerList() {
       try {
-        const response = await api.get(`/listclients?page=${page}`);
+        const formattedStatus =
+          status === "true" || status === "false" ? `status=${status}` : "";
+        const response = await api.get(
+          `/listclients?page=${page}&${formattedStatus}`
+        );
         const listCustomer = await response.data;
         setTotalPage(listCustomer.totalPages);
         setCustomersList(
@@ -79,19 +86,21 @@ export default function CustomerList({
             return customer;
           })
         );
-        setInalteredCustomersList(listCustomer.clientsWithStatus.map((customer) => {
-          const newCpf = customer.cpf_client.replace(
-            /(\d{3})(\d{3})(\d{3})(\d{2})/,
-            "$1.$2.$3-$4"
-          );
-          const formattedPhoneNumber = customer.phone_client.replace(
-            /(\d{2})(\d{4})(\d{4})/,
-            "($1) $2-$3"
-          );
-          customer.cpf_client = newCpf;
-          customer.phone_client = formattedPhoneNumber;
-          return customer;
-        }))
+        setInalteredCustomersList(
+          listCustomer.clientsWithStatus.map((customer) => {
+            const newCpf = customer.cpf_client.replace(
+              /(\d{3})(\d{3})(\d{3})(\d{2})/,
+              "$1.$2.$3-$4"
+            );
+            const formattedPhoneNumber = customer.phone_client.replace(
+              /(\d{2})(\d{4})(\d{4})/,
+              "($1) $2-$3"
+            );
+            customer.cpf_client = newCpf;
+            customer.phone_client = formattedPhoneNumber;
+            return customer;
+          })
+        );
         setFetchClientList(false);
       } catch (error) {
         console.log(error.message);
@@ -102,7 +111,6 @@ export default function CustomerList({
       gettingCustomerList();
     }
   }, [fetchClientList, page, setFetchClientList]);
-
 
   async function detailCustomer(id) {
     const response = await api.get(`/detailclient/${id}`);
@@ -136,8 +144,8 @@ export default function CustomerList({
     let queryParam = "";
 
     if (sentenceSearch.length < 2) {
-      setAlertSearch("Insira pelo menos 3 caracteres")
-      return
+      setAlertSearch("Insira pelo menos 3 caracteres");
+      return;
     }
     try {
       const emailExpression = /[@]/;
@@ -147,10 +155,12 @@ export default function CustomerList({
       } else if (cpfExpression.test(sentenceSearch)) {
         queryParam = "cpf";
       } else {
-        queryParam = "name"
+        queryParam = "name";
       }
 
-      const response = await api.get(`/listclients?${queryParam}=${sentenceSearch}`);
+      const response = await api.get(
+        `/listclients?${queryParam}=${sentenceSearch}`
+      );
       const listCustomer = response.data;
       if (response.data.length < 1) {
         setOpenMessageSearch(true);
@@ -171,32 +181,32 @@ export default function CustomerList({
           return customer;
         })
       );
-      setInalteredCustomersList(listCustomer.map((customer) => {
-        const newCpf = customer.cpf_client.replace(
-          /(\d{3})(\d{3})(\d{3})(\d{2})/,
-          "$1.$2.$3-$4"
-        );
-        const formattedPhoneNumber = customer.phone_client.replace(
-          /(\d{2})(\d{4})(\d{4})/,
-          "($1) $2-$3"
-        );
-        customer.cpf_client = newCpf;
-        customer.phone_client = formattedPhoneNumber;
-        return customer;
-      }))
+      setInalteredCustomersList(
+        listCustomer.map((customer) => {
+          const newCpf = customer.cpf_client.replace(
+            /(\d{3})(\d{3})(\d{3})(\d{2})/,
+            "$1.$2.$3-$4"
+          );
+          const formattedPhoneNumber = customer.phone_client.replace(
+            /(\d{2})(\d{4})(\d{4})/,
+            "($1) $2-$3"
+          );
+          customer.cpf_client = newCpf;
+          customer.phone_client = formattedPhoneNumber;
+          return customer;
+        })
+      );
       setSearchActive(true);
-      setOpenMessageSearch(false)
-      return
-
+      setOpenMessageSearch(false);
+      return;
     } catch (error) {
       console.log(error.message);
     }
-
-  }
+  };
 
   const handleSortByName = async () => {
     if (countOrderClients > 1) {
-      return
+      return;
     }
 
     const customersListOrdened = customersList;
@@ -212,24 +222,19 @@ export default function CustomerList({
         return 1;
       }
       return 0;
-    })
-
+    });
 
     if (!ordenedListActive) {
-
       setOrdenedListActive(true);
       setCustomersList(customersListOrdened);
-      return
+      return;
     }
     if (ordenedListActive) {
       setCustomersList(inalteredCustomersList);
       setOrdenedListActive(false);
-      return
+      return;
     }
-
-
-  }
-
+  };
 
   return (
     <>
@@ -316,7 +321,9 @@ export default function CustomerList({
                       type="text"
                       name="senha"
                       value={sentenceSearch}
-                      onChange={(event) => setSentenceSearch(event.target.value)}
+                      onChange={(event) =>
+                        setSentenceSearch(event.target.value)
+                      }
                       InputProps={{
                         style: {
                           fontSize: "1.6rem",
@@ -337,7 +344,11 @@ export default function CustomerList({
                               top: "50%",
                               transform: "translateY(-50%)",
                             }}
-                            onClick={() => { handleSearch(), setSentenceSearch(""), setCountOrderClients(0) }}
+                            onClick={() => {
+                              handleSearch(),
+                                setSentenceSearch(""),
+                                setCountOrderClients(0);
+                            }}
                           >
                             <SearchIcon style={{ fontSize: "3rem" }} />
                           </IconButton>
@@ -357,163 +368,184 @@ export default function CustomerList({
                 </div>
               </div>
             </div>
-            {openMessageSearch ? <MessageSearch /> : (<div>
-
-              <div className="box-table-billings">
-                <div className="table-header-customer">
-                  <ul>
-                    <li>
-                      {countOrderClients > 1 ? "" : <img src={sortIconHeaders} alt="Sort Icon"
-                        onClick={() => { handleSortByName(), setCountOrderClients(countOrderClients + 1) }}
-                      />}
-                      Cliente
-                    </li>
-                    <li>CPF</li>
-                    <li>E-mail</li>
-                    <li>Telefone</li>
-                    <li>Status</li>
-                    <li>Criar Cobrança</li>
-                  </ul>
-                </div>
-                <div className="body-table-customer">
-                  {customersList.map((customer) => (
-                    <ul key={customer.id}>
-                      <li
-                        className="link-detail-customer"
-                        onClick={() => detailCustomer(customer.id)}
-                      >
-                        {customer.name_client.length < 12
-                          ? customer.name_client
-                          : customer.name_client.slice(0, 12) + "..."}
-                      </li>
-                      <li>{customer.cpf_client}</li>
+            {openMessageSearch ? (
+              <MessageSearch />
+            ) : (
+              <div>
+                <div className="box-table-billings">
+                  <div className="table-header-customer">
+                    <ul>
                       <li>
-                        {customer.email_client.length < 15
-                          ? customer.email_client
-                          : customer.email_client.slice(0, 15) + "..."}
-                      </li>
-                      <li>{customer.phone_client}</li>
-                      <li
-                        className={
-                          !customer.status
-                            ? "paid-client"
-                            : "expired-client"
-                        }
-                      >
-                        {!customer.status ? "Em dia" : "Inadimplente"}
-                      </li>
-                      <li>
-                        <div
-                          style={{
-                            display: "flex",
-                            alignItems: "center",
-                            justifyContent: "center",
-                            flexDirection: "column",
-                          }}
-                        >
+                        {countOrderClients > 1 ? (
+                          ""
+                        ) : (
                           <img
+                            src={sortIconHeaders}
+                            alt="Sort Icon"
                             onClick={() => {
-                              createBilling(customer.id, customer.name_client);
-                              setOpenModalCreateCharges(true);
+                              handleSortByName(),
+                                setCountOrderClients(countOrderClients + 1);
                             }}
-                            src={addBilling}
-                            alt="Add Billing Icon"
                           />
-                          <span
+                        )}
+                        Cliente
+                      </li>
+                      <li>CPF</li>
+                      <li>E-mail</li>
+                      <li>Telefone</li>
+                      <li>Status</li>
+                      <li>Criar Cobrança</li>
+                    </ul>
+                  </div>
+                  <div className="body-table-customer">
+                    {customersList.map((customer) => (
+                      <ul key={customer.id}>
+                        <li
+                          className="link-detail-customer"
+                          onClick={() => detailCustomer(customer.id)}
+                        >
+                          {customer.name_client.length < 12
+                            ? customer.name_client
+                            : customer.name_client.slice(0, 12) + "..."}
+                        </li>
+                        <li>{customer.cpf_client}</li>
+                        <li>
+                          {customer.email_client.length < 15
+                            ? customer.email_client
+                            : customer.email_client.slice(0, 15) + "..."}
+                        </li>
+                        <li>{customer.phone_client}</li>
+                        <li
+                          className={
+                            !customer.status ? "paid-client" : "expired-client"
+                          }
+                        >
+                          {!customer.status ? "Em dia" : "Inadimplente"}
+                        </li>
+                        <li>
+                          <div
                             style={{
-                              color: "#DA0175",
-                              fontSize: "1.1rem",
-                              marginTop: ".5rem",
+                              display: "flex",
+                              alignItems: "center",
+                              justifyContent: "center",
+                              flexDirection: "column",
                             }}
                           >
-                            Cobrança
-                          </span>
-                        </div>
-                      </li>
-                    </ul>
-                  ))}
-                </div>
+                            <img
+                              onClick={() => {
+                                createBilling(
+                                  customer.id,
+                                  customer.name_client
+                                );
+                                setOpenModalCreateCharges(true);
+                              }}
+                              src={addBilling}
+                              alt="Add Billing Icon"
+                            />
+                            <span
+                              style={{
+                                color: "#DA0175",
+                                fontSize: "1.1rem",
+                                marginTop: ".5rem",
+                              }}
+                            >
+                              Cobrança
+                            </span>
+                          </div>
+                        </li>
+                      </ul>
+                    ))}
+                  </div>
 
-                <div style={{ margin: "5rem 0" }}>
-                  {!searchActive ?
-                    <Stack
-                      sx={{
-                        width: "100%",
-                        display: "flex",
-                        justifyContent: "center",
-                      }}
-                      direction="row"
-                      spacing={2}
-                    >
-                      <Button
+                  <div style={{ margin: "5rem 0" }}>
+                    {!searchActive ? (
+                      <Stack
                         sx={{
-                          width: "16rem",
-                          height: "4.4rem",
-                          borderRadius: ".8rem",
-                          backgroundColor: "#DA0175",
-                          "&:hover": {
-                            backgroundColor: "#790342",
-                          },
-                          fontSize: "1.4rem",
+                          width: "100%",
+                          display: "flex",
+                          justifyContent: "center",
                         }}
-                        variant="contained"
-                        type="button"
-                        onClick={() => { handlePreviousPage(), setCountOrderClients(0) }}
-                        disabled={page == 1}
+                        direction="row"
+                        spacing={2}
                       >
-                        Anterior
-                      </Button>
-                      <Button
+                        <Button
+                          sx={{
+                            width: "16rem",
+                            height: "4.4rem",
+                            borderRadius: ".8rem",
+                            backgroundColor: "#DA0175",
+                            "&:hover": {
+                              backgroundColor: "#790342",
+                            },
+                            fontSize: "1.4rem",
+                          }}
+                          variant="contained"
+                          type="button"
+                          onClick={() => {
+                            handlePreviousPage(), setCountOrderClients(0);
+                          }}
+                          disabled={page == 1}
+                        >
+                          Anterior
+                        </Button>
+                        <Button
+                          sx={{
+                            width: "16rem",
+                            height: "4.4rem",
+                            borderRadius: ".8rem",
+                            backgroundColor: "#DA0175",
+                            "&:hover": {
+                              backgroundColor: "#790342",
+                            },
+                            fontSize: "1.4rem",
+                          }}
+                          variant="contained"
+                          type="button"
+                          onClick={() => {
+                            handleNextPage(), setCountOrderClients(0);
+                          }}
+                          disabled={page >= totalPage}
+                        >
+                          Proximo
+                        </Button>
+                      </Stack>
+                    ) : (
+                      <Stack
                         sx={{
-                          width: "16rem",
-                          height: "4.4rem",
-                          borderRadius: ".8rem",
-                          backgroundColor: "#DA0175",
-                          "&:hover": {
-                            backgroundColor: "#790342",
-                          },
-                          fontSize: "1.4rem",
+                          width: "100%",
+                          display: "flex",
+                          justifyContent: "center",
                         }}
-                        variant="contained"
-                        type="button"
-                        onClick={() => { handleNextPage(), setCountOrderClients(0) }}
-                        disabled={page >= totalPage}
+                        direction="row"
+                        spacing={2}
                       >
-                        Proximo
-                      </Button>
-                    </Stack>
-                    :
-                    <Stack
-                      sx={{
-                        width: "100%",
-                        display: "flex",
-                        justifyContent: "center",
-                      }}
-                      direction="row"
-                      spacing={2}
-                    >
-                      <Button
-                        sx={{
-                          width: "16rem",
-                          height: "4.4rem",
-                          borderRadius: ".8rem",
-                          backgroundColor: "#DA0175",
-                          "&:hover": {
-                            backgroundColor: "#790342",
-                          },
-                          fontSize: "1.4rem",
-                        }}
-                        variant="contained"
-                        type="button"
-                        onClick={() => { setFetchClientList(true), setSearchActive(false), setCountOrderClients(0) }}
-                      >
-                        Voltar
-                      </Button>
-                    </Stack>}
-
+                        <Button
+                          sx={{
+                            width: "16rem",
+                            height: "4.4rem",
+                            borderRadius: ".8rem",
+                            backgroundColor: "#DA0175",
+                            "&:hover": {
+                              backgroundColor: "#790342",
+                            },
+                            fontSize: "1.4rem",
+                          }}
+                          variant="contained"
+                          type="button"
+                          onClick={() => {
+                            setFetchClientList(true),
+                              setSearchActive(false),
+                              setCountOrderClients(0);
+                          }}
+                        >
+                          Voltar
+                        </Button>
+                      </Stack>
+                    )}
+                  </div>
                 </div>
               </div>
-            </div>)}
+            )}
           </div>
         ) : (
           <Box
