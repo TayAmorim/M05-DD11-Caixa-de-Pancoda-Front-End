@@ -14,7 +14,7 @@ export default function modalEditCustomer({ setOpenModalEditCharges }) {
   const { idEdit, setFetchChargesList } =
     useContext(AuthContext);
   const [name, setName] = useState("");
-  const [alertName, setAlertName] = useState("");
+  const [alertName] = useState("");
   const [description, setDescription] = useState("");
   const [alertDescription, setAlertDescription] = useState("");
   const [dueDate, setDueDate] = useState("");

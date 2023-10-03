@@ -28,7 +28,7 @@ export default function ModalEditCustomers({ setOpenModalCustomers, customerData
     const [alertPhone, setAlertPhone] = useState("");
     const [alertCep, setAlertCep] = useState("");
     const [alertaDeuceData, setAlertDeuceData] = useState("");
-    const { setCustomerData, isClientUpdated, setIsClientUpdated } = useContext(AuthContext);
+    const { setCustomerData, setIsClientUpdated } = useContext(AuthContext);
 
 
 
