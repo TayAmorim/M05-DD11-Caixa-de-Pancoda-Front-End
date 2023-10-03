@@ -23,7 +23,7 @@ import { AuthContext } from "../../context/myContext";
 import { format } from "../../../node_modules/date-fns";
 import ptBr from "date-fns/locale/pt-BR";
 import MessageSearch from "../MessageSearch";
-import { Navigate, useLocation, useNavigate } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 
 export default function ChargesList({
   setOpenModalDeleteCharges,
@@ -57,7 +57,8 @@ export default function ChargesList({
   const [openMessageSearch, setOpenMessageSearch] = useState(false);
 
   const location = useLocation();
-  const navigate = useNavigate();
+  const queryParams = new URLSearchParams(location.search);
+  const state = queryParams.get("state");
 
   for (let i = 0; i < 2; i++) {
     if (words[i] && words[i].length > 0) {
@@ -69,7 +70,13 @@ export default function ChargesList({
   useEffect(() => {
     const getCharges = async () => {
       try {
-        const response = await api.get(`/listcharges?page=${page}`);
+        const formattedState =
+          state === "paid" || state === "preview" || state === "overdue"
+            ? `&state=${state}`
+            : "";
+        const response = await api.get(
+          `/listcharges?page=${page}${formattedState}`
+        );
         setDataResponse(response.data);
         setInfoListCharge(response.data.charges);
         setInalteredListCharges(response.data.charges);
