@@ -65,16 +65,6 @@ export default function ChargesList({
   useEffect(() => {
     const getCharges = async () => {
       try {
-        if (searchIsActive) {
-          const response = await api.get(
-            `/listcharges?${queryParams}=${sentenceSearch}`
-          );
-          setInfoListCharge(response.data);
-          setInalteredListCharges(response.data);
-          setFetchChargesList(false);
-          setSortActive(false);
-          return;
-        }
         const response = await api.get(`/listcharges?page=${page}`);
         setDataResponse(response.data);
         setInfoListCharge(response.data.charges);
