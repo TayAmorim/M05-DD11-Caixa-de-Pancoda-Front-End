@@ -1,4 +1,4 @@
-import { useContext, useEffect, useState } from 'react';
+import { useContext } from 'react';
 import validator from 'validator'
 import { useNavigate } from 'react-router-dom'
 import { Box, TextField, Button, Stack, Link } from '@mui/material';
@@ -7,9 +7,9 @@ import { AuthContext } from '../../context/myContext.jsx'
 
 export default function SignUpComponent({ setPagePassword }) {
     const navigate = useNavigate()
-    const {name, setName, email, setEmail, alert, setAlert} = useContext(AuthContext)
+    const { name, setName, email, setEmail, alert, setAlert } = useContext(AuthContext)
 
-    const handleSignup = async() => {
+    const handleSignup = async () => {
 
         if (!name) {
             return setAlert('Nome é um campo obrigátorio!')
@@ -54,10 +54,10 @@ export default function SignUpComponent({ setPagePassword }) {
                     onChange={(event) => setName(event.target.value)}
                     name="name"
                     InputProps={{
-                        style: { fontSize: '1.6rem', color: '#343447', borderRadius: '.8rem', height: '4.5rem', width:'35.5rem' },
+                        style: { fontSize: '1.6rem', color: '#343447', borderRadius: '.8rem', height: '4.5rem', width: '35.5rem' },
                     }}
                     InputLabelProps={{
-                        style: { fontSize: '1.6rem', color: 'gray', transform: 'none', margin: '0', height: '4.5rem' , width:'35.5rem'},
+                        style: { fontSize: '1.6rem', color: 'gray', transform: 'none', margin: '0', height: '4.5rem', width: '35.5rem' },
                     }}
                 />
             </Box>
@@ -73,16 +73,16 @@ export default function SignUpComponent({ setPagePassword }) {
                     onChange={(event) => setEmail(event.target.value)}
                     name="email"
                     InputProps={{
-                        style: { fontSize: '1.6rem', color: '#343447', borderRadius: '.8rem', height: '4.5rem', width:'35.5rem' },
+                        style: { fontSize: '1.6rem', color: '#343447', borderRadius: '.8rem', height: '4.5rem', width: '35.5rem' },
                     }}
                     InputLabelProps={{
-                        style: { fontSize: '1.6rem', color: 'gray', transform: 'none', margin: '0', height: '4.5rem' , width:'35.5rem'},
+                        style: { fontSize: '1.6rem', color: 'gray', transform: 'none', margin: '0', height: '4.5rem', width: '35.5rem' },
                     }}
                 />
-            {alert && <span style={{ color: '#DA0175', width: '100%', left: '2rem', marginTop:'1rem'}}>{alert}</span>}
+                {alert && <span style={{ color: '#DA0175', width: '100%', left: '2rem', marginTop: '1rem' }}>{alert}</span>}
             </Box>
 
-            <div style={{marginTop: '10rem'}}>
+            <div style={{ marginTop: '10rem' }}>
                 <Stack sx={{ width: '100%', display: 'flex', justifyContent: 'center' }} direction="row" spacing={2}>
                     <Button
                         sx={{
@@ -103,7 +103,7 @@ export default function SignUpComponent({ setPagePassword }) {
                         Continuar
                     </Button>
                 </Stack>
-                <Box sx={{ width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', fontFamily: 'Nunito', fontWeight: '500', marginTop:'3rem' }}>
+                <Box sx={{ width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', fontFamily: 'Nunito', fontWeight: '500', marginTop: '3rem' }}>
                     Já tem uma conta? Faça seu <Link onClick={() => navigate('/')} sx={{
                         color: '#DA0175', textDecorationColor: '#DA0175', cursor: 'pointer', marginLeft: '1rem'
                     }}>Login</Link>
