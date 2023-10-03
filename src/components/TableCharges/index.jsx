@@ -2,7 +2,6 @@ import { Chip } from "@mui/material";
 import "./styles.css";
 import { Stack } from "@mui/system";
 import colors from "../../style/colors";
-import { Link } from "react-router-dom";
 
 export default function TableCharge({ title, color, number, children }) {
   let backgroundChip;
