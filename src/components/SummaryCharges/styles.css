@@ -28,16 +28,16 @@
 
 .animation {
   overflow-x: auto;
-  animation: slideFromRight .7s ease-in-out;
+  animation: slideFromRight 0.7s ease-in-out;
 }
 
 @keyframes slideFromRight {
   0% {
-      transform: translateX(100%);
-      opacity: 0;
+    transform: translateX(100%);
+    opacity: 0;
   }
   100% {
-      transform: translateX(0);
-      opacity: 1;
+    transform: translateX(0);
+    opacity: 1;
   }
 }

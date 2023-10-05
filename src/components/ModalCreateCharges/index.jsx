@@ -20,8 +20,9 @@ export default function modalEditCustomer({
     idModalCreateCharge,
     fetchClientList,
     setFetchClientList,
+    createdChargeStatus,
+    setCreatedChargeStatus
   } = useContext(AuthContext);
-  const [name, setName] = useState("");
   const [alertName, setAlertName] = useState("");
   const [description, setDescription] = useState("");
   const [alertDescription, setAlertDescription] = useState("");
@@ -68,6 +69,7 @@ export default function modalEditCustomer({
       dataValuesCharges();
       setOpenModalCreateCharges(false);
       setFetchClientList(true);
+      setCreatedChargeStatus(true);
     } catch (error) {
       console.log(error.message);
     }

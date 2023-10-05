@@ -4,9 +4,8 @@ import { ReactComponent as DefaultingSvg } from "../../assets/defaultingCustomer
 import { ReactComponent as CompliantSvg } from "../../assets/compliant.svg";
 import "./styles.css";
 import colors from "../../style/colors";
-import {Link} from 'react-router-dom'
 
-function TableChargeClients({ title, defaulter, number }) {
+function TableChargeClients({ title, defaulter, number, children }) {
   const backgroundChip = defaulter
     ? colors.Wine.light
     : colors.GreenSupport.light;
@@ -43,45 +42,7 @@ function TableChargeClients({ title, defaulter, number }) {
         <span>ID do clie.</span>
         <span>CPF</span>
       </Stack>
-      <Stack
-        className="customer-clients"
-        direction="row"
-        justifyContent="space-between"
-      >
-        <span>Cameron Williamson</span>
-        <span>223456787</span>
-        <span>041.477.456-56</span>
-      </Stack>
-      <Stack
-        className="customer-clients"
-        direction="row"
-        justifyContent="space-between"
-      >
-        <span>Savannah Nguyen</span>
-        <span>223456787</span>
-        <span>041.477.456-56</span>
-      </Stack>
-      <Stack
-        className="customer-clients"
-        direction="row"
-        justifyContent="space-between"
-      >
-        <span>Darlene Robertson</span>
-        <span>223456787</span>
-        <span>041.477.456-56</span>
-      </Stack>
-      <Stack
-        className="customer-clients"
-        direction="row"
-        justifyContent="space-between"
-      >
-        <span>Marvin McKinney</span>
-        <span>223456787</span>
-        <span>041.477.456-56</span>
-      </Stack>
-      <Stack sx={{ margin: "0 auto", paddingBlock: "1rem" }}>
-        <Link to={'/cobranca'}><a className="btn-more">Ver Todos</a></Link>
-      </Stack>
+      {children}
     </Stack>
   );
 }

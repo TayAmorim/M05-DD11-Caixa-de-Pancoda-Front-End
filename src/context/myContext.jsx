@@ -12,11 +12,17 @@ const AuthProvider = ({ children }) => {
   const [dataCharges, setDataCharges] = useState([]);
   const [dataChargesById, setDataChargesById] = useState([]);
   const [idEdit, setIdEdit] = useState("");
+  const [idDetailsCharge, setIdDetailsCharge] = useState("");
+  const [detailCharge, setDetailCharge] = useState([]);
   const [customerData, setCustomerData] = useState(false);
   const [isClientUpdated, setIsClientUpdated] = useState(false);
   const [fetchClientList, setFetchClientList] = useState(false);
+  const [fetchChargesList, setFetchChargesList] = useState(false);
   const [nameModalCreateCharge, setNameModalCreateCharge] = useState("");
   const [idModalCreateCharge, setIdModalCreateCharge] = useState("");
+  const [createdChargeStatus, setCreatedChargeStatus] = useState(false);
+  const [infoListCharge, setInfoListCharge] = useState([]);
+  const [shareSessionStorage, setShareSessionStorage] = useState([]);
 
   return (
     <AuthContext.Provider
@@ -49,6 +55,18 @@ const AuthProvider = ({ children }) => {
         setIdModalCreateCharge,
         fetchClientList,
         setFetchClientList,
+        fetchChargesList,
+        setFetchChargesList,
+        createdChargeStatus,
+        setCreatedChargeStatus,
+        idDetailsCharge,
+        setIdDetailsCharge,
+        detailCharge,
+        setDetailCharge,
+        infoListCharge,
+        setInfoListCharge,
+        shareSessionStorage,
+        setShareSessionStorage,
       }}
     >
       {children}

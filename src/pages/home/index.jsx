@@ -1,20 +1,20 @@
-import { Button, Grid, Stack } from "@mui/material";
+import { Grid } from "@mui/material";
 import TabPanel from "../../components/TabPanel";
 import "./styles.css";
-import { Navigate, Route, Routes } from "react-router-dom";
+import { Route, Routes } from "react-router-dom";
 import SummaryCharges from "../../components/SummaryCharges";
 import CustomerList from "../../components/CustomerList";
 import ChargesList from "../../components/ChargesList";
 import colors from "../../style/colors";
 import ModalEditCustomer from "../../components/modalEditCustomer/index";
 import { useContext, useState } from "react";
-
 import ModalEditUser from "../../components/modalEdituser";
 import { ModalContext } from "../../context/modalContext";
 import ModalSucess from "../../components/modalSucess";
 import ModalDelete from "../../components/ModalDeleteCharges";
 import ModalEditCharges from "../../components/modalEditCharges/index";
 import ModalCreateCharges from "../../components/ModalCreateCharges/index";
+import ModalChargeDetails from "../../components/ModalChargeDetails";
 import CustomerDetails from "../../components/CustomerDetails/index";
 import ModalEditCustomers from "../../components/ModalEditCustomers";
 import { AuthContext } from "../../context/myContext";
@@ -25,8 +25,9 @@ export default function Home() {
   const [openModalEditCharges, setOpenModalEditCharges] = useState(false);
   const [openModalCreateCharges, setOpenModalCreateCharges] = useState(false);
   const [openModalCustomers, setOpenModalCustomers] = useState(false);
-  const { customerData, setCustomerData } = useContext(AuthContext);
-  const { OpenModalEditUser, setOpenModalEditUser, sucess, setSucess } =
+  const [openModalChargeDetails, setModalChargeDetails] = useState(false);
+  const { customerData } = useContext(AuthContext);
+  const { OpenModalEditUser, setOpenModalEditUser, sucess } =
     useContext(ModalContext);
 
   return (
@@ -52,13 +53,24 @@ export default function Home() {
               <ChargesList
                 setOpenModalDeleteCharges={setOpenModalDeleteCharges}
                 setOpenModalEditCharges={setOpenModalEditCharges}
+                setModalChargeDetails={setModalChargeDetails}
+                openModalChargeDetails={openModalChargeDetails}
               />
             }
           />
-          <Route path="clientes/detalhes" element={
-            <CustomerDetails
-              setOpenModalCreateCharges={setOpenModalCreateCharges}
-              setOpenModalCustomers={setOpenModalCustomers} />} />
+          <Route
+            path="clientes/detalhes"
+            element={
+              <CustomerDetails
+                setOpenModalCreateCharges={setOpenModalCreateCharges}
+                setOpenModalCustomers={setOpenModalCustomers}
+                setOpenModalEditCharges={setOpenModalEditCharges}
+                setOpenModalDeleteCharges={setOpenModalDeleteCharges}
+                setModalChargeDetails={setModalChargeDetails}
+                openModalChargeDetails={openModalChargeDetails}
+              />
+            }
+          />
         </Routes>
 
         {OpenModalEditUser && (
@@ -70,7 +82,10 @@ export default function Home() {
         )}
 
         {openModalCustomers && (
-          <ModalEditCustomers setOpenModalCustomers={setOpenModalCustomers} customerData={customerData} />
+          <ModalEditCustomers
+            setOpenModalCustomers={setOpenModalCustomers}
+            customerData={customerData}
+          />
         )}
 
         {sucess && <ModalSucess />}
@@ -89,6 +104,9 @@ export default function Home() {
             setOpenModalCreateCharges={setOpenModalCreateCharges}
             openModalCreateCharges={openModalCreateCharges}
           />
+        )}
+        {openModalChargeDetails && (
+          <ModalChargeDetails setModalChargeDetails={setModalChargeDetails} />
         )}
       </Grid>
     </>

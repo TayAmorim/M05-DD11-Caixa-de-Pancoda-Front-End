@@ -9,24 +9,28 @@ import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
 export default function ModalEditCustomers({ setOpenModalCustomers, customerData }) {
+    const storedData = sessionStorage.getItem("customerDataSession");
+    const parsedData = JSON.parse(storedData);
 
-    const [name, setName] = useState(customerData.name_client);
-    const [email, setEmail] = useState(customerData.email_client);
-    const [cpf, setCpf] = useState(customerData.cpf_client);
-    const [phone, setPhone] = useState(customerData.phone_client);
-    const [address, setAddress] = useState(customerData.address_complete.address);
-    const [complement, setComplement] = useState(customerData.address_complete.complement);
-    const [cep, setCep] = useState(customerData.address_complete.cep);
-    const [neighborhood, setNeighborhood] = useState(customerData.address_complete.neighborhood);
-    const [city, setCity] = useState(customerData.address_complete.city);
-    const [state, setState] = useState(customerData.address_complete.state);
+    const [name, setName] = useState(parsedData.name_client);
+    const [email, setEmail] = useState(parsedData.email_client);
+    const [cpf, setCpf] = useState(parsedData.cpf_client);
+    const [phone, setPhone] = useState(parsedData.phone_client);
+    const [address, setAddress] = useState(parsedData.address_complete.address);
+    const [complement, setComplement] = useState(parsedData.address_complete.complement);
+    const [cep, setCep] = useState(parsedData.address_complete.cep);
+    const [neighborhood, setNeighborhood] = useState(parsedData.address_complete.neighborhood);
+    const [city, setCity] = useState(parsedData.address_complete.city);
+    const [state, setState] = useState(parsedData.address_complete.state);
     const [alertName, setAlertName] = useState("");
     const [alertEmail, setAlertEmail] = useState("");
     const [alertCpf, setAlertCpf] = useState("");
     const [alertPhone, setAlertPhone] = useState("");
     const [alertCep, setAlertCep] = useState("");
     const [alertaDeuceData, setAlertDeuceData] = useState("");
-    const { setCustomerData, isClientUpdated, setIsClientUpdated } = useContext(AuthContext);
+    const { setCustomerData, setIsClientUpdated } = useContext(AuthContext);
+
+
 
 
     const handleSubmit = async (event) => {
@@ -62,21 +66,22 @@ export default function ModalEditCustomers({ setOpenModalCustomers, customerData
             state,
         };
 
-        if (customerData.name_client == newClient.name_client &&
-            customerData.email_client == newClient.email_client &&
-            customerData.cpf_client == newClient.cpf_client &&
-            customerData.phone_client == newClient.phone_client &&
-            customerData.address_complete.address == newClient.address &&
-            customerData.address_complete.complement == newClient.complement &&
-            customerData.address_complete.neighborhood == newClient.neighborhood &&
-            customerData.address_complete.city == newClient.city &&
-            customerData.address_complete.state == newClient.state
+        if (parsedData.name_client == newClient.name_client &&
+            parsedData.email_client == newClient.email_client &&
+            parsedData.cpf_client == newClient.cpf_client &&
+            parsedData.phone_client == newClient.phone_client &&
+            parsedData.address_complete.address == newClient.address &&
+            parsedData.address_complete.complement == newClient.complement &&
+            parsedData.address_complete.neighborhood == newClient.neighborhood &&
+            parsedData.address_complete.city == newClient.city &&
+            parsedData.address_complete.state == newClient.state
         ) {
             return setAlertDeuceData("Nenhum dado Alterado");
         }
 
         try {
-            await api.put(`clients/${customerData.id}`, newClient);
+            await api.put(`clients/${parsedData.id}`, newClient);
+            updateDataCustomer();
 
             toast.success("Cliente editado com sucesso!", {
                 position: "bottom-right",
@@ -148,22 +153,19 @@ export default function ModalEditCustomers({ setOpenModalCustomers, customerData
         setAlertCep("");
     };
 
-    useEffect(() => {
+    async function updateDataCustomer() {
+        try {
+            const response = await api.get(`detailclient/${parsedData.id}`);
 
-        async function updateDataCustomer() {
-            try {
-                const response = await api.get(`detailclient/${customerData.id}`);
+            setCustomerData(response.data);
+            setIsClientUpdated(true);
+            sessionStorage.setItem("customerDataSession", JSON.stringify(response.data));
 
-                setCustomerData(response.data);
-
-            } catch (error) {
-                console.log(error);
-            }
+        } catch (error) {
+            console.log(error);
         }
+    }
 
-        updateDataCustomer();
-        setIsClientUpdated(false);
-    }, [customerData]);
 
     return (
         <div className="container-modal-customer">

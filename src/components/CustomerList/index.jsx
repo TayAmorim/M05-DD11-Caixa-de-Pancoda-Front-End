@@ -19,8 +19,9 @@ import sortIconHeaders from "../../assets/sortIconHeaders.svg";
 import addBilling from "../../assets/addBilling.svg";
 import { useContext, useEffect, useState } from "react";
 import api from "../../api/api";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { AuthContext } from "../../context/myContext";
+import MessageSearch from "../MessageSearch";
 
 export default function CustomerList({
   setOpenModalCustomer,
@@ -41,6 +42,16 @@ export default function CustomerList({
   const navigate = useNavigate();
   const [page, setPage] = useState(1);
   const [totalPage, setTotalPage] = useState("");
+  const [alertSearch, setAlertSearch] = useState("");
+  const [sentenceSearch, setSentenceSearch] = useState("");
+  const [searchActive, setSearchActive] = useState(false);
+  const [ordenedListActive, setOrdenedListActive] = useState(false);
+  const [inalteredCustomersList, setInalteredCustomersList] = useState([]);
+  const [openMessageSearch, setOpenMessageSearch] = useState(false);
+
+  const location = useLocation();
+  const queryParams = new URLSearchParams(location.search);
+  const status = queryParams.get("status");
 
   for (let i = 0; i < 2; i++) {
     if (words[i] && words[i].length > 0) {
@@ -50,20 +61,112 @@ export default function CustomerList({
   }
 
   useEffect(() => {
+    async function gettingCustomerList() {
+      try {
+        const formattedStatus =
+          status === "true" || status === "false" ? `status=${status}` : "";
+        const response = await api.get(
+          `/listclients?page=${page}&${formattedStatus}`
+        );
+        const listCustomer = await response.data;
+        setTotalPage(listCustomer.totalPages);
+        setCustomersList(
+          listCustomer.clientsWithStatus.map((customer) => {
+            const newCpf = customer.cpf_client.replace(
+              /(\d{3})(\d{3})(\d{3})(\d{2})/,
+              "$1.$2.$3-$4"
+            );
+            const formattedPhoneNumber = customer.phone_client.replace(
+              /(\d{2})(\d{4})(\d{4})/,
+              "($1) $2-$3"
+            );
+            customer.cpf_client = newCpf;
+            customer.phone_client = formattedPhoneNumber;
+            return customer;
+          })
+        );
+        setInalteredCustomersList(
+          listCustomer.clientsWithStatus.map((customer) => {
+            const newCpf = customer.cpf_client.replace(
+              /(\d{3})(\d{3})(\d{3})(\d{2})/,
+              "$1.$2.$3-$4"
+            );
+            const formattedPhoneNumber = customer.phone_client.replace(
+              /(\d{2})(\d{4})(\d{4})/,
+              "($1) $2-$3"
+            );
+            customer.cpf_client = newCpf;
+            customer.phone_client = formattedPhoneNumber;
+            return customer;
+          })
+        );
+        setFetchClientList(false);
+      } catch (error) {
+        console.log(error.message);
+      }
+    }
+    gettingCustomerList();
     if (fetchClientList) {
       gettingCustomerList();
     }
-    setFetchClientList(false);
-  }, [fetchClientList]);
+  }, [fetchClientList, page, setFetchClientList]);
 
-  async function gettingCustomerList(newPage) {
+  async function detailCustomer(id) {
+    const response = await api.get(`/detailclient/${id}`);
+    navigate("/clientes/detalhes");
+    setCustomerData(response.data);
+    localStorage.setItem("idClient", JSON.stringify(id));
+    sessionStorage.setItem(
+      "customerDataSession",
+      JSON.stringify(response.data)
+    );
+  }
+
+  function createBilling(idCustomer, nameCustomer) {
+    setNameModalCreateCharge(nameCustomer);
+    setIdModalCreateCharge(idCustomer);
+  }
+
+  function handlePreviousPage() {
+    if (page > 1) {
+      const newPage = page - 1;
+      setPage(newPage);
+    }
+  }
+
+  function handleNextPage() {
+    const newPage = page + 1;
+    setPage(newPage);
+  }
+
+  const handleSearch = async () => {
+    let queryParam = "";
+
+    if (sentenceSearch.length < 2) {
+      setAlertSearch("Insira pelo menos 3 caracteres");
+      return;
+    }
     try {
-      const response = await api.get(`/listclients?page=${newPage}`);
+      const emailExpression = /[@]/;
+      const cpfExpression = /^[0-9]+$/;
+      if (emailExpression.test(sentenceSearch)) {
+        queryParam = "email";
+      } else if (cpfExpression.test(sentenceSearch)) {
+        queryParam = "cpf";
+      } else {
+        queryParam = "name";
+      }
 
-      const listCustomer = await response.data;
-      setTotalPage(listCustomer.totalPages);
+      const response = await api.get(
+        `/listclients?${queryParam}=${sentenceSearch}`
+      );
+      const listCustomer = response.data;
+      if (response.data.length < 1) {
+        setOpenMessageSearch(true);
+        return;
+      }
       setCustomersList(
-        listCustomer.clientsWithStatus.map((customer) => {
+        listCustomer.map((customer) => {
           const newCpf = customer.cpf_client.replace(
             /(\d{3})(\d{3})(\d{3})(\d{2})/,
             "$1.$2.$3-$4"
@@ -77,38 +180,61 @@ export default function CustomerList({
           return customer;
         })
       );
+      setInalteredCustomersList(
+        listCustomer.map((customer) => {
+          const newCpf = customer.cpf_client.replace(
+            /(\d{3})(\d{3})(\d{3})(\d{2})/,
+            "$1.$2.$3-$4"
+          );
+          const formattedPhoneNumber = customer.phone_client.replace(
+            /(\d{2})(\d{4})(\d{4})/,
+            "($1) $2-$3"
+          );
+          customer.cpf_client = newCpf;
+          customer.phone_client = formattedPhoneNumber;
+          return customer;
+        })
+      );
+      setSearchActive(true);
+      setOpenMessageSearch(false);
+      return;
     } catch (error) {
       console.log(error.message);
     }
-  }
-  useEffect(() => {
-    gettingCustomerList();
-  }, []);
+  };
 
-  async function detailCustomer(id) {
-    const response = await api.get(`/detailclient/${id}`);
-    navigate("/clientes/detalhes");
-    setCustomerData(response.data);
-    localStorage.setItem("idClient", JSON.stringify(id));
-  }
+  const handleSortByName = async () => {
+    const customersListOrdened = [...customersList];
 
-  function createBilling(idCustomer, nameCustomer) {
-    setNameModalCreateCharge(nameCustomer);
-    setIdModalCreateCharge(idCustomer);
-  }
+    customersListOrdened.sort((a, b) => {
+      const nomeA = a.name_client[0].toUpperCase();
+      const nomeB = b.name_client[0].toUpperCase();
 
-  function handlePreviousPage() {
-    if (page > 1) {
-      const newPage = page - 1;
-      setPage(newPage);
-      gettingCustomerList(newPage);
+      if (nomeA < nomeB) {
+        return -1;
+      }
+      if (nomeA > nomeB) {
+        return 1;
+      }
+      return 0;
+    });
+
+    if (!ordenedListActive) {
+      setOrdenedListActive(true);
+      setCustomersList(customersListOrdened);
+      return;
     }
-  }
+    if (ordenedListActive) {
+      setCustomersList(inalteredCustomersList);
+      setOrdenedListActive(false);
+      return;
+    }
+  };
 
-  function handleNextPage() {
-    const newPage = page + 1;
-    setPage(newPage);
-    gettingCustomerList(newPage);
+  function clearQueryParams() {
+    const novaURL = location.pathname;
+    navigate(novaURL);
+    setFetchClientList(true);
   }
 
   return (
@@ -129,7 +255,9 @@ export default function CustomerList({
               color: "#0E8750",
               alignSelf: "flex-end",
               marginBottom: "-2rem",
+              cursor: "pointer",
             }}
+            onClick={clearQueryParams}
           >
             Clientes
           </h1>
@@ -195,6 +323,10 @@ export default function CustomerList({
                       variant="outlined"
                       type="text"
                       name="senha"
+                      value={sentenceSearch}
+                      onChange={(event) =>
+                        setSentenceSearch(event.target.value)
+                      }
                       InputProps={{
                         style: {
                           fontSize: "1.6rem",
@@ -215,6 +347,9 @@ export default function CustomerList({
                               top: "50%",
                               transform: "translateY(-50%)",
                             }}
+                            onClick={() => {
+                              handleSearch(), setSentenceSearch("");
+                            }}
                           >
                             <SearchIcon style={{ fontSize: "3rem" }} />
                           </IconButton>
@@ -234,129 +369,199 @@ export default function CustomerList({
                 </div>
               </div>
             </div>
-
-            <div className="box-table-billings">
-              <div className="table-header-customer">
-                <ul>
-                  <li>
-                    <img src={sortIconHeaders} alt="Sort Icon" />
-                    Cliente
-                  </li>
-                  <li>CPF</li>
-                  <li>E-mail</li>
-                  <li>Telefone</li>
-                  <li>Status</li>
-                  <li>Criar Cobrança</li>
-                </ul>
-              </div>
-              <div className="body-table-customer">
-                {customersList.map((customer) => (
-                  <ul key={customer.id}>
-                    <li
-                      className="link-detail-customer"
-                      onClick={() => detailCustomer(customer.id)}
-                    >
-                      {customer.name_client.length < 12
-                        ? customer.name_client
-                        : customer.name_client.slice(0, 12) + "..."}
-                    </li>
-                    <li>{customer.cpf_client}</li>
-                    <li>
-                      {customer.email_client.length < 15
-                        ? customer.email_client
-                        : customer.email_client.slice(0, 15) + "..."}
-                    </li>
-                    <li>{customer.phone_client}</li>
-                    <li
-                      className={
-                        !customer.status
-                          ? "up-to-date-client"
-                          : "expired-client"
-                      }
-                    >
-                      {!customer.status ? "Em dia" : "Inadimplente"}
-                    </li>
-                    <li>
-                      <div
-                        style={{
-                          display: "flex",
-                          alignItems: "center",
-                          justifyContent: "center",
-                          flexDirection: "column",
-                        }}
-                      >
+            {openMessageSearch ? (
+              <MessageSearch>
+                <Button
+                  sx={{
+                    width: "16rem",
+                    margin: "0 auto",
+                    height: "4.4rem",
+                    borderRadius: ".8rem",
+                    backgroundColor: "#DA0175",
+                    "&:hover": {
+                      backgroundColor: "#790342",
+                    },
+                    fontSize: "1.4rem",
+                  }}
+                  variant="contained"
+                  type="button"
+                  onClick={() => {
+                    setSentenceSearch("");
+                    setOpenMessageSearch(false);
+                  }}
+                >
+                  Voltar
+                </Button>
+              </MessageSearch>
+            ) : (
+              <div>
+                <div className="box-table-billings">
+                  <div className="table-header-customer">
+                    <ul>
+                      <li>
                         <img
+                          src={sortIconHeaders}
+                          alt="Sort Icon"
                           onClick={() => {
-                            createBilling(customer.id, customer.name_client);
-                            setOpenModalCreateCharges(true);
+                            handleSortByName();
                           }}
-                          src={addBilling}
-                          alt="Add Billing Icon"
                         />
-                        <span
-                          style={{
-                            color: "#DA0175",
-                            fontSize: "1.1rem",
-                            marginTop: ".5rem",
+                        Cliente
+                      </li>
+                      <li>CPF</li>
+                      <li>E-mail</li>
+                      <li>Telefone</li>
+                      <li>Status</li>
+                      <li>Criar Cobrança</li>
+                    </ul>
+                  </div>
+                  <div className="body-table-customer">
+                    {customersList.map((customer) => (
+                      <ul key={customer.id}>
+                        <li
+                          className="link-detail-customer"
+                          onClick={() => detailCustomer(customer.id)}
+                        >
+                          {customer.name_client.length < 12
+                            ? customer.name_client
+                            : customer.name_client.slice(0, 12) + "..."}
+                        </li>
+                        <li>{customer.cpf_client}</li>
+                        <li>
+                          {customer.email_client.length < 15
+                            ? customer.email_client
+                            : customer.email_client.slice(0, 15) + "..."}
+                        </li>
+                        <li>{customer.phone_client}</li>
+                        <li
+                          className={
+                            !customer.status ? "paid-client" : "expired-client"
+                          }
+                        >
+                          {!customer.status ? "Em dia" : "Inadimplente"}
+                        </li>
+                        <li>
+                          <div
+                            style={{
+                              display: "flex",
+                              alignItems: "center",
+                              justifyContent: "center",
+                              flexDirection: "column",
+                            }}
+                          >
+                            <img
+                              onClick={() => {
+                                createBilling(
+                                  customer.id,
+                                  customer.name_client
+                                );
+                                setOpenModalCreateCharges(true);
+                              }}
+                              src={addBilling}
+                              alt="Add Billing Icon"
+                            />
+                            <span
+                              style={{
+                                color: "#DA0175",
+                                fontSize: "1.1rem",
+                                marginTop: ".5rem",
+                              }}
+                            >
+                              Cobrança
+                            </span>
+                          </div>
+                        </li>
+                      </ul>
+                    ))}
+                  </div>
+
+                  <div style={{ margin: "5rem 0" }}>
+                    {!searchActive ? (
+                      <Stack
+                        sx={{
+                          width: "100%",
+                          display: "flex",
+                          justifyContent: "center",
+                        }}
+                        direction="row"
+                        spacing={2}
+                      >
+                        <Button
+                          sx={{
+                            width: "16rem",
+                            height: "4.4rem",
+                            borderRadius: ".8rem",
+                            backgroundColor: "#DA0175",
+                            "&:hover": {
+                              backgroundColor: "#790342",
+                            },
+                            fontSize: "1.4rem",
+                          }}
+                          variant="contained"
+                          type="button"
+                          onClick={() => {
+                            handlePreviousPage();
+                          }}
+                          disabled={page == 1}
+                        >
+                          Anterior
+                        </Button>
+                        <Button
+                          sx={{
+                            width: "16rem",
+                            height: "4.4rem",
+                            borderRadius: ".8rem",
+                            backgroundColor: "#DA0175",
+                            "&:hover": {
+                              backgroundColor: "#790342",
+                            },
+                            fontSize: "1.4rem",
+                          }}
+                          variant="contained"
+                          type="button"
+                          onClick={() => {
+                            handleNextPage();
+                          }}
+                          disabled={page >= totalPage}
+                        >
+                          Proximo
+                        </Button>
+                      </Stack>
+                    ) : (
+                      <Stack
+                        sx={{
+                          width: "100%",
+                          display: "flex",
+                          justifyContent: "center",
+                        }}
+                        direction="row"
+                        spacing={2}
+                      >
+                        <Button
+                          sx={{
+                            width: "16rem",
+                            height: "4.4rem",
+                            borderRadius: ".8rem",
+                            backgroundColor: "#DA0175",
+                            "&:hover": {
+                              backgroundColor: "#790342",
+                            },
+                            fontSize: "1.4rem",
+                          }}
+                          variant="contained"
+                          type="button"
+                          onClick={() => {
+                            setFetchClientList(true), setSearchActive(false);
                           }}
                         >
-                          Cobrança
-                        </span>
-                      </div>
-                    </li>
-                  </ul>
-                ))}
+                          Voltar
+                        </Button>
+                      </Stack>
+                    )}
+                  </div>
+                </div>
               </div>
-
-              <div style={{ margin: "5rem 0" }}>
-                <Stack
-                  sx={{
-                    width: "100%",
-                    display: "flex",
-                    justifyContent: "center",
-                  }}
-                  direction="row"
-                  spacing={2}
-                >
-                  <Button
-                    sx={{
-                      width: "16rem",
-                      height: "4.4rem",
-                      borderRadius: ".8rem",
-                      backgroundColor: "#DA0175",
-                      "&:hover": {
-                        backgroundColor: "#790342",
-                      },
-                      fontSize: "1.4rem",
-                    }}
-                    variant="contained"
-                    type="button"
-                    onClick={() => handlePreviousPage()}
-                    disabled={page == 1}
-                  >
-                    Anterior
-                  </Button>
-                  <Button
-                    sx={{
-                      width: "16rem",
-                      height: "4.4rem",
-                      borderRadius: ".8rem",
-                      backgroundColor: "#DA0175",
-                      "&:hover": {
-                        backgroundColor: "#790342",
-                      },
-                      fontSize: "1.4rem",
-                    }}
-                    variant="contained"
-                    type="button"
-                    onClick={() => handleNextPage()}
-                    disabled={page >= totalPage}
-                  >
-                    Proximo
-                  </Button>
-                </Stack>
-              </div>
-            </div>
+            )}
           </div>
         ) : (
           <Box
